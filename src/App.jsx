@@ -6,6 +6,13 @@ import Mushrooms from "./features/mushrooms/Mushrooms";
 import User from "./features/user/User";
 import Recepies from "./features/recepies/Recepies";
 import AppLayout from "./ui/AppLayout";
+import LocationDetail, {
+  loader as locationDetailLoader,
+} from "./features/map/LocationDetail";
+import CreateLocation, {
+  action as createLocationAction,
+} from "./features/map/CreateLocation";
+import CreateComment from "./features/map/CreateComment";
 
 const router = createBrowserRouter([
   {
@@ -16,32 +23,38 @@ const router = createBrowserRouter([
         path: "",
         element: <Homepage />,
       },
+      // ******************** MAP ******************** //
       {
         path: "/map",
         element: <Map />,
         loader: locationsLoader,
       },
       {
-        path: "/map/:locationId",
-        // element:
+        path: "/map/:id",
+        element: <LocationDetail />,
+        loader: locationDetailLoader,
       },
       {
-        path: "/map/:locationId/newComment",
-        // element:
+        path: "/map/:id/createComment",
+        element: <CreateComment />,
       },
       {
-        path: "/map/newLocation",
-        // element:
+        path: "/map/createLocation",
+        element: <CreateLocation />,
+        action: createLocationAction,
       },
+      // ******************** MUSHROOMS ******************** //
       {
         path: "/mushrooms",
         element: <Mushrooms />,
         //loader: mushroomsLoader,
       },
+      // ******************** USER ******************** //
       {
         path: "/user",
         element: <User />,
       },
+      // ******************** RECEPIES ******************** //
       {
         path: "/recepies",
         element: <Recepies />,
