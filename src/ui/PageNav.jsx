@@ -41,7 +41,7 @@ function PageNav() {
         </li>
         <li>
           <NavLink
-            to="/articles"
+            to="/recepies"
             className={({ isActive }) =>
               isActive
                 ? "flex flex-col items-center text-navbar-active"
@@ -56,7 +56,7 @@ function PageNav() {
         </li>
         <li>
           <NavLink
-            to="/browse"
+            to="/mushrooms"
             className={({ isActive }) =>
               isActive
                 ? "flex flex-col items-center text-navbar-active"
@@ -71,7 +71,7 @@ function PageNav() {
         </li>
         <li>
           <NavLink
-            to="/profile"
+            to="/user"
             className={({ isActive }) =>
               isActive
                 ? "flex flex-col items-center text-navbar-active"

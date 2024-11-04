@@ -1,28 +1,58 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Map from "./pages/Map";
-import Articles from "./pages/Articles";
-import User from "./pages/Profile";
-import Homepage from "./pages/Homepage";
-import Browse from "./pages/Browse";
-import PageNotFound from "./pages/PageNotFound";
-import PageNav from "./components/PageNav";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Homepage from "./ui/Homepage";
+import Error from "./ui/Error";
+import Map, { loader as locationsLoader } from "./features/map/Map";
+import Mushrooms from "./features/mushrooms/Mushrooms";
+import User from "./features/user/User";
+import Recepies from "./features/recepies/Recepies";
+import AppLayout from "./ui/AppLayout";
+
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "",
+        element: <Homepage />,
+      },
+      {
+        path: "/map",
+        element: <Map />,
+        loader: locationsLoader,
+      },
+      {
+        path: "/map/:locationId",
+        // element:
+      },
+      {
+        path: "/map/:locationId/newComment",
+        // element:
+      },
+      {
+        path: "/map/newLocation",
+        // element:
+      },
+      {
+        path: "/mushrooms",
+        element: <Mushrooms />,
+        //loader: mushroomsLoader,
+      },
+      {
+        path: "/user",
+        element: <User />,
+      },
+      {
+        path: "/recepies",
+        element: <Recepies />,
+        //loader: recepiesLoader,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="map" element={<Map />} />
-          <Route path="browse" element={<Browse />} />
-          <Route path="profile" element={<User />} />
-          <Route path="/" element={<Homepage />} />
-          <Route path="articles" element={<Articles />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-        <PageNav />
-      </BrowserRouter>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
