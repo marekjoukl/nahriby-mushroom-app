@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./ui/Homepage";
 import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";
-import Mushrooms from "./features/mushrooms/Mushrooms";
+import Mushrooms, { loader as mushroomsLoader } from "./features/mushrooms/Mushrooms";
 import User from "./features/user/User";
 import Recepies from "./features/recepies/Recepies";
 import AppLayout from "./ui/AppLayout";
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       {
         path: "/mushrooms",
         element: <Mushrooms />,
-        //loader: mushroomsLoader,
+        loader: mushroomsLoader,
       },
       // ******************** USER ******************** //
       {
