@@ -4,7 +4,9 @@ import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";
 import Mushrooms, { loader as mushroomsLoader } from "./features/mushrooms/Mushrooms";
 import User, { loader as userLoader } from "./features/user/User";
-import Recepies from "./features/recepies/Recepies";
+import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
+import RecipeDetail, { loader as recipeDetailLoader } from "./features/recepies/RecipeDetail";
+import RecipeAdd from "./features/recepies/RecipeAdd";
 import AppLayout from "./ui/AppLayout";
 import LocationDetail, {
   loader as locationDetailLoader,
@@ -55,11 +57,20 @@ const router = createBrowserRouter([
         element: <User />,
         loader: userLoader,
       },
-      // ******************** RECEPIES ******************** //
+      // ******************** RECIPES ******************** //
       {
-        path: "/recepies",
-        element: <Recepies />,
-        //loader: recepiesLoader,
+        path: "/recipes",
+        element: <Recipes />,
+        loader: recipesLoader,
+      },
+      {
+        path: "/recipes/:id",
+        element: <RecipeDetail />,
+        loader: recipeDetailLoader,
+      },
+      {
+        path: "/recipes/add",
+        element: <RecipeAdd />,        
       },
     ],
   },

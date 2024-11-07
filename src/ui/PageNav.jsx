@@ -41,7 +41,7 @@ function PageNav() {
         </li>
         <li>
           <NavLink
-            to="/recepies"
+            to="/recipes"
             className={({ isActive }) =>
               isActive
                 ? "flex flex-col items-center text-navbar-active"
