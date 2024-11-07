@@ -3,7 +3,7 @@ import Homepage from "./ui/Homepage";
 import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";
 import Mushrooms, { loader as mushroomsLoader } from "./features/mushrooms/Mushrooms";
-import User from "./features/user/User";
+import User, { loader as userLoader } from "./features/user/User";
 import Recepies from "./features/recepies/Recepies";
 import AppLayout from "./ui/AppLayout";
 import LocationDetail, {
@@ -53,6 +53,7 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+        loader: userLoader,
       },
       // ******************** RECEPIES ******************** //
       {
