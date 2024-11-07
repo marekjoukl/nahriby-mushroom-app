@@ -3,7 +3,7 @@ import Homepage from "./ui/Homepage";
 import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";
 import Mushrooms, { loader as mushroomsLoader } from "./features/mushrooms/Mushrooms";
-import User from "./features/user/User";
+import User, { loader as userLoader } from "./features/user/User";
 import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
 import RecipeDetail, { loader as recipeDetailLoader } from "./features/recepies/RecipeDetail";
 import RecipeAdd from "./features/recepies/RecipeAdd";
@@ -55,6 +55,7 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+        loader: userLoader,
       },
       // ******************** RECIPES ******************** //
       {
