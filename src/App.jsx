@@ -1,11 +1,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Homepage from "./ui/Homepage";
 import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";
-import Mushrooms, { loader as mushroomsLoader } from "./features/mushrooms/Mushrooms";
+import Mushrooms, {
+  loader as mushroomsLoader,
+} from "./features/mushrooms/Mushrooms";
 import User, { loader as userLoader } from "./features/user/User";
 import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
-import RecipeDetail, { loader as recipeDetailLoader } from "./features/recepies/RecipeDetail";
+import RecipeDetail, {
+  loader as recipeDetailLoader,
+} from "./features/recepies/RecipeDetail";
 import RecipeAdd from "./features/recepies/RecipeAdd";
 import AppLayout from "./ui/AppLayout";
 import LocationDetail, {
@@ -15,6 +18,10 @@ import CreateLocation, {
   action as createLocationAction,
 } from "./features/map/CreateLocation";
 import CreateComment from "./features/map/CreateComment";
+import EditLocation, {
+  loader as editLocationLoader,
+  action as editLocationAction,
+} from "./features/map/EditLocation";
 import MushroomForm from "./features/mushrooms/MushroomForm";
 
 const router = createBrowserRouter([
@@ -23,8 +30,9 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: "",
-        element: <Homepage />,
+        index: true, // This makes / (root) route to the Map page
+        element: <Map />,
+        loader: locationsLoader,
       },
       // ******************** MAP ******************** //
       {
@@ -41,6 +49,13 @@ const router = createBrowserRouter([
         path: "/map/:id/createComment",
         element: <CreateComment />,
       },
+      {
+        path: "/map/:id/edit",
+        element: <EditLocation />,
+        loader: editLocationLoader,
+        action: editLocationAction,
+      },
+
       {
         path: "/map/createLocation",
         element: <CreateLocation />,
@@ -75,7 +90,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/recipes/add",
-        element: <RecipeAdd />,        
+        element: <RecipeAdd />,
       },
     ],
   },

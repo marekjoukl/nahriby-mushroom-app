@@ -12,7 +12,7 @@ export async function getLocations() {
 export async function createLocation(data) {
   const { error, data: insertedData } = await supabase
     .from("locations")
-    .insert([{ ...data }])
+    .insert([{ ...data, mushrooms: data.mushrooms }])
     .select();
 
   if (error) {
@@ -34,4 +34,15 @@ export async function getLocation(id) {
     return null; // Return null if there's an error
   }
   return data; // Return the location data
+}
+
+export async function updateLocation(id, data) {
+  const { error } = await supabase.from("locations").update(data).eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+// Delete a location
+export async function deleteLocation(id) {
+  const { error } = await supabase.from("locations").delete().eq("id", id);
+  if (error) throw new Error(error.message);
 }

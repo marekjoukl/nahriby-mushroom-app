@@ -13,7 +13,7 @@ function Map() {
     navigate("/map/createLocation");
   }
   return (
-    <div>
+    <div className="pb-16">
       {locations.map((location) => (
         <LocationPin location={location} key={location.id} />
       ))}
