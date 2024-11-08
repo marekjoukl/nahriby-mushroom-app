@@ -8,7 +8,7 @@ function CreateLocation() {
   const [mushrooms, setMushrooms] = useState([]);
   const [locationData, setLocationData] = useState({
     stars: 0,
-    author: 42,
+    author: "45c4b990-4a01-46aa-87a5-f73e243c338c",
     mushrooms: [],
   });
 
@@ -52,6 +52,14 @@ function CreateLocation() {
       ...locationData,
       mushrooms: selectedOptions,
     });
+  };
+  const toggleMushroomSelection = (mushroomId) => {
+    setLocationData((prevData) => ({
+      ...prevData,
+      mushrooms: prevData.mushrooms.includes(mushroomId)
+        ? prevData.mushrooms.filter((id) => id !== mushroomId)
+        : [...prevData.mushrooms, mushroomId],
+    }));
   };
 
   return (
@@ -133,19 +141,22 @@ function CreateLocation() {
         <label className="mb-2 block text-sm font-medium text-gray-700">
           Select Mushrooms
         </label>
-        <select
-          name="mushrooms"
-          multiple
-          value={locationData.mushrooms}
-          onChange={handleMushroomChange}
-          className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
-        >
+        <div className="flex flex-wrap gap-2">
           {mushrooms.map((mushroom) => (
-            <option key={mushroom.id} value={mushroom.id}>
+            <button
+              key={mushroom.id}
+              type="button"
+              onClick={() => toggleMushroomSelection(mushroom.id)}
+              className={`rounded-full border px-4 py-2 ${
+                locationData.mushrooms.includes(mushroom.id)
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
               {mushroom.name}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
       <input
@@ -168,6 +179,7 @@ function CreateLocation() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+  console.log(data);
   try {
     const newLocation = await createLocation(data);
 

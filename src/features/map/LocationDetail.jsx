@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faStar, faCar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/apiUsers";
+import { getMushrooms } from "../../api/apiMushrooms";
 
 function LocationDetail() {
   const { location } = useLoaderData();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
+  const [mushrooms, setMushrooms] = useState([]);
 
   function handleEditLocation() {
     navigate(`/map/${location.id}/edit`);
@@ -24,6 +26,14 @@ function LocationDetail() {
     }
     fetchUser();
   }, [location.author]);
+
+  useEffect(() => {
+    async function fetchMushrooms() {
+      const mushrooms = await getMushrooms();
+      setMushrooms(mushrooms);
+    }
+    fetchMushrooms();
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg-primary pb-16 text-white">
@@ -39,19 +49,22 @@ function LocationDetail() {
       ></div>
 
       <div className="border-b border-gray-500 p-4">
-        <div
-          className="mb-2 flex items-center"
-          style={{ backgroundImage: `url(${user.image_url})` }}
-        ></div>
-        <div>
-          <p className="font-semibold">{user.name}</p>
-          <p className="text-sm text-gray-300">
-            {new Date(location.created_at).toLocaleDateString("en-GB")}{" "}
-            {new Date(location.created_at).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
+        <div className="flex gap-2 pb-2">
+          <img
+            src={user.image_url}
+            alt={`${user.name}'s profile`}
+            className="h-10 w-10 rounded-full object-cover"
+          />
+          <div>
+            <p className="font-semibold">{user.name}</p>
+            <p className="text-sm text-gray-300">
+              {new Date(location.created_at).toLocaleDateString("en-GB")}{" "}
+              {new Date(location.created_at).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+          </div>
         </div>
         <h1 className="mb-2 text-2xl font-bold">{location.name}</h1>
       </div>
@@ -81,7 +94,14 @@ function LocationDetail() {
         <p className="text-sm text-gray-400">
           Mushrooms in this location:{" "}
           <span className="text-green-400">
-            Bay Bolete, Blusher, Common Puffball
+            {location.mushrooms.length > 0
+              ? mushrooms
+                  .filter((mushroom) =>
+                    location.mushrooms.includes(mushroom.id),
+                  )
+                  .map((mushroom) => mushroom.name)
+                  .join(", ")
+              : "No mushrooms selected"}
           </span>
         </p>
       </div>
@@ -93,10 +113,10 @@ function LocationDetail() {
       </div>
 
       <div className="border-b border-gray-500 p-4">
-        <div className="mb-2 rounded-lg bg-gray-800 p-4">
+        <div className="mb-2 rounded-lg bg-bg-secondary p-4">
           <div className="mb-2 flex items-center">
             <img
-              src="path/to/comment-user-avatar.jpg" // Replace with dynamic avatar if available
+              src="path/to/comment-user-avatar.jpg"
               alt="Commenter Avatar"
               className="mr-2 h-8 w-8 rounded-full"
             />
