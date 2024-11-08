@@ -41,3 +41,18 @@ export async function getMushroom(id) {
     }
     return data; // Return the mushroom data
 }
+
+// Function to update a mushroom by ID
+export async function updateMushroom(id, data) {
+    const { error, data: updatedData } = await supabase
+        .from("mushrooms")
+        .update(data)
+        .eq("id", id)
+        .select();
+
+    if (error) {
+        console.error("Error updating mushroom:", error);
+        throw new Error(error.message);
+    }
+    return updatedData;
+}

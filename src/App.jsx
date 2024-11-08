@@ -15,6 +15,7 @@ import CreateLocation, {
   action as createLocationAction,
 } from "./features/map/CreateLocation";
 import CreateComment from "./features/map/CreateComment";
+import MushroomForm from "./features/mushrooms/MushroomForm";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
         path: "/mushrooms",
         element: <Mushrooms />,
         loader: mushroomsLoader,
+      },
+      {
+        path: "/mushrooms/mushroomForm",
+        element: <MushroomForm />,
       },
       // ******************** USER ******************** //
       {
