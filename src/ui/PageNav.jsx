@@ -35,7 +35,7 @@ function PageNav() {
             <span>
               <IoBookOutline />
             </span>
-            <span>Read</span>
+            <span>Recipes</span>
           </NavLink>
         </li>
         <li>
@@ -50,7 +50,7 @@ function PageNav() {
             <span>
               <TbMushroom />
             </span>
-            <span>Browse</span>
+            <span>Atlas</span>
           </NavLink>
         </li>
         <li>
