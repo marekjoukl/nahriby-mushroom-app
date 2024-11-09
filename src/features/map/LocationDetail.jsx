@@ -38,7 +38,7 @@ function LocationDetail() {
   return (
     <div className="min-h-screen bg-bg-primary pb-16 text-white">
       <div className="fixed left-0 top-0 z-10 flex w-full items-center justify-between p-4">
-        <BackButton iconType="x" />
+        <BackButton iconType="x" navigateTo="/map" />
         <FontAwesomeIcon icon={faBookmark} />
       </div>
       <div

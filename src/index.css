@@ -1,3 +1,63 @@
+@import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Popup Content Styling */
+.custom-popup .leaflet-popup-content-wrapper {
+  background-color: #f3f3f3; /* Light gray background */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  padding: 8px; /* Padding inside popup */
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: #f3f3f3; /* Match the popup pointer color to the content */
+}
+
+.custom-popup .leaflet-popup-content {
+  font-size: 14px;
+  color: #333; /* Font color */
+  margin: 0;
+}
+
+/* Author Image Styling */
+.custom-popup img {
+  border-radius: 50%; /* Make the image circular */
+  width: 32px; /* Image size */
+  height: 32px;
+}
+
+/* Stars Styling */
+.custom-popup .text-yellow-500 {
+  font-size: 16px;
+}
+
+/* View Details Link */
+.custom-popup p {
+  font-size: 14px;
+  color: #4a90e2;
+  font-weight: bold;
+  text-align: right;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.custom-popup p:hover {
+  color: #357ab7;
+}

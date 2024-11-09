@@ -5,9 +5,7 @@ import Mushrooms, {
   loader as mushroomsLoader,
 } from "./features/mushrooms/Mushrooms";
 
-import User, { 
-  loader as userLoader 
-} from "./features/user/User";
+import User, { loader as userLoader } from "./features/user/User";
 import UserEdit, {
   loader as editUserLoader,
   action as editUserAction,

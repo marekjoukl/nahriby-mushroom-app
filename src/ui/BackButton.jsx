@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-function BackButton({ iconType }) {
+function BackButton({ iconType, navigateTo }) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(navigateTo);
   };
 
   // Determine the icon based on the prop

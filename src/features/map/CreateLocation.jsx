@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useSearchParams } from "react-router-dom";
 import { createLocation } from "../../api/apiMap";
 import BackButton from "../../ui/BackButton";
 import { getMushrooms } from "../../api/apiMushrooms";
 
 function CreateLocation() {
   const [mushrooms, setMushrooms] = useState([]);
+  const [searchParams] = useSearchParams();
+  const lat = searchParams.get("lat") || "";
+  const lng = searchParams.get("lng") || "";
   const [locationData, setLocationData] = useState({
     stars: 0,
     author: "45c4b990-4a01-46aa-87a5-f73e243c338c",
     mushrooms: [],
+    lat: lat,
+    lng: lng,
   });
 
   useEffect(() => {
@@ -43,16 +48,6 @@ function CreateLocation() {
     ));
   };
 
-  const handleMushroomChange = (e) => {
-    e.preventDefault();
-    const selectedOptions = Array.from(e.target.selectedOptions).map(
-      (option) => option.value,
-    );
-    setLocationData({
-      ...locationData,
-      mushrooms: selectedOptions,
-    });
-  };
   const toggleMushroomSelection = (mushroomId) => {
     setLocationData((prevData) => ({
       ...prevData,
@@ -65,7 +60,7 @@ function CreateLocation() {
   return (
     <Form
       method="POST"
-      className="mx-auto mb-16 max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg"
+      className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 pb-16 shadow-lg"
     >
       <BackButton iconType="x" />
       <h2 className="text-center text-xl font-semibold">
@@ -97,6 +92,7 @@ function CreateLocation() {
         <input
           type="text"
           name="lat"
+          defaultValue={locationData.lat}
           className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
           required
         />
@@ -107,6 +103,7 @@ function CreateLocation() {
           Longitude
         </label>
         <input
+          defaultValue={locationData.lng}
           type="text"
           name="lng"
           className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
