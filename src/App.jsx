@@ -32,6 +32,7 @@ import EditLocation, {
 } from "./features/map/EditLocation";
 
 import MushroomForm from "./features/mushrooms/MushroomForm";
+import { UserProvider } from "./contexts/UserContext";
 
 const router = createBrowserRouter([
   {
@@ -112,7 +113,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
+  );
 }
 
 export default App;

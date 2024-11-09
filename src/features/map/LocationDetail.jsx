@@ -7,6 +7,8 @@ import { faBookmark, faStar, faCar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/apiUsers";
 import { getMushrooms } from "../../api/apiMushrooms";
+import Bookmark from "../../ui/Bookmark";
+import { useUserId } from "../../contexts/UserContext";
 
 function LocationDetail() {
   const { location } = useLoaderData();
@@ -37,9 +39,13 @@ function LocationDetail() {
 
   return (
     <div className="min-h-screen bg-bg-primary pb-16 text-white">
-      <div className="fixed left-0 top-0 z-10 flex w-full items-center justify-between p-4">
+      <div className="fixed left-0 top-3 z-10 flex w-full items-center justify-between p-4">
         <BackButton iconType="x" navigateTo="/map" />
-        <FontAwesomeIcon icon={faBookmark} />
+        <Bookmark
+          userId={useUserId()}
+          itemId={location.id}
+          type="saved_locations"
+        />
       </div>
       <div
         className="h-60 bg-black bg-cover"
@@ -83,7 +89,15 @@ function LocationDetail() {
             {location.lat},
             <br /> {location.lng}
           </p>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
+          <div
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-200"
+            onClick={() => {
+              const lat = location.lat; // Replace with actual latitude
+              const lng = location.lng; // Replace with actual longitude
+              const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+              window.open(googleMapsUrl, "_blank");
+            }}
+          >
             <FontAwesomeIcon icon={faCar} style={{ color: "#63E6BE" }} />
           </div>
         </div>
