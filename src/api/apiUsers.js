@@ -14,11 +14,11 @@ export async function getUsers() {
 }
 
 // Function to get a single user by ID
-export async function getUser(id) {
+export async function getUser(userId) {
     const { data, error } = await supabase
         .from("users")
         .select("*")
-        .eq("id", id)
+        .eq("id", userId)
         .single();
 
     if (error) {
@@ -28,75 +28,71 @@ export async function getUser(id) {
     return data;
 }
 
-
-/*export async function updateUserName(id, newName) {
-    const { error } = await supabase
-        .from("users")
-        .update({ name: newName})
-        .eq("id", id);
-
+// Function to get all locations created by a user
+export async function getUserLocations(userId) {
+    const { data, error } = await supabase
+      .from('locations')
+      .select('id, image_url')
+      .eq('author', userId);
+  
     if (error) {
-        console.error("Error updating user name: ", error);
-        throw new Error(error.message)
+      console.error("Error fetching user locations: ", error);
+      throw error;
     }
+  
+    return data;
 }
 
-export async function updateUserEmail(id, newEmail) {
-    const { error } = await supabase
-        .from("users")
-        .update({ email: newEmail})
-        .eq("id", id);
-
+// Function to get all mushrooms created by a user
+export async function getUserMushrooms(userId) {
+    const { data, error } = await supabase
+      .from('mushrooms')
+      .select('id, image_url')
+      .eq('author', userId);
+  
     if (error) {
-        console.error("Error updating user email: ", error);
-        throw new Error(error.message)
+      console.error("Error fetching user mushrooms: ", error);
+      throw error;
     }
+  
+    return data;
 }
 
-export async function updateUserBirthDate(id, newDate) {
-    const { error } = await supabase
-        .from("users")
-        .update({ birth_date: newDate})
-        .eq("id", id);
-
+// Function to get all recipes created by a user
+export async function getUserRecipes(userId) {
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('id, image_url')
+      .eq('author', userId);
+  
     if (error) {
-        console.error("Error updating user birth date: ", error);
-        throw new Error(error.message)
+      console.error("Error fetching user recipes: ", error);
+      throw error;
     }
+  
+    return data;
 }
 
-export async function updateUserName(id, newCountry) {
+// Function for updating a user
+export async function updateUser(id, data) {
     const { error } = await supabase
         .from("users")
-        .update({ country: newCountry})
+        .update(data)
         .eq("id", id);
 
     if (error) {
-        console.error("Error updating user country: ", error);
-        throw new Error(error.message)
+        throw new Error(error.message);
     }
 }
-
-export async function updateUserPassword(id, newPassword) {
+  
+// Function for deleting a user
+export async function deleteUser(id) {
     const { error } = await supabase
         .from("users")
-        .update({ password: newPassword})
+        .delete()
         .eq("id", id);
 
     if (error) {
-        console.error("Error updating user password: ", error);
-        throw new Error(error.message)
+        throw new Error(error.message);
     }
 }
-
-export async function updateUserImage(id, newImage) {
-    const { error } = await supabase
-        .from("users")
-        .update({ image_url: newImage})
-        .eq("id", id);
-
-    if (error) {
-        console.error("Error updating user image: ", error);
-        throw new Error(error.message)
-    }
-}*/

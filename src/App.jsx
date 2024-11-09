@@ -4,13 +4,23 @@ import Map, { loader as locationsLoader } from "./features/map/Map";
 import Mushrooms, {
   loader as mushroomsLoader,
 } from "./features/mushrooms/Mushrooms";
-import User, { loader as userLoader } from "./features/user/User";
+
+import User, { 
+  loader as userLoader 
+} from "./features/user/User";
+import UserEdit, {
+  loader as editUserLoader,
+  action as editUserAction,
+} from "./features/user/UserEdit";
+
 import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
 import RecipeDetail, {
   loader as recipeDetailLoader,
 } from "./features/recepies/RecipeDetail";
 import RecipeAdd from "./features/recepies/RecipeAdd";
+
 import AppLayout from "./ui/AppLayout";
+
 import LocationDetail, {
   loader as locationDetailLoader,
 } from "./features/map/LocationDetail";
@@ -22,6 +32,7 @@ import EditLocation, {
   loader as editLocationLoader,
   action as editLocationAction,
 } from "./features/map/EditLocation";
+
 import MushroomForm from "./features/mushrooms/MushroomForm";
 
 const router = createBrowserRouter([
@@ -76,6 +87,12 @@ const router = createBrowserRouter([
         path: "/user",
         element: <User />,
         loader: userLoader,
+      },
+      {
+        path: "/user/:id/edit",
+        element: <UserEdit />,
+        loader: editUserLoader,
+        action: editUserAction,
       },
       // ******************** RECIPES ******************** //
       {
