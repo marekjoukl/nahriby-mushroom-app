@@ -25,7 +25,9 @@ import LocationDetail, {
 import CreateLocation, {
   action as createLocationAction,
 } from "./features/map/CreateLocation";
-import CreateComment from "./features/map/CreateComment";
+import CreateComment, {
+  action as createCommentAction,
+} from "./features/map/CreateComment";
 import EditLocation, {
   loader as editLocationLoader,
   action as editLocationAction,
@@ -58,6 +60,7 @@ const router = createBrowserRouter([
       {
         path: "/map/:id/createComment",
         element: <CreateComment />,
+        action: createCommentAction,
       },
       {
         path: "/map/:id/edit",

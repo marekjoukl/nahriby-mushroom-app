@@ -3,7 +3,7 @@ import { Form, redirect, useSearchParams } from "react-router-dom";
 import { createLocation } from "../../api/apiMap";
 import BackButton from "../../ui/BackButton";
 import { getMushrooms } from "../../api/apiMushrooms";
-import Button from "../../ui/Button";
+import { useUserId } from "../../contexts/UserContext";
 
 function CreateLocation() {
   const [mushrooms, setMushrooms] = useState([]);
@@ -12,7 +12,6 @@ function CreateLocation() {
   const lng = searchParams.get("lng") || "";
   const [locationData, setLocationData] = useState({
     stars: 0,
-    author: "45c4b990-4a01-46aa-87a5-f73e243c338c",
     mushrooms: [],
     lat: lat,
     lng: lng,
@@ -62,7 +61,7 @@ function CreateLocation() {
   return (
     <Form
       method="POST"
-      className="mx-auto max-w-md space-y-4 bg-bg-primary p-6 pb-16 pt-12 text-white shadow-lg"
+      className="mx-auto h-full max-w-md space-y-4 bg-bg-primary p-6 pb-16 pt-12 text-white shadow-lg"
     >
       <BackButton iconType="x" navigateTo="/map" />
       <h2 className="text-center text-xl font-semibold text-white">
@@ -148,7 +147,7 @@ function CreateLocation() {
         name="mushrooms"
         value={JSON.stringify(locationData.mushrooms)}
       />
-      <input type="hidden" name="author" value={locationData.author} />
+      <input type="hidden" name="author" value={useUserId()} />
 
       <div className="flex justify-center">
         <button
