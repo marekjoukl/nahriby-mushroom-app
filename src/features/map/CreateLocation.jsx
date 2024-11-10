@@ -61,7 +61,7 @@ function CreateLocation() {
   return (
     <Form
       method="POST"
-      className="mx-auto h-full max-w-md space-y-4 bg-bg-primary p-6 pb-16 pt-12 text-white shadow-lg"
+      className="mx-auto min-h-screen space-y-4 bg-bg-primary p-6 pb-[5rem] pt-12 text-white shadow-lg"
     >
       <BackButton iconType="x" navigateTo="/map" />
       <h2 className="text-center text-xl font-semibold text-white">

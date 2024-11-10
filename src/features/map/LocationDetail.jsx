@@ -75,7 +75,7 @@ function LocationDetail() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-primary pb-16 text-white">
+    <div className="min-h-screen bg-bg-primary pb-[5rem] text-white">
       <div className="fixed left-0 top-3 z-10 flex w-full items-center justify-between p-4">
         <BackButton iconType="x" navigateTo="/map" />
         <Bookmark
