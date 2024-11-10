@@ -32,7 +32,7 @@ function MushroomForm() {
             method="POST"
             className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg"
         >
-            <BackButton iconType="arrow" />
+            <BackButton iconType="arrow" navigateTo={-1}/>
             <h2 className="text-center text-xl font-semibold">
                 {mushroom.id ? "Edit Mushroom" : "Add a New Mushroom"}
             </h2>
