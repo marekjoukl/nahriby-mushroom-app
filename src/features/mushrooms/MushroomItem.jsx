@@ -1,10 +1,10 @@
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function MushroomItem({ mushroom }) {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleEdit = () => {
-        //navigate(`/mushrooms/mushroomForm/:${mushroom.id}`);
+        navigate(`/mushrooms/mushroomForm/${mushroom.id}`);
     };
 
     return (

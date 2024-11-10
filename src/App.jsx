@@ -33,7 +33,10 @@ import EditLocation, {
   action as editLocationAction,
 } from "./features/map/EditLocation";
 
-import MushroomForm from "./features/mushrooms/MushroomForm";
+import MushroomForm, { 
+  loader as mushroomsFormLoader,
+  action as mushroomsFormAction, 
+} from "./features/mushrooms/MushroomForm";
 import { UserProvider } from "./contexts/UserContext";
 
 const router = createBrowserRouter([
@@ -83,6 +86,14 @@ const router = createBrowserRouter([
       {
         path: "/mushrooms/mushroomForm",
         element: <MushroomForm />,
+        loader: mushroomsFormLoader,
+        action: mushroomsFormAction,
+      },
+      {
+        path: "/mushrooms/mushroomForm/:id",
+        element: <MushroomForm />,
+        loader: mushroomsFormLoader,
+        action: mushroomsFormAction,
       },
       // ******************** USER ******************** //
       {
