@@ -56,3 +56,16 @@ export async function updateMushroom(id, data) {
     }
     return updatedData;
 }
+
+// Function to delete a mushroom by ID
+export async function deleteMushroom(id) {
+    const { error } = await supabase
+        .from("mushrooms")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        console.error("Error deleting mushroom:", error);
+        throw new Error(error.message);
+    }
+}
