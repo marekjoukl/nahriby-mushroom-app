@@ -3,8 +3,11 @@ import { MdMap } from "react-icons/md";
 import { IoBookOutline } from "react-icons/io5";
 import { TbMushroom } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
+import { useUserId } from "../contexts/UserContext";
 
 function PageNav() {
+  const userId = useUserId(); // Get the user ID from the context
+
   return (
     <nav className="fixed bottom-0 left-0 h-16 w-full bg-bg-secondary p-2 text-white">
       <ul className="flex justify-around py-2">
@@ -55,7 +58,7 @@ function PageNav() {
         </li>
         <li>
           <NavLink
-            to="/user"
+            to={`/user/${userId}`} // Dynamic user ID in the URL
             className={({ isActive }) =>
               isActive
                 ? "flex flex-col items-center text-navbar-active"

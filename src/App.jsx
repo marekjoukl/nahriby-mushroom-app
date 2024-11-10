@@ -5,11 +5,20 @@ import Mushrooms, {
   loader as mushroomsLoader,
 } from "./features/mushrooms/Mushrooms";
 
-import User, { loader as userLoader } from "./features/user/User";
+// ******************** USER ******************** //
+import User, { 
+  loader as userLoader 
+} from "./features/user/User";
 import UserEdit, {
   loader as editUserLoader,
   action as editUserAction,
 } from "./features/user/UserEdit";
+import UserSaved, {
+  loader as savedUserLoader,
+} from "./features/user/UserSaved";
+import UserSavedCategory, {
+  loader as savedCategoryUserLoader,
+} from "./features/user/UserSavedCategory";
 
 import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
 import RecipeDetail, {
@@ -86,7 +95,7 @@ const router = createBrowserRouter([
       },
       // ******************** USER ******************** //
       {
-        path: "/user",
+        path: "/user/:id",
         element: <User />,
         loader: userLoader,
       },
@@ -95,6 +104,16 @@ const router = createBrowserRouter([
         element: <UserEdit />,
         loader: editUserLoader,
         action: editUserAction,
+      },
+      {
+        path: "/user/:id/saved",
+        element: <UserSaved />,
+        loader: savedUserLoader,
+      },
+      {
+        path: "/user/:id/saved/:category",
+        element: <UserSavedCategory />,
+        loader: savedCategoryUserLoader,
       },
       // ******************** RECIPES ******************** //
       {

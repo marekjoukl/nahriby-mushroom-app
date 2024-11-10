@@ -96,3 +96,153 @@ export async function deleteUser(id) {
         throw new Error(error.message);
     }
 }
+
+// Fetch saved mushrooms for a user by user ID
+export async function getUserSavedMushrooms(userId) {
+    try {
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('saved_mushrooms')
+        .eq('id', userId)
+        .single();
+  
+      if (userError) {
+        throw new Error(`Error fetching user: ${userError.message}`);
+      }
+  
+      const { saved_mushrooms } = user;
+  
+      const { data: mushrooms, error: mushroomError } = await supabase
+        .from('mushrooms')
+        .select('*')
+        .in('id', saved_mushrooms || []); // Handle empty arrays gracefully
+  
+      if (mushroomError) {
+        throw new Error(`Error fetching mushrooms: ${mushroomError.message}`);
+      }
+  
+      return mushrooms;
+    } catch (error) {
+      console.error('Error fetching saved mushrooms:', error);
+      return { error: error.message };
+    }
+}
+  
+// Fetch saved recipes for a user by user ID
+export async function getUserSavedRecipes(userId) {
+    try {
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('saved_recipes')
+        .eq('id', userId)
+        .single();
+  
+      if (userError) {
+        throw new Error(`Error fetching user: ${userError.message}`);
+      }
+  
+      const { saved_recipes } = user;
+  
+      const { data: recipes, error: recipeError } = await supabase
+        .from('recipes')
+        .select('*')
+        .in('id', saved_recipes || []);
+  
+      if (recipeError) {
+        throw new Error(`Error fetching recipes: ${recipeError.message}`);
+      }
+  
+      return recipes;
+    } catch (error) {
+      console.error('Error fetching saved recipes:', error);
+      return { error: error.message };
+    }
+}
+  
+// Fetch saved locations for a user by user ID
+export async function getUserSavedLocations(userId) {
+    try {
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('saved_locations')
+        .eq('id', userId)
+        .single();
+  
+      if (userError) {
+        throw new Error(`Error fetching user: ${userError.message}`);
+      }
+  
+      const { saved_locations } = user;
+  
+      const { data: locations, error: locationError } = await supabase
+        .from('locations')
+        .select('*')
+        .in('id', saved_locations || []);
+  
+      if (locationError) {
+        throw new Error(`Error fetching locations: ${locationError.message}`);
+      }
+  
+      return locations;
+    } catch (error) {
+      console.error('Error fetching saved locations:', error);
+      return { error: error.message };
+    }
+}
+
+// Fetch 2 saved mushrooms, recipes, and locations for a user by user ID
+export async function getTwoUserSavedItems(userId) {
+    try {
+      // Fetch the user's saved items arrays
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('saved_mushrooms, saved_recipes, saved_locations')
+        .eq('id', userId)
+        .single();
+  
+      if (userError) {
+        throw new Error(`Error fetching user: ${userError.message}`);
+      }
+  
+      const { saved_mushrooms, saved_recipes, saved_locations } = user;
+  
+      // Fetch the mushrooms that match the user's saved mushroom IDs
+      const { data: mushrooms, error: mushroomError } = await supabase
+        .from('mushrooms')
+        .select('*')
+        .in('id', saved_mushrooms || []) // Handle empty arrays gracefully
+        .limit(2);
+  
+      if (mushroomError) {
+        throw new Error(`Error fetching mushrooms: ${mushroomError.message}`);
+      }
+  
+      // Fetch the recipes that match the user's saved recipe IDs
+      const { data: recipes, error: recipeError } = await supabase
+        .from('recipes')
+        .select('*')
+        .in('id', saved_recipes || [])
+        .limit(2);
+  
+      if (recipeError) {
+        throw new Error(`Error fetching recipes: ${recipeError.message}`);
+      }
+  
+      // Fetch the locations that match the user's saved location IDs
+      const { data: locations, error: locationError } = await supabase
+        .from('locations')
+        .select('*')
+        .in('id', saved_locations || [])
+        .limit(2);
+  
+      if (locationError) {
+        throw new Error(`Error fetching locations: ${locationError.message}`);
+      }
+  
+      // Return an object with the saved items
+      return { mushrooms, recipes, locations };
+    } catch (error) {
+      console.error('Error fetching saved items:', error);
+      return { error: error.message };
+    }
+}

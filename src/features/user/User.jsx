@@ -28,24 +28,40 @@ function User() {
     navigate(`/user/${user.id}/edit`);
   };
 
+  const handleBookmarkClick = () => {
+    navigate(`/user/${user.id}/saved`);
+  };
+
   const renderContent = () => {
     if (activeTab === "Recipes") {
       return recipes.map((recipe) => (
-        <div key={recipe.uuid} className="w-24 h-32 rounded-md overflow-hidden border border-white">
+        <div 
+          key={recipe.id} 
+          className="w-24 h-32 rounded-md overflow-hidden border-2 border-white cursor-pointer"
+          onClick={() => navigate(`/recipes`)}
+        >
           <img src={recipe.image_url} alt="Recipe" className="object-cover w-full h-full" />
         </div>
       ));
     }
     if (activeTab === "Mushrooms") {
       return mushrooms.map((mushroom) => (
-        <div key={mushroom.uuid} className="w-24 h-32 rounded-md overflow-hidden border border-white">
+        <div 
+          key={mushroom.id} 
+          className="w-24 h-32 rounded-md overflow-hidden border-2 border-white cursor-pointer"
+          onClick={() => navigate(`/mushrooms`)}
+        >
           <img src={mushroom.image_url} alt="Mushroom" className="object-cover w-full h-full" />
         </div>
       ));
     }
     if (activeTab === "Locations") {
       return locations.map((location) => (
-        <div key={location.uuid} className="w-24 h-32 rounded-md overflow-hidden border border-white">
+        <div 
+          key={location.id} 
+          className="w-24 h-32 rounded-md overflow-hidden border-2 border-white cursor-pointer"
+          onClick={() => navigate(`/map/${location.id}/edit`)}
+        >
           <img src={location.image_url} alt="Location" className="object-cover w-full h-full" />
         </div>
       ));
@@ -76,11 +92,14 @@ function User() {
           </div>
         </div>
         
-        <FiBookmark className="text-2xl text-white mt-4 cursor-pointer" />
+        <FiBookmark 
+          className="text-2xl text-white mt-4 cursor-pointer" 
+          onClick={handleBookmarkClick} 
+        />
       </div>
       
       <div className="mt-4 text-green-500 text-lg font-bold">
-        {locations.length + mushrooms.length + recipes.length} Post {/* Replace with `{user.postsCount} Post` if `postsCount` is available */}
+        {locations.length + mushrooms.length + recipes.length} Post
       </div>
 
       <div className="flex justify-around mt-5 border-b border-green-500 pb-2">
@@ -119,11 +138,16 @@ function User() {
   );
 }
 
-export async function loader() {
-  const user = await getUser("45c4b990-4a01-46aa-87a5-f73e243c338c");
-  const locations = await getUserLocations(user.id);
-  const mushrooms = await getUserMushrooms(user.id);
-  const recipes = await getUserRecipes(user.id);
+// Loader function to load user data by ID
+export async function loader({ params }) {
+  const user = await getUser(params.id);
+  const locations = await getUserLocations(params.id);
+  const mushrooms = await getUserMushrooms(params.id);
+  const recipes = await getUserRecipes(params.id);
+
+  if (!user) {
+    throw new Response("User not found", { status: 404 });
+  }
 
   return { user, locations, mushrooms, recipes };
 }
