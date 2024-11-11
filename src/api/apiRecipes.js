@@ -47,3 +47,22 @@ export async function updateRecipeRating(id, newRating) {
         throw new Error(error.message)
     }
 }
+
+export async function updateRecipe(id, data) {
+    const { error } = await supabase
+        .from("recipes")
+        .update(data)
+        .eq("id", id);
+}
+
+export async function deleteRecipe(id) {
+    const { error } = await supabase
+        .from("recipes")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        console.error("Error deleting recipe: ", error);
+        throw new Error(error.message);
+    }
+}

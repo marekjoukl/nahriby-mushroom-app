@@ -1,40 +1,32 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createRecipes } from "../../api/apiRecipes";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Header from "../../ui/Header";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTrash } from "react-icons/fa";
+import { updateRecipe, deleteRecipe, getRecipe } from "../../api/apiRecipes";
 
 function RecipeAdd() {
     const navigate = useNavigate();
+    const recipe = useLoaderData();
+
     const [recipeData, setRecipeData] = useState({
-       name: "",
-       image_url: "",
-       rating: 0,
-       serves: "",
-       cooking_hours: "",
-       cooking_minutes: "",
-       ingredient_desc: "",
-       method_desc: "",
+       name: recipe.name || "",
+       image_url: recipe.image_url || "",
+       rating: recipe.rating || 0,
+       serves: recipe.serves || "",
+       cooking_hours: recipe.cooking_hours || "",
+       cooking_minutes: recipe.cooking_minutes || "",
+       ingredient_desc: recipe.ingredient_desc || "",
+       method_desc: recipe.method_desc || "",
     });
 
     const [successMessage, setSuccessMessage] = useState("");
 
     // Handling submiting new recipe
     const submitRecipe = async (e) => {
-        await createRecipes(recipeData);
+        await updateRecipe(recipe.id, recipeData);
 
-        setSuccessMessage("Recipe added successfully");
-        setRecipeData({
-            name: "",
-            image_url: "",
-            rating: 0,
-            serves: "",
-            cooking_hours: "",
-            cooking_minutes: "",
-            ingredient_desc: "",
-            method_desc: "",
-         });
-
+        navigate(-1);
+        setSuccessMessage("Recipe edited successfully");
         // Show message for 4 seconds
         setTimeout(() => setSuccessMessage(""), 4000);
     };
@@ -48,6 +40,12 @@ function RecipeAdd() {
         }));
     }
 
+    // Deleting recipe
+    const handleDelete = async () => {
+        await deleteRecipe(recipe.id);
+        navigate("/user/saved/recipes");
+    }
+
     return (
         <div className="pl-8 pr-8 pt-20 pb-20">
         <div className="bg-white shadow-md rounded-lg border border-gray-200 mt-5 pt-5 text-black flex justify-center w-full">
@@ -57,6 +55,8 @@ function RecipeAdd() {
                 backButtonFlag={true}
                 RightIcon1={FaCheckCircle}
                 onRightIcon1Click={submitRecipe}
+                RightIcon2={FaTrash}
+                onRightIcon2Click={handleDelete}
                 >
             </Header>       
 
@@ -120,6 +120,12 @@ function RecipeAdd() {
         </div>
         
     );
+}
+
+export async function loader({ params }) {
+    const recipe = await getRecipe(params.id);
+    if (!recipe) throw new Error("Recipe not found");
+    return recipe;
 }
 
 export default RecipeAdd;

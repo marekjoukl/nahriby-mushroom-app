@@ -4,8 +4,10 @@ import PageNav from "./PageNav";
 function AppLayout() {
   return (
     <>
-      <Outlet />
-      <PageNav />
+      <div className="bg-green-950 min-h-screen text-white">
+        <Outlet />
+        <PageNav />
+      </div>
     </>
   );
 }
