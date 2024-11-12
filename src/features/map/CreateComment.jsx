@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useLocation } from "react-router-dom";
 import { useUserId } from "../../contexts/UserContext"; // Assuming this hook returns the current user ID
 import BackButton from "../../ui/BackButton";
 import { getLocation, updateLocation } from "../../api/apiMap";
@@ -8,6 +8,8 @@ import { createComment } from "../../api/apiComments";
 function CreateComment() {
   const userId = useUserId();
   const [stars, setStars] = useState(0);
+  const location = useLocation();
+  const location_id = location.pathname.split("/")[2];
 
   const handleStarClick = (rating) => {
     setStars(rating);
@@ -57,6 +59,7 @@ function CreateComment() {
       </div>
 
       <input type="hidden" name="author" value={userId} />
+      <input type="hidden" name="location_id" value={location_id} />
 
       <div className="flex justify-center">
         <button
@@ -80,7 +83,6 @@ export async function action({ request, params }) {
 
     // Fetch the location data and ensure comments is an array
     const location = await getLocation(params.id);
-    console.log("Location:", location);
     const existingComments = location.comments ?? []; // Use an empty array if comments is null
     const updatedComments = [...existingComments, commentId];
 
