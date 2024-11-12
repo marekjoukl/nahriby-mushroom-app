@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
 import { FaCheckCircle } from "react-icons/fa";
+import { useUserId } from "../../contexts/UserContext";
 
 function RecipeAdd() {
     const navigate = useNavigate();
+    const userId = useUserId();
     const [recipeData, setRecipeData] = useState({
        name: "",
        image_url: "",
@@ -15,6 +17,7 @@ function RecipeAdd() {
        cooking_minutes: "",
        ingredient_desc: "",
        method_desc: "",
+       author: userId,
     });
 
     const [successMessage, setSuccessMessage] = useState("");
@@ -23,7 +26,7 @@ function RecipeAdd() {
     const submitRecipe = async (e) => {
         await createRecipes(recipeData);
 
-        setSuccessMessage("Recipe added successfully");
+        setSuccessMessage("Recipe added successfully", useUserId);
         setRecipeData({
             name: "",
             image_url: "",
@@ -33,10 +36,15 @@ function RecipeAdd() {
             cooking_minutes: "",
             ingredient_desc: "",
             method_desc: "",
-         });
+            author: userId,
+        });
 
+        navigate("/recipes");
         // Show message for 4 seconds
-        setTimeout(() => setSuccessMessage(""), 4000);
+        setTimeout(() => {
+            setSuccessMessage("")
+            navigate("/recipes");
+        }, 4000);
     };
 
     // Changes when typing given form inputs
@@ -86,7 +94,7 @@ function RecipeAdd() {
                 <div className="space-y-1">
                     <label className="block font-semibold">Number of serves<span className="text-red-600"> *</span></label>
                     <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                        type="number" name="serves" placeholder="Serves" value={recipeData.serves}>
+                        type="number" name="serves" placeholder="Serves" value={recipeData.serves} min="1">
                     </input>
                 </div>
                 {/* Cooking Time */}
@@ -101,6 +109,9 @@ function RecipeAdd() {
                         </input>
                     </div>
                 </div>
+
+                {/* <input type="hidden" name="author" value={useUserId()} /> */}
+
                 {/* Ingredients */}
                 <div className="space-y-1">
                     <label className="block font-semibold">Ingredients Description<span className="text-red-600"> *</span></label>
@@ -114,7 +125,7 @@ function RecipeAdd() {
                     <textarea className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500 min-h-32" onChange={onChange}
                             name="method_desc" placeholder="Describe Cooking Process ..." value={recipeData.method_desc}>                            
                     </textarea>
-                </div>
+                </div>                
             </form>
         </div>
         </div>

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import Bookmark from "./Bookmark";
 
-function Header({ title, backButtonFlag = true, 
+function Header({ title, backButtonFlag = true, RightIcon1 = null, onRightIcon1Click,
                   RightIcon2 = null, onRightIcon2Click,
                   userId, itemId, type }) {
     const navigate = useNavigate();
@@ -28,6 +28,7 @@ function Header({ title, backButtonFlag = true,
                 {userId && itemId && type && (
                     <Bookmark userId={userId} itemId={itemId} type={type} />
                 )}
+                {RightIcon1 && <RightIcon1 onClick={onRightIcon1Click} className="text-white text-xl cursor-pointer"></RightIcon1>}
                 {RightIcon2 && <RightIcon2 onClick={onRightIcon2Click} className="text-white text-xl cursor-pointer"></RightIcon2>}
             </div>
 

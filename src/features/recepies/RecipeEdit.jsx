@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import Header from "../../ui/Header";
 import { FaCheckCircle, FaTrash } from "react-icons/fa";
 import { updateRecipe, deleteRecipe, getRecipe } from "../../api/apiRecipes";
+import { useUserId } from "../../contexts/UserContext";
 
 function RecipeAdd() {
     const navigate = useNavigate();
@@ -43,7 +44,11 @@ function RecipeAdd() {
     // Deleting recipe
     const handleDelete = async () => {
         await deleteRecipe(recipe.id);
-        navigate("/user/saved/recipes");
+
+        navigate("/recipes");
+        setSuccessMessage("Recipe deleted successfully");
+        // Show message for 4 seconds
+        setTimeout(() => setSuccessMessage(""), 4000);
     }
 
     return (
