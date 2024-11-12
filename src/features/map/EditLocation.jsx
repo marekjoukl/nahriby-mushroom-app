@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation, updateLocation, deleteLocation } from "../../api/apiMap";
 import BackButton from "../../ui/BackButton";
+import Header from "../../ui/Header";
 
 function EditLocation() {
   const { location } = useLoaderData(); // Load initial data from loader
@@ -55,88 +56,89 @@ function EditLocation() {
   };
 
   return (
-    <Form
-      method="POST"
-      className="mx-auto min-h-screen space-y-4 bg-bg-primary p-6 pb-[5rem] pt-12 text-white shadow-lg"
-    >
-      <BackButton iconType="arrow" navigateTo="/map" />
-      <h2 className="text-center text-xl font-semibold text-white">
-        Edit Location
-      </h2>
+    <>
+      <Header
+        title="Edit Location"
+        type="saved_locations"
+        itemId={location.id}
+      />
+      <Form
+        method="POST"
+        className="mx-auto min-h-screen space-y-4 bg-bg-primary p-6 pb-[5rem] pt-[5rem] text-white shadow-lg"
+      >
+        <div>
+          <input
+            type="text"
+            name="name"
+            value={locationData.name}
+            onChange={handleChange}
+            placeholder="Name"
+            className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
+            required
+          />
+        </div>
+        <div>
+          <div className="flex justify-center">{renderStars()}</div>
+          <input type="hidden" name="stars" value={locationData.stars} />
+        </div>
 
-      <div>
-        <div className="flex justify-center">{renderStars()}</div>
-        <input type="hidden" name="stars" value={locationData.stars} />
-      </div>
+        <div className="flex items-center justify-center space-x-2 text-gray-300">
+          <label className="text-xs font-bold tracking-widest">LAT:</label>
+          <p className="text-xs font-light tracking-widest">
+            {Number(locationData.lat)?.toFixed(7)}
+          </p>
+          <span className="mx-1">,</span>{" "}
+          <label className="text-xs font-bold tracking-widest">LNG:</label>
+          <p className="text-xs font-light tracking-widest">
+            {Number(locationData.lng)?.toFixed(7)}
+          </p>
+        </div>
+        <input type="hidden" name="lat" value={locationData.lat} />
+        <input type="hidden" name="lng" value={locationData.lng} />
 
-      <div>
-        <input
-          type="text"
-          name="name"
-          value={locationData.name}
-          onChange={handleChange}
-          placeholder="Name"
-          className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
-          required
-        />
-      </div>
+        <div>
+          <textarea
+            name="description"
+            value={locationData.description}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-gray-300 p-4 text-black focus:ring focus:ring-green-200"
+            rows="3"
+            placeholder="Write something..."
+            required
+          />
+        </div>
 
-      <div className="flex items-center justify-center space-x-2 text-gray-300">
-        <label className="text-xs font-bold tracking-widest">LAT:</label>
-        <p className="text-xs font-light tracking-widest">
-          {Number(locationData.lat)?.toFixed(7)}
-        </p>
-        <span className="mx-1">,</span>{" "}
-        <label className="text-xs font-bold tracking-widest">LNG:</label>
-        <p className="text-xs font-light tracking-widest">
-          {Number(locationData.lng)?.toFixed(7)}
-        </p>
-      </div>
-      <input type="hidden" name="lat" value={locationData.lat} />
-      <input type="hidden" name="lng" value={locationData.lng} />
+        <div>
+          <input
+            type="text"
+            name="image_url"
+            value={locationData.image_url}
+            onChange={handleChange}
+            placeholder="Image URL"
+            className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
+          />
+        </div>
 
-      <div>
-        <textarea
-          name="description"
-          value={locationData.description}
-          onChange={handleChange}
-          className="w-full rounded-xl border border-gray-300 p-4 text-black focus:ring focus:ring-green-200"
-          rows="3"
-          placeholder="Write something..."
-          required
-        />
-      </div>
+        <input type="hidden" name="author" value={locationData.author} />
 
-      <div>
-        <input
-          type="text"
-          name="image_url"
-          value={locationData.image_url}
-          onChange={handleChange}
-          placeholder="Image URL"
-          className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
-        />
-      </div>
+        <div className="flex justify-between">
+          <button
+            type="submit"
+            className="rounded-full bg-navbar-active px-4 py-2 text-white hover:bg-[#0cd784] focus:outline-none focus:ring-2 focus:ring-[#0FE596] focus:ring-opacity-50"
+          >
+            Save Changes
+          </button>
 
-      <input type="hidden" name="author" value={locationData.author} />
-
-      <div className="flex justify-between">
-        <button
-          type="submit"
-          className="rounded-full bg-navbar-active px-4 py-2 text-white hover:bg-[#0cd784] focus:outline-none focus:ring-2 focus:ring-[#0FE596] focus:ring-opacity-50"
-        >
-          Save Changes
-        </button>
-
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-        >
-          Delete Location
-        </button>
-      </div>
-    </Form>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          >
+            Delete Location
+          </button>
+        </div>
+      </Form>
+    </>
   );
 }
 

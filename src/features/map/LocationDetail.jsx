@@ -1,17 +1,15 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation } from "../../api/apiMap";
-import BackButton from "../../ui/BackButton";
 import Button from "../../ui/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faCar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/apiUsers";
 import { getMushrooms } from "../../api/apiMushrooms";
-import Bookmark from "../../ui/Bookmark";
 import { useUserId } from "../../contexts/UserContext";
 import { getCommentsByLocation } from "../../api/apiComments";
 import Header from "../../ui/Header";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaHeart } from "react-icons/fa";
 
 function LocationDetail() {
   const { location } = useLoaderData();
@@ -83,6 +81,7 @@ function LocationDetail() {
         navigateTo="/map"
         type="saved_locations"
         itemId={location.id}
+        userId={location.author}
         RightIcon2={location.author === useUserId() ? FaEdit : null}
         onRightIcon2Click={handleEditLocation}
       />
