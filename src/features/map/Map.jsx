@@ -18,13 +18,14 @@ function ChangeCenter({ position }) {
   return null;
 }
 
-function DetectClick() {
+function DetectClick({ setPosition }) {
   const map = useMap();
   useMapEvents({
     click: (e) => {
       map.setView([e.latlng.lat, e.latlng.lng], map.getZoom(), {
         animate: true,
       });
+      setPosition([e.latlng.lat, e.latlng.lng]);
     },
   });
 }
@@ -103,7 +104,7 @@ function Map() {
             <LocationMarker location={location} key={location.id} />
           ))}
           <ChangeCenter position={position} />
-          <DetectClick />
+          <DetectClick setPosition={setPosition} />
         </MapContainer>
         <div className="fixed bottom-[5rem] left-1/2 z-[9999] -translate-x-1/2">
           <Button name="Find my position" onClick={handleFindMyPosition} />

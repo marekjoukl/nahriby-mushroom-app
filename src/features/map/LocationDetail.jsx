@@ -10,6 +10,8 @@ import { getMushrooms } from "../../api/apiMushrooms";
 import Bookmark from "../../ui/Bookmark";
 import { useUserId } from "../../contexts/UserContext";
 import { getCommentsByLocation } from "../../api/apiComments";
+import Header from "../../ui/Header";
+import { FaEdit } from "react-icons/fa";
 
 function LocationDetail() {
   const { location } = useLoaderData();
@@ -75,15 +77,15 @@ function LocationDetail() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-primary pb-[5rem] text-white">
-      <div className="fixed left-0 top-3 z-10 flex w-full items-center justify-between p-4">
-        <BackButton iconType="x" navigateTo="/map" />
-        <Bookmark
-          userId={useUserId()}
-          itemId={location.id}
-          type="saved_locations"
-        />
-      </div>
+    <div className="min-h-screen bg-bg-primary pb-[5rem] pt-16 text-white">
+      <Header
+        title="Location Detail"
+        navigateTo="/map"
+        type="saved_locations"
+        itemId={location.id}
+        RightIcon2={location.author === useUserId() ? FaEdit : null}
+        onRightIcon2Click={handleEditLocation}
+      />
       <div
         className="h-60 bg-black bg-cover"
         style={{

@@ -43,6 +43,12 @@ export async function updateLocation(id, data) {
 
 // Delete a location
 export async function deleteLocation(id) {
+  const { error: commentsError } = await supabase
+    .from("comments")
+    .delete()
+    .eq("location_id", id);
+  if (commentsError)
+    throw new Error(`Failed to delete comments: ${commentsError.message}`);
   const { error } = await supabase.from("locations").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
