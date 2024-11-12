@@ -43,7 +43,6 @@ function RecipeAdd() {
         // Show message for 4 seconds
         setTimeout(() => {
             setSuccessMessage("")
-            navigate("/recipes");
         }, 4000);
     };
 
