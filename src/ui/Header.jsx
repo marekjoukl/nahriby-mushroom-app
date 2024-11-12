@@ -5,7 +5,9 @@ import Bookmark from "./Bookmark";
 function Header({
   title,
   backButtonFlag = true,
+  RightIcon1 = null,
   RightIcon2 = null,
+  onRightIcon1Click,
   onRightIcon2Click,
   userId,
   itemId,
@@ -34,6 +36,12 @@ function Header({
       <div className="mr-8 flex items-center space-x-4">
         {userId && itemId && type && (
           <Bookmark userId={userId} itemId={itemId} type={type} />
+        )}
+        {RightIcon1 && (
+          <RightIcon1
+            onClick={onRightIcon1Click}
+            className="cursor-pointer text-xl text-white"
+          ></RightIcon1>
         )}
         {RightIcon2 && (
           <RightIcon2
