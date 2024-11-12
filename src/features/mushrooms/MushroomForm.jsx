@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { createMushroom, getMushroom, updateMushroom, deleteMushroom } from "../../api/apiMushrooms";
 import BackButton from "../../ui/BackButton";
+import { useUserId } from "../../contexts/UserContext";
 
 function MushroomForm() {
     const { mushroom } = useLoaderData(); // Load initial data from loader
@@ -93,6 +94,8 @@ function MushroomForm() {
                 />
             </div>
 
+            <input type="hidden" name="author" value={useUserId()} />
+            
             <button
                 type="submit"
                 className="w-full rounded bg-green-500 px-4 py-2 font-semibold text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"

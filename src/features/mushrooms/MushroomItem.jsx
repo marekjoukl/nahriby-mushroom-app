@@ -7,8 +7,15 @@ function MushroomItem({ mushroom }) {
         navigate(`/mushrooms/mushroomForm/${mushroom.id}`);
     };
 
+    const handleClick = () => {
+        navigate(`/mushrooms/mushroomDetail/${mushroom.id}`);
+    };
+
     return (
-        <div className="border border-green-700 p-4 m-4 rounded-lg text-center bg-green-50 flex flex-column bg-[#86EFAC]">
+        <div 
+            onClick={handleClick}
+            className="border border-green-700 p-4 m-4 rounded-lg text-center bg-green-50 flex flex-column bg-[#86EFAC]"
+        >
             <img src={mushroom.image_url} alt={mushroom.name} className="max-w-full h-auto rounded-lg mb-4" />
             <div className="flex-grow text-left p-4">
                 <h3 className="text-xl font-semibold mb-2 text-green-900">{mushroom.name}</h3>

@@ -11,7 +11,7 @@ function Mushrooms() {
     };
 
     return (
-        <div className="mushroom-list bg-[#1a2a1d] min-h-screen p-5">
+        <div className="mushroom-list pb-16 bg-[#1a2a1d] min-h-screen p-5">
             <button
                 onClick={handleAddMushroom}
                 className="bg-green-700 text-white p-2 rounded mb-4"

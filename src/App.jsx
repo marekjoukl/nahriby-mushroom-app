@@ -48,6 +48,9 @@ import MushroomForm, {
   action as mushroomsFormAction, 
 } from "./features/mushrooms/MushroomForm";
 import { UserProvider } from "./contexts/UserContext";
+import MushroomDetail, {
+  loader as mushroomDetailLoader,
+} from "./features/mushrooms/MushroomDetail";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +107,11 @@ const router = createBrowserRouter([
         element: <MushroomForm />,
         loader: mushroomsFormLoader,
         action: mushroomsFormAction,
+      },
+      {
+        path: "/mushrooms/mushroomDetail/:id",
+        element: <MushroomDetail />,
+        loader: mushroomDetailLoader,
       },
       // ******************** USER ******************** //
       {
