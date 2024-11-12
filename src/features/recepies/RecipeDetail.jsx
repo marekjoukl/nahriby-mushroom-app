@@ -30,9 +30,12 @@ function RecipeDetail() {
             <Header 
                 title="Recipes"
                 backButtonFlag={true}
-                RightIcon1={FaHeart}
+                // RightIcon1={FaHeart}
                 RightIcon2={recipe.author === userId ? FaEdit : null}
                 onRightIcon2Click={handleEditClick}
+                userId={userId}
+                itemId={recipe.id}
+                type="saved_recipes"
                 >
             </Header>            
 
