@@ -33,8 +33,8 @@ function MushroomForm() {
             method="POST"
             className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg"
         >
-            <BackButton iconType="arrow" navigateTo={-1}/>
-            <h2 className="text-center text-xl font-semibold">
+            <BackButton iconType="arrow" navigateTo={-1} />
+            <h2 className="text-center text-xl font-semibold text-gray-900">
                 {mushroom.id ? "Edit Mushroom" : "Add a New Mushroom"}
             </h2>
 
@@ -47,7 +47,7 @@ function MushroomForm() {
                     name="name"
                     value={mushroomData.name}
                     onChange={handleChange}
-                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
+                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
                     required
                 />
             </div>
@@ -61,7 +61,7 @@ function MushroomForm() {
                     name="image_url"
                     value={mushroomData.image_url}
                     onChange={handleChange}
-                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
+                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
                 />
             </div>
 
@@ -74,7 +74,7 @@ function MushroomForm() {
                     name="short_description"
                     value={mushroomData.short_description}
                     onChange={handleChange}
-                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
+                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
                     required
                 />
             </div>
@@ -87,7 +87,7 @@ function MushroomForm() {
                     name="long_description"
                     value={mushroomData.long_description}
                     onChange={handleChange}
-                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200"
+                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
                     rows="3"
                     placeholder="Enter a detailed description of the mushroom"
                     required
@@ -95,7 +95,7 @@ function MushroomForm() {
             </div>
 
             <input type="hidden" name="author" value={useUserId()} />
-            
+
             <button
                 type="submit"
                 className="w-full rounded bg-green-500 px-4 py-2 font-semibold text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
@@ -132,8 +132,7 @@ export async function action({ request, params }) {
     const data = Object.fromEntries(formData);
     if (params.id) {
         await updateMushroom(params.id, data);
-        // TODO : Redirect to the updated mushroom page
-        return redirect(`/mushrooms`);
+        return redirect("/mushrooms");
     } else {
         await createMushroom(data);
         return redirect("/mushrooms");

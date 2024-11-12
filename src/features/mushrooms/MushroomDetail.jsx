@@ -1,6 +1,8 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getMushroom } from "../../api/apiMushrooms";
-import BackButton from "../../ui/BackButton";
+import Header from "../../ui/Header";
+import { FaEdit, FaStar } from "react-icons/fa";
+import { useUserId } from "../../contexts/UserContext";
 
 function MushroomDetail() {
     const { mushroom } = useLoaderData();
@@ -10,32 +12,18 @@ function MushroomDetail() {
         navigate(`/mushrooms/mushroomForm/${mushroom.id}`);
     };
 
-    const handleFavorite = () => {
-        // Implement favorite functionality here
-        console.log("Favorite button clicked");
-    };
-
     return (
         <div className="bg-[#1a2a1d] min-h-screen p-5 text-white">
-            <header className="flex items-center justify-between mb-4">
-                <BackButton iconType="arrow" navigateTo={-1}/>
-                <h1 className="text-2xl font-semibold">Atlas</h1>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={handleEdit}
-                        className="bg-blue-500 text-white p-2 rounded"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={handleFavorite}
-                        className="bg-yellow-500 text-white p-2 rounded"
-                    >
-                        Favorites
-                    </button>
-                </div>
-            </header>
-            <div className="text-center">
+            <Header
+                title="Atlas"
+                backButtonFlag={true}
+                RightIcon2={mushroom.author === useUserId() ? FaEdit : null}
+                onRightIcon2Click={handleEdit}
+                userId={useUserId()}
+                itemId={mushroom.id}
+                type="saved_mushrooms"
+            />
+            <div className="text-center mt-20">
                 <img
                     src={mushroom.image_url}
                     alt={mushroom.name}

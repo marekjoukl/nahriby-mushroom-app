@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import Bookmark from "./Bookmark";
 
 function Header({ title, backButtonFlag = true, 
-                  RightIcon1 = null, onRightIcon1Click,
-                  RightIcon2 = null, onRightIcon2Click }) {
+                  RightIcon2 = null, onRightIcon2Click,
+                  userId, itemId, type }) {
     const navigate = useNavigate();
 
     const goBack = () => {
@@ -24,7 +25,9 @@ function Header({ title, backButtonFlag = true,
             
             {/* Right icons also optional, given as param.. such as search icon, save icon, edit icon, etc.. */}
             <div className="flex items-center space-x-4 mr-8">
-                {RightIcon1 && <RightIcon1 onClick={onRightIcon1Click} className="text-white text-xl cursor-pointer"></RightIcon1>}
+                {userId && itemId && type && (
+                    <Bookmark userId={userId} itemId={itemId} type={type} />
+                )}
                 {RightIcon2 && <RightIcon2 onClick={onRightIcon2Click} className="text-white text-xl cursor-pointer"></RightIcon2>}
             </div>
 
