@@ -43,7 +43,7 @@ function User() {
         <div
           key={recipe.id}
           className="h-32 w-24 cursor-pointer overflow-hidden rounded-md border-2 border-white"
-          onClick={() => navigate(`/recipes`)}
+          onClick={() => navigate(`/recipes/${recipe.id}`)}
         >
           <img
             src={recipe.image_url}
@@ -58,7 +58,7 @@ function User() {
         <div
           key={mushroom.id}
           className="h-32 w-24 cursor-pointer overflow-hidden rounded-md border-2 border-white"
-          onClick={() => navigate(`/mushrooms`)}
+          onClick={() => navigate(`/mushrooms/mushroomDetail/${mushroom.id}`)}
         >
           <img
             src={mushroom.image_url}
@@ -73,7 +73,7 @@ function User() {
         <div
           key={location.id}
           className="h-32 w-24 cursor-pointer overflow-hidden rounded-md border-2 border-white"
-          onClick={() => navigate(`/map/${location.id}/edit`)}
+          onClick={() => navigate(`/map/${location.id}`)}
         >
           <img
             src={location.image_url}
@@ -119,7 +119,7 @@ function User() {
       </div>
 
       <div className="mt-4 text-lg font-bold text-green-500">
-        {locations.length + mushrooms.length + recipes.length} Post
+        {locations.length + mushrooms.length + recipes.length} Posts
       </div>
 
       <div className="mt-5 flex justify-around border-b border-green-500 pb-2">

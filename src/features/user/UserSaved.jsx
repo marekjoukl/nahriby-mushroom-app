@@ -23,8 +23,14 @@ function UserSaved() {
         <h2 className="text-lg mb-2 items-center font-semibold border-b border-gray-300 pb-2">Atlas</h2>
         <div className="flex justify-center items-center gap-4">
           {mushrooms.map((mushroom) => (
-            <div key={mushroom.id} className="w-24 h-32 rounded-md overflow-hidden border-2 border-white">
-              <img src={mushroom.image_url} alt={mushroom.name} className="object-cover w-full h-full" />
+            <div 
+                key={mushroom.id} 
+                className="w-24 h-32 cursor-pointer rounded-md overflow-hidden border-2 border-white" 
+                onClick={() => navigate(`/mushrooms/mushroomDetail/${mushroom.id}`)}>
+              <img 
+                src={mushroom.image_url} 
+                alt={mushroom.name} 
+                className="object-cover w-full h-full" />
             </div>
           ))}
           <button
@@ -41,8 +47,14 @@ function UserSaved() {
         <h2 className="text-lg mb-2 font-semibold border-b border-gray-300 pb-2">Recipes</h2>
         <div className="flex justify-center items-center gap-4">
           {recipes.map((recipe) => (
-            <div key={recipe.id} className="w-24 h-32 rounded-md overflow-hidden border-2 border-white">
-              <img src={recipe.image_url} alt={recipe.name} className="object-cover w-full h-full" />
+            <div 
+                key={recipe.id} 
+                className="w-24 h-32 cursor-pointer rounded-md overflow-hidden border-2 border-white" 
+                onClick={() => navigate(`/recipes/${recipe.id}`)}>
+              <img 
+                src={recipe.image_url} 
+                alt={recipe.name} 
+                className="object-cover w-full h-full" />
             </div>
           ))}
           <button
@@ -59,8 +71,14 @@ function UserSaved() {
         <h2 className="text-lg mb-2 font-semibold border-b border-gray-300 pb-2">Locations</h2>
         <div className="flex justify-center items-center gap-4">
           {locations.map((location) => (
-            <div key={location.id} className="w-24 h-32 rounded-md overflow-hidden border-2 border-white">
-              <img src={location.image_url} alt={location.name} className="object-cover w-full h-full" />
+            <div 
+                key={location.id} 
+                className="w-24 h-32 cursor-pointer rounded-md overflow-hidden border-2 border-white" 
+                onClick={() => navigate(`/map/${location.id}`)}>
+              <img 
+                src={location.image_url} 
+                alt={location.name} 
+                className="object-cover w-full h-full" />
             </div>
           ))}
           <button

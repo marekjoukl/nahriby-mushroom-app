@@ -9,7 +9,7 @@ function UserSavedCategory() {
 
   const handleViewDetail = (id) => {
     if (category === "mushrooms") {
-      navigate(`/mushrooms/${id}`);
+      navigate(`/mushrooms/mushroomDetail/${id}`);
     } else if (category === "recipes") {
       navigate(`/recipes/${id}`);
     } else if (category === "locations") {

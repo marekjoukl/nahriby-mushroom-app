@@ -72,7 +72,7 @@ function Recipes() {
                 {filteredRecipes.map((recipe) => (
                     
                     <div key={recipe.id} onClick={() => handleRecipeClick(recipe.id)}
-                    className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-400 mr-8 ml-8">
+                    className="bg-white shadow-md cursor-pointer rounded-lg overflow-hidden border border-gray-400 mr-8 ml-8">
 
                         {/* Image - higher half */}
                         <div className="h-40 bg-gray-100">
