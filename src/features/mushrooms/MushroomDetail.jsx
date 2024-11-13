@@ -13,7 +13,7 @@ function MushroomDetail() {
     };
 
     return (
-        <div className="bg-[#1a2a1d] min-h-screen p-5 text-white">
+        <div className="bg-[#1a2a1d] pb-16 min-h-screen p-5 text-white">
             <Header
                 title="Atlas"
                 backButtonFlag={true}

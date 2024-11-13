@@ -20,7 +20,6 @@ function MushroomItem({ mushroom }) {
             <div className="flex-grow text-left">
                 <h3 className="text-xl font-semibold mb-1 text-green-900">{mushroom.name}</h3>
                 <p className="text-base mb-1 text-green-800">{mushroom.short_description}</p>
-                <p className="text-sm text-green-700">{mushroom.long_description}</p>
             </div>
         </div>
     );
