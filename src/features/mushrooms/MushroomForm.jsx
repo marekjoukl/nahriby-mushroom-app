@@ -13,6 +13,7 @@ function MushroomForm() {
         image_url: mushroom.image_url || "",
         short_description: mushroom.short_description,
         long_description: mushroom.long_description,
+        toxicity: mushroom.toxicity || 1,
     });
 
     const handleChange = (e) => {
@@ -92,6 +93,23 @@ function MushroomForm() {
                     placeholder="Enter a detailed description of the mushroom"
                     required
                 />
+            </div>
+
+            <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Toxicity
+                </label>
+                <select
+                    name="toxicity"
+                    value={mushroomData.toxicity}
+                    onChange={handleChange}
+                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
+                    required
+                >
+                    <option value={1}>Edible</option>
+                    <option value={2}>Warning</option>
+                    <option value={3}>Toxic</option>
+                </select>
             </div>
 
             <input type="hidden" name="author" value={useUserId()} />

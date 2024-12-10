@@ -21,7 +21,7 @@ function Header({
   };
 
   return (
-    <div className="fixed top-0 z-10 mb-5 flex h-16 w-full items-center justify-between border-b-4 border-green-900 bg-green-950 p-4 text-white">
+    <div className="fixed left-0 top-0 z-10 mb-5 flex h-16 w-full items-center justify-between border-b-4 border-green-900 bg-green-950 p-4 text-white">
       {/* Optional back button (navigation to previous page) */}
       <div className="ml-4 flex items-center">
         {backButtonFlag && (

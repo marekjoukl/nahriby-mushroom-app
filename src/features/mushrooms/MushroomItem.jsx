@@ -7,6 +7,32 @@ function MushroomItem({ mushroom }) {
         navigate(`/mushrooms/mushroomDetail/${mushroom.id}`);
     };
 
+    const getToxicityLabel = (toxicity) => {
+        switch (toxicity) {
+            case 1:
+                return "Edible";
+            case 2:
+                return "Warning";
+            case 3:
+                return "Toxic";
+            default:
+                return "Unknown";
+        }
+    };
+
+    const getToxicityColor = (toxicity) => {
+        switch (toxicity) {
+            case 1:
+                return "text-green-500";
+            case 2:
+                return "text-yellow-500";
+            case 3:
+                return "text-red-500";
+            default:
+                return "text-gray-500";
+        }
+    };
+
     return (
         <div 
             onClick={handleClick}
@@ -20,6 +46,7 @@ function MushroomItem({ mushroom }) {
             <div className="flex-grow text-left">
                 <h3 className="text-xl font-semibold mb-1 text-green-900">{mushroom.name}</h3>
                 <p className="text-base mb-1 text-green-800">{mushroom.short_description}</p>
+                <p className={`text-sm ${getToxicityColor(mushroom.toxicity)}`}><strong>Toxicity:</strong> {getToxicityLabel(mushroom.toxicity)}</p>
             </div>
         </div>
     );
