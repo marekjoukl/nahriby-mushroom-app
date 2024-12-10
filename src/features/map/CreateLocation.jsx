@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Form, redirect, useSearchParams } from "react-router-dom";
 import { createLocation } from "../../api/apiMap";
-import BackButton from "../../ui/BackButton";
 import { getMushrooms } from "../../api/apiMushrooms";
 import { useUserId } from "../../contexts/UserContext";
 import Header from "../../ui/Header";
+import toast from "react-hot-toast";
 
 function CreateLocation() {
   const [mushrooms, setMushrooms] = useState([]);
@@ -169,10 +169,12 @@ export async function action({ request }) {
   const data = Object.fromEntries(formData);
   try {
     const newLocation = await createLocation(data);
+    toast.success("Location created successfully!");
 
     return redirect(`/map/${newLocation[0].id}`);
   } catch (error) {
     console.error("Failed to create location:", error);
+    toast.error("Failed to create location. Please try again.");
     return null;
   }
 }

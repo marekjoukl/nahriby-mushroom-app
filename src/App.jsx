@@ -6,9 +6,7 @@ import Mushrooms, {
 } from "./features/mushrooms/Mushrooms";
 
 // ******************** USER ******************** //
-import User, { 
-  loader as userLoader 
-} from "./features/user/User";
+import User, { loader as userLoader } from "./features/user/User";
 import UserEdit, {
   loader as editUserLoader,
   action as editUserAction,
@@ -25,7 +23,9 @@ import RecipeDetail, {
   loader as recipeDetailLoader,
 } from "./features/recepies/RecipeDetail";
 import RecipeAdd from "./features/recepies/RecipeAdd";
-import RecipeEdit, {loader as recipeEditLoader } from "./features/recepies/RecipeEdit";
+import RecipeEdit, {
+  loader as recipeEditLoader,
+} from "./features/recepies/RecipeEdit";
 
 import AppLayout from "./ui/AppLayout";
 
@@ -43,14 +43,15 @@ import EditLocation, {
   action as editLocationAction,
 } from "./features/map/EditLocation";
 
-import MushroomForm, { 
+import MushroomForm, {
   loader as mushroomsFormLoader,
-  action as mushroomsFormAction, 
+  action as mushroomsFormAction,
 } from "./features/mushrooms/MushroomForm";
 import { UserProvider } from "./contexts/UserContext";
 import MushroomDetail, {
   loader as mushroomDetailLoader,
 } from "./features/mushrooms/MushroomDetail";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -154,7 +155,7 @@ const router = createBrowserRouter([
         path: "/recipes/:id/edit",
         element: <RecipeEdit />,
         loader: recipeEditLoader,
-      }
+      },
     ],
   },
 ]);
@@ -163,6 +164,7 @@ function App() {
   return (
     <UserProvider>
       <RouterProvider router={router} />
+      <Toaster />
     </UserProvider>
   );
 }

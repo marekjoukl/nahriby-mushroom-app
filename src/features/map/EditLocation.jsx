@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation, updateLocation, deleteLocation } from "../../api/apiMap";
-import BackButton from "../../ui/BackButton";
 import Header from "../../ui/Header";
+import toast from "react-hot-toast";
 
 function EditLocation() {
   const { location } = useLoaderData(); // Load initial data from loader
@@ -50,9 +50,26 @@ function EditLocation() {
     }));
   };
 
+  const handleSave = async () => {
+    try {
+      await updateLocation(location.id, locationData);
+      toast.success("Location updated successfully!");
+      navigate(`/map/${location.id}`);
+    } catch (error) {
+      toast.error("Failed to update location.");
+      console.error(error);
+    }
+  };
+
   const handleDelete = async () => {
-    await deleteLocation(location.id);
-    navigate("/map");
+    try {
+      await deleteLocation(location.id);
+      toast.success("Location deleted successfully!");
+      navigate("/map");
+    } catch (error) {
+      toast.error("Failed to delete location.");
+      console.error(error);
+    }
   };
 
   return (
@@ -123,7 +140,8 @@ function EditLocation() {
 
         <div className="flex justify-between">
           <button
-            type="submit"
+            type="button"
+            onClick={handleSave}
             className="rounded-full bg-navbar-active px-4 py-2 text-white hover:bg-[#0cd784] focus:outline-none focus:ring-2 focus:ring-[#0FE596] focus:ring-opacity-50"
           >
             Save Changes

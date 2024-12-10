@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Form, redirect, useLocation } from "react-router-dom";
 import { useUserId } from "../../contexts/UserContext"; // Assuming this hook returns the current user ID
-import BackButton from "../../ui/BackButton";
 import { getLocation, updateLocation } from "../../api/apiMap";
 import { createComment } from "../../api/apiComments";
 import Header from "../../ui/Header";
+import toast from "react-hot-toast";
 
 function CreateComment() {
   const userId = useUserId();
@@ -91,9 +91,11 @@ export async function action({ request, params }) {
 
     // Update the location with the new comments array
     await updateLocation(location.id, { comments: updatedComments });
+    toast.success("Comment added successfully!");
 
     return redirect(`/map/${location.id}`);
   } catch (error) {
+    toast.error("Error creating comment");
     console.error("Error creating comment:", error);
     throw error;
   }
