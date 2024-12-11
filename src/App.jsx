@@ -53,9 +53,20 @@ import MushroomDetail, {
 } from "./features/mushrooms/MushroomDetail";
 import { Toaster } from "react-hot-toast";
 
+// Component for displaying loading state
+import CursorLoadingSpinner from "./ui/CursorLoadingSpinner";
+
+const Root = () => (
+  <>
+    <AppLayout />
+    <CursorLoadingSpinner />
+  </>
+);
+
+// Define the router with Root as the root element
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <Root />,
     errorElement: <Error />,
     children: [
       {

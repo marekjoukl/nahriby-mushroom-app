@@ -1,3 +1,5 @@
+// src/components/User.jsx
+
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -124,19 +126,31 @@ function User() {
 
       <div className="mt-5 flex justify-around border-b border-green-500 pb-2">
         <button
-          className={`p-2 text-lg ${activeTab === "Recipes" ? "border-b-2 border-green-500 font-bold text-red-500" : "text-green-300"}`}
+          className={`p-2 text-lg ${
+            activeTab === "Recipes"
+              ? "border-b-2 border-green-500 font-bold text-red-500"
+              : "text-green-300"
+          }`}
           onClick={() => handleTabClick("Recipes")}
         >
           Recipes
         </button>
         <button
-          className={`p-2 text-lg ${activeTab === "Mushrooms" ? "border-b-2 border-green-500 font-bold text-red-500" : "text-green-300"}`}
+          className={`p-2 text-lg ${
+            activeTab === "Mushrooms"
+              ? "border-b-2 border-green-500 font-bold text-red-500"
+              : "text-green-300"
+          }`}
           onClick={() => handleTabClick("Mushrooms")}
         >
           Mushrooms
         </button>
         <button
-          className={`p-2 text-lg ${activeTab === "Locations" ? "border-b-2 border-green-500 font-bold text-red-500" : "text-green-300"}`}
+          className={`p-2 text-lg ${
+            activeTab === "Locations"
+              ? "border-b-2 border-green-500 font-bold text-red-500"
+              : "text-green-300"
+          }`}
           onClick={() => handleTabClick("Locations")}
         >
           Locations
