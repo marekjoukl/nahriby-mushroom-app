@@ -21,6 +21,9 @@ function UserEdit() {
     image_url: user.image_url || "",
   });
 
+  // State to control the visibility of the Image URL field
+  const [showImageUrlField, setShowImageUrlField] = useState(false);
+
   // Fetch the list of countries from REST API
   useEffect(() => {
     async function fetchCountries() {
@@ -49,6 +52,20 @@ function UserEdit() {
     setIsDeletePopupOpen(false);
   };
 
+  // Handler for camera icon click to toggle the Image URL field
+  const handleCameraClick = () => {
+    setShowImageUrlField((prev) => !prev);
+  };
+
+  // Handler for form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <div
       className="min-h-screen w-full flex flex-col items-center"
@@ -68,21 +85,43 @@ function UserEdit() {
         className="mx-auto w-3/4 max-w-lg space-y-4 p-6 pb-20 text-white"
         style={{ backgroundColor: "#0B2602", borderRadius: "10px" }}
       >
+        {/* Profile Image Section */}
         <div className="flex justify-center mb-4 mt-20">
-          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white">
-            <img
-              src={userData.image_url}
-              alt="Profile"
-              className="object-cover w-full h-full"
-            />
+          <div className="relative w-32 h-32">
+            {/* Profile Image */}
+            <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white">
+              <img
+                src={userData.image_url}
+                alt="Profile"
+                className="object-cover w-full h-full"
+              />
+            </div>
+            {/* Camera Icon */}
             <label
-              className="absolute bottom-0 right-0 m-2 bg-gray-800 p-2 rounded-full cursor-pointer z-10 flex items-center justify-center"
-              style={{ width: "30px", height: "30px" }}
+              className="border-2 border-white absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-800 p-2 rounded-full cursor-pointer z-5 flex items-center justify-center"
+              style={{ width: "35px", height: "35px" }}
+              onClick={handleCameraClick} // Toggle visibility on click
             >
               <FiCamera className="text-white" />
             </label>
           </div>
         </div>
+
+        {/* Conditionally Render Image URL Field */}
+        {showImageUrlField && (
+          <label className="mb-2 block text-sm font-medium">
+            Image URL
+            <input
+              type="url"
+              name="image_url"
+              value={userData.image_url}
+              onChange={handleInputChange} // Update state on change
+              className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
+              placeholder="Enter new image URL"
+              required
+            />
+          </label>
+        )}
 
         {/* Form Fields */}
         <label className="mb-2 block text-sm font-medium">
@@ -91,6 +130,7 @@ function UserEdit() {
             type="text"
             name="name"
             value={userData.name}
+            onChange={handleInputChange} // Update state on change
             className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
             autoComplete="name"
             required
@@ -103,6 +143,7 @@ function UserEdit() {
             type="email"
             name="email"
             value={userData.email}
+            onChange={handleInputChange} // Update state on change
             className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
             autoComplete="email"
             required
@@ -115,6 +156,7 @@ function UserEdit() {
             type="password"
             name="password"
             value={userData.password}
+            onChange={handleInputChange} // Update state on change
             className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
             placeholder="Enter a new password"
             autoComplete="new-password"
@@ -127,6 +169,7 @@ function UserEdit() {
             type="date"
             name="birth_date"
             value={userData.birth_date}
+            onChange={handleInputChange} // Update state on change
             className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
             autoComplete="bday"
           />
@@ -138,12 +181,7 @@ function UserEdit() {
           <select
             name="country"
             value={userData.country}
-            onChange={(e) =>
-              setUserData((prev) => ({
-                ...prev,
-                country: e.target.value, // Update the country field
-              }))
-            }
+            onChange={handleInputChange} // Update state on change
             className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
           >
             <option value="" disabled>
@@ -155,7 +193,7 @@ function UserEdit() {
               </option>
             ))}
           </select>
-      </label>
+        </label>
 
         <button
           type="submit"
@@ -176,9 +214,9 @@ function UserEdit() {
       {/* Delete Confirmation Popup */}
       {isDeletePopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center shadow-lg">
+          <div className="bg-white rounded-lg p-6 text-center shadow-lg w-full max-w-md mx-4">
             <p className="text-lg text-black mb-4">
-              Do you really want to delete your account?
+              Do you really wish to delete your account?
             </p>
             <button
               onClick={confirmDelete}
@@ -212,6 +250,11 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+
+  // Only update the password if it's provided
+  if (!data.password) {
+    delete data.password;
+  }
 
   toast.success("Changes have been saved!");
   await updateUser(params.id, data);
