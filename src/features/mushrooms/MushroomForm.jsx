@@ -32,7 +32,7 @@ function MushroomForm() {
     return (
         <Form
             method="POST"
-            className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg"
+            className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg pb-20"
         >
             <BackButton iconType="arrow" navigateTo={-1} />
             <h2 className="text-center text-xl font-semibold text-gray-900">
