@@ -69,3 +69,17 @@ export async function deleteMushroom(id) {
         throw new Error(error.message);
     }
 }
+
+// Function to search mushrooms by name
+export async function searchMushroomsByName(name) {
+    const { data, error } = await supabase
+        .from("mushrooms")
+        .select("*")
+        .ilike("name", `%${name}%`);
+
+    if (error) {
+        console.error("Error searching mushrooms:", error);
+        throw new Error(error.message);
+    }
+    return data;
+}
