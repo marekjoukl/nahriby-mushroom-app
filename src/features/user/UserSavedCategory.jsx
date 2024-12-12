@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getUserSavedMushrooms, getUserSavedRecipes, getUserSavedLocations } from "../../api/apiUsers";
-import { FiSearch, FiStar, FiClock, FiZap } from "react-icons/fi";
+import { FiSearch, FiStar, FiClock} from "react-icons/fi";
 import BackButton from "../../ui/BackButton";
 
 function UserSavedCategory() {

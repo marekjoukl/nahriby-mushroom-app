@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { getUser, updateUser, deleteUser } from "../../api/apiUsers";
+import { getUser, updateUser} from "../../api/apiUsers";
 import { FiCamera } from "react-icons/fi";
 import Header from "../../ui/Header";
 import TrashCan from "../../ui/TrashCan";
@@ -98,7 +98,7 @@ function UserEdit() {
             </div>
             {/* Camera Icon */}
             <label
-              className="border-2 border-white absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-800 p-2 rounded-full cursor-pointer z-5 flex items-center justify-center"
+              className="border-2 border-white absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-800 p-2 rounded-full cursor-pointer z-5 flex items-center justify-center hover:bg-gray-700 transition-all duration-300"
               style={{ width: "35px", height: "35px" }}
               onClick={handleCameraClick} // Toggle visibility on click
             >
