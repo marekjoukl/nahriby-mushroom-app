@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getMushroom } from "../../api/apiMushrooms";
+import { getMushroom, getImageUrl } from "../../api/apiMushrooms";
 import Header from "../../ui/Header";
 import { FaEdit, FaStar } from "react-icons/fa";
 import { useUserId } from "../../contexts/UserContext";
@@ -15,12 +15,28 @@ function MushroomDetail() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [similarMushrooms, setSimilarMushrooms] = useState([]);
+    const [imageUrl, setImageUrl] = useState(null);
 
     const fetchSimilarMushrooms = async () => {
         const similarMushroomIds = await getSimilarMushroomsByMushroomId(mushroom.id);
         const similarMushroomsData = await Promise.all(similarMushroomIds.map(id => getMushroom(id)));
         setSimilarMushrooms(similarMushroomsData);
     };
+
+    useEffect(() => {
+        async function fetchImageUrl() {
+          try {
+            if (mushroom.image_url) {
+              const url = await getImageUrl(mushroom.image_url);
+              setImageUrl(url);
+            }
+          } catch (error) {
+            console.error("Error fetching image URL:", error);
+          }
+        }
+    
+        fetchImageUrl();
+    }, [mushroom.image_url]);
 
     useEffect(() => {
         fetchSimilarMushrooms();
@@ -91,7 +107,7 @@ function MushroomDetail() {
             />
             <div className="mt-20">
                 <img
-                    src={mushroom.image_url}
+                    src={imageUrl}
                     alt={mushroom.name}
                     className="w-64 h-64 object-cover rounded-lg mb-4 mx-auto"
                 />

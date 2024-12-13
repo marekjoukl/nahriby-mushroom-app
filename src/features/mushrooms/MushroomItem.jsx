@@ -1,7 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../api/apiMushrooms"; // Import your new function
+import { useEffect, useState } from "react";
 
 function MushroomItem({ mushroom }) {
     const navigate = useNavigate();
+    const [imageUrl, setImageUrl] = useState(null);
+
+    useEffect(() => {
+        async function fetchImageUrl() {
+          try {
+            if (mushroom.image_url) {
+              const url = await getImageUrl(mushroom.image_url);
+              setImageUrl(url);
+            }
+          } catch (error) {
+            console.error("Error fetching image URL:", error);
+          }
+        }
+    
+        fetchImageUrl();
+    }, [mushroom.image_url]);
 
     const handleClick = () => {
         navigate(`/mushrooms/mushroomDetail/${mushroom.id}`);
@@ -39,7 +57,7 @@ function MushroomItem({ mushroom }) {
             className="border border-green-700 p-4 m-4 rounded-lg bg-green-50 flex flex-row items-start bg-[#86EFAC] max-w-lg"
         >
             <img 
-                src={mushroom.image_url} 
+                src={imageUrl}
                 alt={mushroom.name} 
                 className="w-24 h-24 object-cover rounded-lg mr-4" 
             />

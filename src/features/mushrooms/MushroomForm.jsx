@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { createMushroom, getMushroom, updateMushroom, deleteMushroom } from "../../api/apiMushrooms";
+import { createMushroom, getMushroom, updateMushroom, deleteMushroom, uploadImageAndGetUrl } from "../../api/apiMushrooms";
 import BackButton from "../../ui/BackButton";
 import { useUserId } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ function MushroomForm() {
         long_description: mushroom.long_description,
         toxicity: mushroom.toxicity || 1,
     });
+    const [imageFile, setImageFile] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,10 +32,58 @@ function MushroomForm() {
         navigate("/mushrooms");
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setImageFile(file);
+        setMushroomData((prev) => ({
+            ...prev,
+            image_url: file.name,
+        }));
+    };
+
+    const removeImage = () => {
+        setImageFile(null);
+        setMushroomData((prev) => ({
+            ...prev,
+            image_url: "",
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        let imageUrl = mushroom.image_url;
+
+        try {
+            if (imageFile) {
+                console.log("Image file selected:", imageFile); // Debugging information
+                imageUrl = await uploadImageAndGetUrl(imageFile);
+            }
+
+            const updatedData = {
+                ...mushroomData,
+                image_url: imageUrl,
+            };
+
+            if (mushroom.id) {
+                await updateMushroom(mushroom.id, updatedData);
+                toast.success("Mushroom updated successfully!");
+            } else {
+                await createMushroom(updatedData);
+                toast.success("Mushroom created successfully!");
+            }
+
+            navigate("/mushrooms");
+        } catch (error) {
+            console.error("Error in handleSubmit:", error); // Debugging information
+            toast.error("Failed to upload image. Please try again.");
+        }
+    };
+
     return (
         <Form
             method="POST"
             className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg pb-20"
+            onSubmit={handleSubmit}
         >
             <BackButton iconType="arrow" navigateTo={-1} />
             <h2 className="text-center text-xl font-semibold text-gray-900">
@@ -56,16 +105,41 @@ function MushroomForm() {
             </div>
 
             <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Image URL
+                <label className="block text-sm font-medium text-gray-700">
+                    Upload Photo
                 </label>
-                <input
-                    type="text"
-                    name="image_url"
-                    value={mushroomData.image_url}
-                    onChange={handleChange}
-                    className="w-full rounded border border-gray-300 p-2 focus:ring focus:ring-green-200 text-gray-900"
-                />
+                <div className="mt-2 flex flex-row items-center space-x-4">
+                    {!mushroomData.image_url && (
+                        <label
+                            className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${imageFile ? "hidden" : ""}`}
+                        >
+                            Choose File
+                            <input
+                                type="file"
+                                name="imageFile"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="hidden"
+                            />
+                        </label>
+                    )}
+                    {mushroomData.image_url && (
+                    <>
+                        <p className="text-black">
+                        {mushroomData.image_url.split("_")[1] ||
+                            mushroomData.image_url}
+                        </p>
+                        <button
+                        type="button"
+                        onClick={removeImage}
+                        className="rounded-full bg-red-500 p-2 text-xs font-bold text-white hover:bg-red-600"
+                        title="Remove Photo"
+                        >
+                        ✕
+                        </button>
+                    </>
+                    )}
+                </div>
             </div>
 
             <div>
