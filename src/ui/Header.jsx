@@ -30,7 +30,7 @@ function Header({
       <div className="ml-2 flex items-center">
         {backButtonFlag && (
           <button onClick={goBack} className="mr-4">
-            <FaArrowLeft className="text-xl text-white"></FaArrowLeft>
+            <FaArrowLeft className="text-xl text-white transition-transform duration-100 hover:opacity-80"></FaArrowLeft>
           </button>
         )}
         <h1 className="text-2xl font-semibold">{title}</h1>
@@ -47,13 +47,13 @@ function Header({
         {RightIcon1 && (
           <RightIcon1
             onClick={onRightIcon1Click}
-            className="cursor-pointer text-xl text-white"
+            className="cursor-pointer text-xl text-white transition-transform duration-100 hover:opacity-80"
           ></RightIcon1>
         )}
         {RightIcon2 && (
           <RightIcon2
             onClick={onRightIcon2Click}
-            className="cursor-pointer text-xl text-white"
+            className="cursor-pointer text-xl text-white transition-transform duration-100 hover:opacity-80"
           ></RightIcon2>
         )}
       </div>

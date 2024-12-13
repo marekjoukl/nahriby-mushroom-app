@@ -39,6 +39,10 @@ function UserEdit() {
     fetchCountries();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page
+  }, []); // Runs only once
+
   const handleDeleteClick = () => {
     setIsDeletePopupOpen(true);
   };
@@ -98,7 +102,7 @@ function UserEdit() {
             </div>
             {/* Camera Icon */}
             <label
-              className="border-2 border-white absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-800 p-2 rounded-full cursor-pointer z-5 flex items-center justify-center hover:bg-gray-700 transition-all duration-300"
+              className="border-2 border-white absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-800 p-2 rounded-full cursor-pointer z-5 flex items-center justify-center transition-transform duration-100 hover:opacity-80"
               style={{ width: "35px", height: "35px" }}
               onClick={handleCameraClick} // Toggle visibility on click
             >
@@ -197,7 +201,7 @@ function UserEdit() {
 
         <button
           type="submit"
-          className="w-full rounded bg-green-500 px-4 py-2 font-semibold text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+          className="w-full rounded bg-green-500 px-4 py-2 font-semibold text-white transition-transform duration-100 hover:opacity-80"
         >
           Save Changes
         </button>
@@ -205,7 +209,7 @@ function UserEdit() {
         <button
           type="button"
           onClick={() => navigate(`/user/${user.id}`)}
-          className="mt-4 w-full rounded bg-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+          className="mt-4 w-full rounded bg-gray-300 px-4 py-2 font-semibold text-gray-700 transition-transform duration-100 hover:opacity-80"
         >
           Cancel
         </button>

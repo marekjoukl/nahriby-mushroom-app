@@ -47,7 +47,7 @@ function Bookmark({ userId, itemId, type }) {
     <FontAwesomeIcon
       icon={faBookmark}
       onClick={handleBookmarkClick}
-      className={`cursor-pointer text-2xl ${isSaved ? "text-green-700" : "text-gray-400"}`}
+      className={`cursor-pointer text-2xl ${isSaved ? "text-green-700" : "text-gray-400"} transition-transform duration-100 hover:opacity-80`}
       title={isSaved ? "Remove from favorites" : "Add to favorites"}
     />
   );

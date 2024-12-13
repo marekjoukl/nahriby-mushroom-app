@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import {
   getUser,
   getUserLocations,
@@ -39,58 +39,47 @@ function User() {
   };
 
   const renderContent = () => {
-    if (activeTab === "Recipes") {
-      return recipes.map((recipe) => (
+    const renderItems = (items, type) => {
+      return items.map((item) => (
         <div
-          key={recipe.id}
-          className="relative flex-shrink-0 h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer overflow-hidden rounded-md border-2 border-white transition-all duration-300 hover:bg-gray-800"
-          onClick={() => navigate(`/recipes/${recipe.id}`)}
+          key={item.id}
+          className="relative flex-shrink-0 h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer overflow-hidden rounded-md border-2 border-white group"
+          onClick={() =>
+            type === "recipes"
+              ? navigate(`/recipes/${item.id}`)
+              : type === "mushrooms"
+              ? navigate(`/mushrooms/mushroomDetail/${item.id}`)
+              : navigate(`/map/${item.id}`)
+          }
         >
-          {/* Overlay effect */}
-          <div className="absolute inset-0 bg-gray-500 opacity-0 hover:opacity-30 transition-opacity duration-300 rounded-md"></div>
           <img
-            src={recipe.image_url}
-            alt="Recipe"
-            className="h-full w-full object-cover"
+            src={item.image_url}
+            alt={item.name}
+            className="h-full w-full object-cover transition-transform duration-200 hover:opacity-80"
           />
+          {/* Hover Box */}
+          <div className="absolute bottom-0 left-0 w-full bg-white text-black text-sm font-bold flex items-center justify-center rounded-md overflow-hidden transition-all duration-100 ease-in-out h-0 group-hover:h-1/4">
+            {item.name}
+          </div>
         </div>
       ));
+    };
+  
+    if (activeTab === "Recipes") {
+      return renderItems(recipes, "recipes");
     }
     if (activeTab === "Mushrooms") {
-      return mushrooms.map((mushroom) => (
-        <div
-          key={mushroom.id}
-          className="relative flex-shrink-0 h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer overflow-hidden rounded-md border-2 border-white transition-all duration-300 hover:bg-gray-800"
-          onClick={() => navigate(`/mushrooms/mushroomDetail/${mushroom.id}`)}
-        >
-          {/* Overlay effect */}
-          <div className="absolute inset-0 bg-gray-500 opacity-0 hover:opacity-30 transition-opacity duration-300 rounded-md"></div>
-          <img
-            src={mushroom.image_url}
-            alt="Mushroom"
-            className="h-full w-full object-cover"
-          />
-        </div>
-      ));
+      return renderItems(mushrooms, "mushrooms");
     }
     if (activeTab === "Locations") {
-      return locations.map((location) => (
-        <div
-          key={location.id}
-          className="relative flex-shrink-0 h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer overflow-hidden rounded-md border-2 border-white transition-all duration-300 hover:bg-gray-800"
-          onClick={() => navigate(`/map/${location.id}`)}
-        >
-          {/* Overlay effect */}
-          <div className="absolute inset-0 bg-gray-500 opacity-0 hover:opacity-30 transition-opacity duration-300 rounded-md"></div>
-          <img
-            src={location.image_url}
-            alt="Location"
-            className="h-full w-full object-cover"
-          />
-        </div>
-      ));
+      return renderItems(locations, "locations");
     }
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page
+  }, []); // Runs only once
+  
 
   return (
     <div className="min-h-screen w-full bg-bg-primary p-5 pb-20 text-center font-sans text-white items-center">
@@ -130,30 +119,30 @@ function User() {
       {/* Tabs Section */}
       <div className="mt-5 flex justify-around border-b border-green-500 pb-2">
         <button
-          className={`p-2 text-lg transition-all duration-300 ${
+          className={`p-2 text-lg ${
             activeTab === "Locations"
-              ? "border-b-2 border-green-500 font-bold text-red-500"
-              : "text-green-300 hover:text-green-400"
+              ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
+              : "text-green-300 transition-transform duration-100 hover:opacity-80"
           }`}
           onClick={() => handleTabClick("Locations")}
         >
           Locations
         </button>
         <button
-          className={`p-2 text-lg transition-all duration-300 ${
+          className={`p-2 text-lg ${
             activeTab === "Recipes"
-              ? "border-b-2 border-green-500 font-bold text-red-500"
-              : "text-green-300 hover:text-green-400"
+              ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
+              : "text-green-300 transition-transform duration-100 hover:opacity-80"
           }`}
           onClick={() => handleTabClick("Recipes")}
         >
           Recipes
         </button>
         <button
-          className={`p-2 text-lg transition-all duration-300 ${
+          className={`p-2 text-lg ${
             activeTab === "Mushrooms"
-              ? "border-b-2 border-green-500 font-bold text-red-500"
-              : "text-green-300 hover:text-green-400"
+              ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
+              : "text-green-300 transition-transform duration-100 hover:opacity-80"
           }`}
           onClick={() => handleTabClick("Mushrooms")}
         >
@@ -163,15 +152,20 @@ function User() {
 
       {/* Content Section */}
       <div className="mt-5 flex flex-wrap justify-center gap-4 px-1 sm:px-1 md:px-20">
-
         {/* Render content based on active tab */}
         {renderContent()}
 
         <div
-          className="flex h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer items-center justify-center rounded-md border border-white hover:bg-gray-700 transition-all duration-300"
+          className="group flex h-36 w-28 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer items-center justify-center rounded-md border-2 border-white transition-transform duration-100"
           onClick={handleAddClick}
         >
-          <FiPlus className="text-2xl md:text-4xl text-white" />
+          {/* Show "+" by default, replace with "Add New" on hover */}
+          <div className="text-2xl md:text-4xl text-white group-hover:hidden">
+            <FiPlus />
+          </div>
+          <span className="hidden text-white text-sm md:text-lg font-semibold group-hover:block">
+            Add New
+          </span>
         </div>
       </div>
     </div>

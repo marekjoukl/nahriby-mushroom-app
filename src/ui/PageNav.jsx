@@ -16,8 +16,8 @@ function PageNav() {
             to="/map"
             className={({ isActive }) =>
               isActive
-                ? "flex flex-col items-center text-navbar-active"
-                : "flex flex-col items-center text-white"
+                ? "flex flex-col items-center text-navbar-active transition-transform duration-100 hover:opacity-80"
+                : "flex flex-col items-center text-white transition-transform duration-100 hover:opacity-80"
             }
           >
             <span>
@@ -31,8 +31,8 @@ function PageNav() {
             to="/recipes"
             className={({ isActive }) =>
               isActive
-                ? "flex flex-col items-center text-navbar-active"
-                : "flex flex-col items-center text-white"
+                ? "flex flex-col items-center text-navbar-active transition-transform duration-100 hover:opacity-80"
+                : "flex flex-col items-center text-white transition-transform duration-100 hover:opacity-80"
             }
           >
             <span>
@@ -46,8 +46,8 @@ function PageNav() {
             to="/mushrooms"
             className={({ isActive }) =>
               isActive
-                ? "flex flex-col items-center text-navbar-active"
-                : "flex flex-col items-center text-white"
+                ? "flex flex-col items-center text-navbar-active transition-transform duration-100 hover:opacity-80"
+                : "flex flex-col items-center text-white transition-transform duration-100 hover:opacity-80"
             }
           >
             <span>
@@ -61,8 +61,8 @@ function PageNav() {
             to={`/user/${userId}`} // Dynamic user ID in the URL
             className={({ isActive }) =>
               isActive
-                ? "flex flex-col items-center text-navbar-active"
-                : "flex flex-col items-center text-white"
+                ? "flex flex-col items-center text-navbar-active transition-transform duration-100 hover:opacity-80"
+                : "flex flex-col items-center text-white transition-transform duration-100 hover:opacity-80"
             }
           >
             <span>

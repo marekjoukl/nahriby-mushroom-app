@@ -32,7 +32,7 @@ export async function getUser(userId) {
 export async function getUserLocations(userId) {
     const { data, error } = await supabase
       .from('locations')
-      .select('id, image_url')
+      .select('id, image_url, name')
       .eq('author', userId);
   
     if (error) {
@@ -47,7 +47,7 @@ export async function getUserLocations(userId) {
 export async function getUserMushrooms(userId) {
     const { data, error } = await supabase
       .from('mushrooms')
-      .select('id, image_url')
+      .select('id, image_url, name')
       .eq('author', userId);
   
     if (error) {
@@ -62,7 +62,7 @@ export async function getUserMushrooms(userId) {
 export async function getUserRecipes(userId) {
     const { data, error } = await supabase
       .from('recipes')
-      .select('id, image_url')
+      .select('id, image_url, name')
       .eq('author', userId);
   
     if (error) {

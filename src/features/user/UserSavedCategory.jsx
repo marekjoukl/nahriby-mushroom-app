@@ -1,7 +1,9 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getUserSavedMushrooms, getUserSavedRecipes, getUserSavedLocations } from "../../api/apiUsers";
-import { FiSearch, FiStar, FiClock} from "react-icons/fi";
-import BackButton from "../../ui/BackButton";
+import { FiSearch, FiClock} from "react-icons/fi";
+import { FaStar} from "react-icons/fa";
+import Header from "../../ui/Header";
+import { useEffect } from "react";
 
 function UserSavedCategory() {
   const { items, category, userId } = useLoaderData();
@@ -22,7 +24,7 @@ function UserSavedCategory() {
       return items.map((item) => (
         <div
           key={item.id}
-          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer"
+          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
           onClick={() => handleViewDetail(item.id)}
         >
           <img
@@ -42,7 +44,7 @@ function UserSavedCategory() {
       return items.map((item) => (
         <div
           key={item.id}
-          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer"
+          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
           onClick={() => handleViewDetail(item.id)}
         >
           <img
@@ -57,8 +59,13 @@ function UserSavedCategory() {
               <span>{item.cooking_minutes} min</span>
             </div>
             <div className="flex mt-2">
-              {[...Array(5)].map((_, i) => (
-                <FiStar key={i} className="text-yellow-500" />
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  className={`cursor-pointer ${
+                    item.rating >= star ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                />
               ))}
             </div>
           </div>
@@ -70,7 +77,7 @@ function UserSavedCategory() {
       return items.map((item) => (
         <div
           key={item.id}
-          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer"
+          className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
           onClick={() => handleViewDetail(item.id)}
         >
           <img
@@ -83,8 +90,13 @@ function UserSavedCategory() {
             <p className="text-sm text-gray-300">Latitude: {item.lat}</p>
             <p className="text-sm text-gray-300">Longitude: {item.lng}</p>
             <div className="flex mt-2">
-              {[...Array(5)].map((_, i) => (
-                <FiStar key={i} className="text-yellow-500" />
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  className={`cursor-pointer ${
+                    item.stars >= star ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                />
               ))}
             </div>
           </div>
@@ -93,14 +105,18 @@ function UserSavedCategory() {
     }
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page
+  }, []); // Runs only once
+
   return (
     <div className="min-h-screen bg-bg-primary p-6 text-white">
-      <div className="flex items-center justify-between">
-        <BackButton iconType="arrow" navigateTo={`/user/${userId}/saved`} />
-        <h1 className="text-2xl font-serif capitalize">Saved {category}</h1>
-        <FiSearch className="text-2xl" />
-      </div>
-      <div className="mt-6">{renderContent()}</div>
+      <Header
+        title={`Favourite ${category}`}
+        backButtonFlag={true}
+        navigateTo={`/user/${userId}/saved`}
+      />
+      <div className="mt-20">{renderContent()}</div>
     </div>
   );
 }
