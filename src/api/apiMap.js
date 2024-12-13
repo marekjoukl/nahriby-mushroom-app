@@ -11,8 +11,6 @@ export async function getLocations() {
 
 export async function createLocation(data) {
   try {
-    console.log("Input data:", data);
-
     // Handle image upload
     let imagePath = "";
     const imageFile = data.imageFile; // Extract imageFile from the input

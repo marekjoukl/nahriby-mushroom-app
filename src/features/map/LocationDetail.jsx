@@ -108,7 +108,7 @@ function LocationDetail() {
       <div
         className="h-60 bg-black bg-cover"
         style={{
-          backgroundImage: `url(${imageUrl || "/placeholder-image.jpg"})`, // Use placeholder if imageUrl is null
+          backgroundImage: `url(${imageUrl || ""})`, // Use placeholder if imageUrl is null
         }}
       ></div>
 
