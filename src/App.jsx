@@ -40,7 +40,6 @@ import CreateComment, {
 } from "./features/map/CreateComment";
 import EditLocation, {
   loader as editLocationLoader,
-  action as editLocationAction,
 } from "./features/map/EditLocation";
 
 import MushroomForm, {
@@ -52,7 +51,6 @@ import MushroomDetail, {
   loader as mushroomDetailLoader,
 } from "./features/mushrooms/MushroomDetail";
 import { Toaster } from "react-hot-toast";
-
 
 // Define the router with Root as the root element
 const router = createBrowserRouter([
@@ -85,7 +83,6 @@ const router = createBrowserRouter([
         path: "/map/:id/edit",
         element: <EditLocation />,
         loader: editLocationLoader,
-        action: editLocationAction,
       },
 
       {

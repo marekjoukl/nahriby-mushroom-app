@@ -17,6 +17,7 @@ function CreateLocation() {
     lat: lat,
     lng: lng,
   });
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     async function fetchMushrooms() {
@@ -31,6 +32,15 @@ function CreateLocation() {
       ...locationData,
       stars: rating,
     });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
   };
 
   const renderStars = () => {
@@ -61,13 +71,10 @@ function CreateLocation() {
 
   return (
     <>
-      <Header
-        title="Create new location"
-        type="saved_locations"
-        itemId={location.id}
-      />
+      <Header title="Create new location" />
       <Form
         method="POST"
+        encType="multipart/form-data"
         className="mx-auto min-h-screen space-y-4 bg-bg-primary p-6 pb-[5rem] pt-[5rem] text-white shadow-lg"
       >
         <div>
@@ -109,13 +116,39 @@ function CreateLocation() {
           />
         </div>
 
-        <div>
-          <input
-            placeholder="Image URL"
-            type="text"
-            name="image_url"
-            className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
-          />
+        <div className="flex flex-col">
+          <label className="block text-sm font-medium text-white">
+            Upload Photo
+          </label>
+          <div className="mt-2 flex flex-row items-center space-x-4">
+            <label
+              className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${
+                imageFile ? "hidden" : ""
+              }`}
+            >
+              Choose File
+              <input
+                type="file"
+                name="imageFile"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+            <div
+              className={`flex items-center space-x-4 ${imageFile ? "" : "hidden"}`}
+            >
+              <span className="text-sm text-gray-300">{imageFile?.name}</span>
+              <button
+                type="button"
+                onClick={removeImage}
+                className="rounded-full bg-red-500 p-2 text-xs font-bold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+                title="Remove Photo"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -166,7 +199,12 @@ function CreateLocation() {
 
 export async function action({ request }) {
   const formData = await request.formData();
+
+  // Convert form data into a plain object
   const data = Object.fromEntries(formData);
+  data.mushrooms = JSON.parse(data.mushrooms); // Convert mushrooms string back to an array
+  data.imageFile = formData.get("imageFile"); // Get the uploaded image file
+
   try {
     const newLocation = await createLocation(data);
     toast.success("Location created successfully!");

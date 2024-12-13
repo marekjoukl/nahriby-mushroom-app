@@ -1,5 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation } from "../../api/apiMap";
+import { getImageUrl } from "../../api/apiMap"; // Import your new function
 import Button from "../../ui/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faCar } from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +10,7 @@ import { getMushrooms } from "../../api/apiMushrooms";
 import { useUserId } from "../../contexts/UserContext";
 import { getCommentsByLocation } from "../../api/apiComments";
 import Header from "../../ui/Header";
-import { FaEdit, FaHeart } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 
 function LocationDetail() {
   const { location } = useLoaderData();
@@ -19,6 +20,26 @@ function LocationDetail() {
   const [mushrooms, setMushrooms] = useState([]);
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(null); // State for image URL
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
+
+  useEffect(() => {
+    async function fetchImageUrl() {
+      setIsLoadingImage(true);
+      try {
+        if (location.image_url) {
+          const url = await getImageUrl(location.image_url);
+          setImageUrl(url);
+        }
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+      } finally {
+        setIsLoadingImage(false); // Ensure `isLoadingImage` is always updated
+      }
+    }
+
+    fetchImageUrl();
+  }, [location.image_url]);
 
   function handleEditLocation() {
     navigate(`/map/${location.id}/edit`);
@@ -30,15 +51,14 @@ function LocationDetail() {
 
   useEffect(() => {
     async function fetchComments() {
-      setIsLoading(true); // Set loading to true at the start of fetch
+      setIsLoading(true);
 
       try {
         const commentsData = await getCommentsByLocation(location.id);
 
-        // Fetch the author information for each comment
         const commentsWithAuthor = await Promise.all(
           commentsData.map(async (comment) => {
-            const author = await getUser(comment.author); // Fetch the author data
+            const author = await getUser(comment.author);
             return {
               ...comment,
               authorName: author.name,
@@ -51,7 +71,7 @@ function LocationDetail() {
       } catch (error) {
         console.error("Error fetching comments:", error);
       } finally {
-        setIsLoading(false); // Set loading to false once done
+        setIsLoading(false);
       }
     }
 
@@ -88,17 +108,21 @@ function LocationDetail() {
       <div
         className="h-60 bg-black bg-cover"
         style={{
-          backgroundImage: `url(${location.image_url})`,
+          backgroundImage: `url(${imageUrl || "/placeholder-image.jpg"})`, // Use placeholder if imageUrl is null
         }}
       ></div>
 
       <div className="border-b border-gray-500 p-4">
         <div className="flex gap-2 pb-2">
-          <img
-            src={user.image_url}
-            alt={`${user.name}'s profile`}
-            className="h-10 w-10 rounded-full object-cover"
-          />
+          {isLoadingImage ? (
+            <p>Loading...</p>
+          ) : (
+            <img
+              src={user.image_url}
+              alt={`${user.name}'s profile`}
+              className="h-10 w-10 rounded-full object-cover"
+            />
+          )}
           <div>
             <p className="font-semibold">{user.name}</p>
             <p className="text-sm text-gray-300">
@@ -130,8 +154,8 @@ function LocationDetail() {
           <div
             className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-200"
             onClick={() => {
-              const lat = location.lat; // Replace with actual latitude
-              const lng = location.lng; // Replace with actual longitude
+              const lat = location.lat;
+              const lng = location.lng;
               const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
               window.open(googleMapsUrl, "_blank");
             }}
@@ -141,7 +165,6 @@ function LocationDetail() {
         </div>
       </div>
       <div className="border-b border-gray-500 p-4">
-        <div className="mb-2 flex items-center"></div>
         <p className="mb-2">{location.description}</p>
         <p className="text-sm text-gray-400">
           Mushrooms in this location:{" "}
@@ -157,7 +180,7 @@ function LocationDetail() {
           </span>
         </p>
       </div>
-
+      {/* Comments Section */}
       <div className="border-b border-gray-500 p-4">
         <div className="flex items-center justify-between p-4">
           <h2 className="text-lg font-bold">Comments ({comments.length})</h2>
@@ -188,19 +211,6 @@ function LocationDetail() {
                     })}
                   </p>
                 </div>
-              </div>
-              <div className="mb-2 flex items-center">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <FontAwesomeIcon
-                    key={index}
-                    icon={faStar}
-                    className={`${
-                      index < comment.stars
-                        ? "text-yellow-500"
-                        : "text-gray-500"
-                    } text-lg`}
-                  />
-                ))}
               </div>
               <p>{comment.description}</p>
             </div>

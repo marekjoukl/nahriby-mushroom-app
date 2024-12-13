@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { getLocation, updateLocation, deleteLocation } from "../../api/apiMap";
+import {
+  updateLocation,
+  deleteLocation,
+  getLocation,
+  uploadImageAndGetUrl,
+} from "../../api/apiMap";
 import Header from "../../ui/Header";
 import toast from "react-hot-toast";
 
@@ -16,7 +21,11 @@ function EditLocation() {
     image_url: location.image_url || "",
     description: location.description || "",
     author: location.author || 42,
+    imageFile: null, // New file input
   });
+
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleStarsClick = (rating) => {
     setLocationData((prev) => ({
@@ -50,18 +59,53 @@ function EditLocation() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setLocationData((prev) => ({
+      ...prev,
+      imageFile: file,
+      image_url: file.name,
+    }));
+  };
+
+  const removeImage = () => {
+    setLocationData((prev) => ({
+      ...prev,
+      imageFile: null,
+      image_url: "", // Clear existing image URL
+    }));
+  };
+
   const handleSave = async () => {
+    setIsLoading(true); // Set loading to true
     try {
-      await updateLocation(location.id, locationData);
+      let imagePath = locationData.image_url;
+
+      // If a new file is uploaded, handle the upload using the backend function
+      if (locationData.imageFile) {
+        imagePath = await uploadImageAndGetUrl(locationData.imageFile);
+      }
+
+      // Update location data
+      const updatedData = {
+        ...locationData,
+        image_url: imagePath,
+        imageFile: undefined, // Exclude file from the update payload
+      };
+
+      await updateLocation(location.id, updatedData);
       toast.success("Location updated successfully!");
       navigate(`/map/${location.id}`);
     } catch (error) {
       toast.error("Failed to update location.");
       console.error(error);
+    } finally {
+      setIsLoading(false); // Set loading to false
     }
   };
 
   const handleDelete = async () => {
+    setIsLoading(true); // Set loading to true
     try {
       await deleteLocation(location.id);
       toast.success("Location deleted successfully!");
@@ -69,6 +113,8 @@ function EditLocation() {
     } catch (error) {
       toast.error("Failed to delete location.");
       console.error(error);
+    } finally {
+      setIsLoading(false); // Set loading to false
     }
   };
 
@@ -84,12 +130,15 @@ function EditLocation() {
         className="mx-auto min-h-screen space-y-4 bg-bg-primary p-6 pb-[5rem] pt-[5rem] text-white shadow-lg"
       >
         <div>
+          <label className="block p-1 text-sm font-medium text-white">
+            Name
+          </label>
           <input
             type="text"
             name="name"
             value={locationData.name}
             onChange={handleChange}
-            placeholder="Name"
+            placeholder="Name of the location"
             className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
             required
           />
@@ -114,6 +163,9 @@ function EditLocation() {
         <input type="hidden" name="lng" value={locationData.lng} />
 
         <div>
+          <label className="block p-1 text-sm font-medium text-white">
+            Description
+          </label>
           <textarea
             name="description"
             value={locationData.description}
@@ -126,36 +178,84 @@ function EditLocation() {
         </div>
 
         <div>
-          <input
-            type="text"
-            name="image_url"
-            value={locationData.image_url}
-            onChange={handleChange}
-            placeholder="Image URL"
-            className="w-full rounded-xl border border-gray-300 p-3 text-black focus:ring focus:ring-green-200"
-          />
+          <label className="block text-sm font-medium text-white">Photo</label>
+          <div className="mt-2 flex items-center space-x-4">
+            {!locationData.image_url && (
+              <label className="flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                Choose File
+                <input
+                  type="file"
+                  name="imageFile"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            )}
+            {locationData.image_url && (
+              <>
+                <p>
+                  {locationData.image_url.split("_")[1] ||
+                    locationData.image_url}
+                </p>
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="rounded-full bg-red-500 p-2 text-xs font-bold text-white hover:bg-red-600"
+                  title="Remove Photo"
+                >
+                  ✕
+                </button>
+              </>
+            )}
+          </div>
         </div>
-
-        <input type="hidden" name="author" value={locationData.author} />
 
         <div className="flex justify-between">
           <button
             type="button"
             onClick={handleSave}
             className="rounded-full bg-navbar-active px-4 py-2 text-white hover:bg-[#0cd784] focus:outline-none focus:ring-2 focus:ring-[#0FE596] focus:ring-opacity-50"
+            disabled={isLoading} // Disable button when loading
           >
-            Save Changes
+            {isLoading ? "Saving..." : "Save Changes"}
           </button>
 
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={() => setIsModalOpen(true)}
             className="rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            disabled={isLoading} // Disable button when loading
           >
             Delete Location
           </button>
         </div>
       </Form>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-3/4 rounded-lg bg-white p-6 shadow-lg">
+            <p className="text-gray-800">
+              Are you sure you want to delete this location?
+            </p>
+            <div className="mt-4 flex justify-end space-x-4">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="rounded bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                disabled={isLoading} // Disable button when loading
+              >
+                {isLoading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -166,13 +266,6 @@ export async function loader({ params }) {
     throw new Response("Location not found", { status: 404 });
   }
   return { location };
-}
-
-export async function action({ request, params }) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-  await updateLocation(params.id, data);
-  return redirect(`/map/${params.id}`);
 }
 
 export default EditLocation;
