@@ -3,6 +3,7 @@ import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { createMushroom, getMushroom, updateMushroom, deleteMushroom } from "../../api/apiMushrooms";
 import BackButton from "../../ui/BackButton";
 import { useUserId } from "../../contexts/UserContext";
+import toast from "react-hot-toast";
 
 function MushroomForm() {
     const { mushroom } = useLoaderData(); // Load initial data from loader
@@ -26,6 +27,7 @@ function MushroomForm() {
 
     const handleDelete = async () => {
         await deleteMushroom(mushroom.id);
+        toast.success("Mushroom deleted successfully!");
         navigate("/mushrooms");
     };
 
@@ -150,9 +152,11 @@ export async function action({ request, params }) {
     const data = Object.fromEntries(formData);
     if (params.id) {
         await updateMushroom(params.id, data);
+        toast.success("Mushroom updated successfully!");
         return redirect("/mushrooms");
     } else {
         await createMushroom(data);
+        toast.success("Mushroom created successfully!");
         return redirect("/mushrooms");
     }
 }

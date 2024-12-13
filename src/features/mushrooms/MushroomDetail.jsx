@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { searchMushroomsByName } from "../../api/apiMushrooms";
 import SimilarMushroomsPopup from "../../ui/SimilarMushroomsPopup";
 import { addOrUpdateSimilarMushrooms, getSimilarMushroomsByMushroomId, removeMushroomFromSimilarityGroups } from "../../api/apiSimilarMushrooms";
+import toast from "react-hot-toast";
 
 function MushroomDetail() {
     const { mushroom } = useLoaderData();
@@ -36,11 +37,13 @@ function MushroomDetail() {
 
     const handleAddSimilar = async (mushroomId) => {
         await addOrUpdateSimilarMushrooms(mushroom.id, mushroomId);
+        toast.success("Mushroom added to similarity group!");
         fetchSimilarMushrooms();
     };
 
     const handleRemoveFromSimilarityGroups = async () => {
         await removeMushroomFromSimilarityGroups(mushroom.id);
+        toast.success("Mushroom removed from similarity group!");
         setSimilarMushrooms([]);
     };
 
@@ -70,6 +73,11 @@ function MushroomDetail() {
         }
     };
 
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+        setSearchResults([]);
+    };
+
     return (
         <div className="bg-[#1a2a1d] pb-20 min-h-screen p-5 text-white">
             <Header
@@ -92,29 +100,35 @@ function MushroomDetail() {
                 <p className={`text-lg text-left mt-4 ${getToxicityColor(mushroom.toxicity)}`}>
                     <strong>Toxicity:</strong> {getToxicityLabel(mushroom.toxicity)}
                 </p>
-                <button
-                    onClick={() => setIsPopupOpen(true)}
-                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-                >
-                    Add to Similar Mushrooms
-                </button>
+                {similarMushrooms.length === 0 && (
+                    <button
+                        onClick={() => setIsPopupOpen(true)}
+                        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+                    >
+                        Add to Similar Mushrooms
+                    </button>
+                )}
                 {isPopupOpen && (
                     <SimilarMushroomsPopup
-                        onClose={() => setIsPopupOpen(false)}
+                        onClose={handleClosePopup}
                         onSearch={handleAddSimilarMushroom}
                         searchResults={searchResults}
-                        currentMushroomId={mushroom.id}
+                        // currentMushroomId={mushroom.id}
                         onAddSimilar={handleAddSimilar}
                     />
                 )}
                 <div className="mt-10">
-                    <h3 className="text-2xl font-bold mb-4">Similar Mushrooms</h3>
-                    <button
-                        onClick={handleRemoveFromSimilarityGroups}
-                        className="mb-4 bg-red-500 text-white py-2 px-4 rounded"
-                    >
-                        Remove from Similarity Groups
-                    </button>
+                    {similarMushrooms.length > 0 && (
+                        <>
+                            <h3 className="text-2xl font-bold mb-4">Similar Mushrooms</h3>
+                            <button
+                                onClick={handleRemoveFromSimilarityGroups}
+                                className="mb-4 bg-red-500 text-white py-2 px-4 rounded"
+                            >
+                                Remove from Similarity Groups
+                            </button>
+                        </>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {similarMushrooms.map((similarMushroom) => (
                             <div key={similarMushroom.id} className="bg-gray-800 p-4 rounded-lg flex items-center">
