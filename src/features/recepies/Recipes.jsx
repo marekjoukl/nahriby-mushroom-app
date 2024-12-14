@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom"
-import { FaPlus } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
+import { FaPlus, FaSearch, FaStar, FaUtensils, FaClock } from "react-icons/fa";
 import { getRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
 
@@ -85,10 +84,25 @@ function Recipes() {
                         
                         {/* General recipe info */}
                         <div className="p-4 space-y-2">
-                            <h2 className="text-lg font-bold text-gray-900">{recipe.name}</h2>
-                            <p className="text-sm text-gray-600">Rating: {recipe.rating}</p>
-                            <p className="text-sm text-gray-600">Serves: {recipe.serves}</p>
-                            <p className="text-sm text-gray-600"> Cooking Time: {recipe.cooking_hours} hours {recipe.cooking_minutes} minutes</p>
+                            <h2 className="text-lg font-bold text-gray-900 font-serif">{recipe.name}</h2>
+
+                            <div className="flex items-center">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <FaStar
+                                        key={star}
+                                        className={star <= recipe.rating ? "text-yellow-400" : "text-gray-300"}
+                                    />
+                                ))}
+                            </div>
+
+                            <p className="text-sm text-gray-600 flex items-center font-semibold font-mono">
+                                <FaUtensils className="text-orange-500 mr-2"/> {recipe.serves}
+                            </p>
+                            <p className="text-sm text-gray-600 flex items-center font-semibold font-mono">
+                                <FaClock className="text-orange-500 mr-2"/>
+                                {recipe.cooking_hours > 0 && `${recipe.cooking_hours} hours`}
+                                {recipe.cooking_minutes > 0 && `${recipe.cooking_minutes} minutes`}
+                            </p>
                         </div>
                     </div>
                 ))}

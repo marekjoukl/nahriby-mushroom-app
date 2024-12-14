@@ -14,8 +14,8 @@ function RecipeAdd() {
        image_url: recipe.image_url || "",
        rating: recipe.rating || 0,
        serves: recipe.serves || "",
-       cooking_hours: recipe.cooking_hours || "",
-       cooking_minutes: recipe.cooking_minutes || "",
+       cooking_hours: recipe.cooking_hours || 0,
+       cooking_minutes: recipe.cooking_minutes || 0,
        ingredient_desc: recipe.ingredient_desc || "",
        method_desc: recipe.method_desc || "",
     });
@@ -24,6 +24,7 @@ function RecipeAdd() {
 
     // Handling submiting new recipe
     const submitRecipe = async (e) => {
+        console.log("Updating recipe with data:", recipeData); // Debug
         await updateRecipe(recipe.id, recipeData);
 
         navigate(-1);

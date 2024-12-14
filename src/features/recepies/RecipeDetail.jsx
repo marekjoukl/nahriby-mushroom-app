@@ -1,10 +1,67 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getRecipe, updateRecipeRating } from "../../api/apiRecipes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaStar, FaHeart, FaEdit } from "react-icons/fa";
 import Header from "../../ui/Header";
 import { useUserId } from "../../contexts/UserContext";
+import { getMushrooms } from "../../api/apiMushrooms";
 
+function HighlightIngredients({ ingredientDesc }) {
+    const [mushrooms, setMushrooms] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMushrooms = async () => {
+            try {
+                const mushroomsData = await getMushrooms();
+                setMushrooms(mushroomsData);
+            } catch (error) {
+                console.error("Error fetching mushrooms:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMushrooms();
+    }, []);
+
+    const navigateToMushroom = (id) => {
+        window.location.href = `/mushrooms/mushroomDetail/${id}`;
+    };
+
+    const parseIngredients = () => {
+        if (!mushrooms.length || !ingredientDesc) return "No ingredients available.";
+
+        return ingredientDesc.split("\n").map((line, index) => (
+            <div key={index} className="mb-2">
+                {line.split(/,\s*| /).map((word, wordIndex) => {
+                    const trimmedWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+                    const mushroom = mushrooms.find(m =>
+                        m.name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase().includes(trimmedWord)
+                    );
+
+                    return mushroom ? (
+                        <span
+                            key={wordIndex}
+                            className="text-green-600 cursor-pointer"
+                            onClick={() => navigateToMushroom(mushroom.id)}
+                        >
+                            {word}{" "}
+                        </span>
+                    ) : (
+                        <span key={wordIndex}>{word} </span>
+                    );
+                })}
+            </div>
+        ));
+    };
+
+    if (loading) {
+        return <p>Loading ingredients...</p>;
+    }
+
+    return <div className="text-sm text-gray-700">{parseIngredients()}</div>;
+}
 
 function RecipeDetail() {
     const recipe = useLoaderData();
@@ -74,8 +131,8 @@ function RecipeDetail() {
                     <span className="text-sm text-black">{recipe.cooking_hours} hours {recipe.cooking_minutes} minutes</span>
                 </p>
                 <div className="mt-4">
-                    <h3 className="font-semibold font-semibold text-gray-800">Ingredients:</h3>
-                    <p className="text-sm text-gray-700 whitespace-pre-line">{recipe.ingredient_desc}</p>
+                    <h3 className="font-semibold text-gray-800">Ingredients:</h3>
+                    <HighlightIngredients className="text-gray-800" ingredientDesc={recipe.ingredient_desc}></HighlightIngredients>
                 </div>
                 <div className="mt-4">
                     <h3 className="font-semibold text-gray-800">Method:</h3>

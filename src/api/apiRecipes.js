@@ -53,6 +53,11 @@ export async function updateRecipe(id, data) {
         .from("recipes")
         .update(data)
         .eq("id", id);
+
+    if (error) {
+        console.error("Error updating recipe:", error);
+        throw new Error(error.message);
+    }
 }
 
 export async function deleteRecipe(id) {
