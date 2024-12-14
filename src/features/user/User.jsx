@@ -142,7 +142,7 @@ function User() {
       <div className="mt-20 flex flex-col items-center">
         <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white">
           <img
-            src={user.image_url || "https://via.placeholder.com/150"} // Fallback for profile image
+            src={user.image_url}
             alt={`${user.name}'s profile`}
             className="h-full w-full object-cover"
           />

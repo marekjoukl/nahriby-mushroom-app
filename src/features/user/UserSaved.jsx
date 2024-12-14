@@ -11,7 +11,7 @@ function UserSaved() {
   const [locationImages, setLocationImages] = useState([]);
 
   useEffect(() => {
-    // Fetch images for mushrooms
+  
     const fetchMushroomImages = async () => {
       const images = await Promise.all(
         mushrooms.map(async (mushroom) => {
@@ -30,7 +30,6 @@ function UserSaved() {
       setMushroomImages(images);
     };
 
-    // Fetch images for locations
     const fetchLocationImages = async () => {
       const images = await Promise.all(
         locations.map(async (location) => {
@@ -174,7 +173,6 @@ function UserSaved() {
   );
 }
 
-// Loader function
 export async function loader({ params }) {
   const userId = params.id;
 
