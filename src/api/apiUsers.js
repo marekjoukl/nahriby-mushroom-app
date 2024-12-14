@@ -246,3 +246,18 @@ export async function getTwoUserSavedItems(userId) {
       return { error: error.message };
     }
 }
+
+export async function getImageUrl(imagePath, bucketName) {
+  if (!imagePath) return null;
+
+  const { data: publicURL, error } = supabase.storage
+    .from(bucketName)
+    .getPublicUrl(imagePath);
+
+  if (error) {
+    console.error(`Error fetching image from ${bucketName}:`, error.message);
+    return null;
+  }
+
+  return publicURL.publicUrl;
+}

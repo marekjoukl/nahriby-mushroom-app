@@ -1,10 +1,11 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import {
   getUser,
   getUserLocations,
   getUserMushrooms,
   getUserRecipes,
+  getImageUrl,
 } from "../../api/apiUsers";
 import { FiSettings, FiMapPin, FiBookmark, FiPlus } from "react-icons/fi";
 import Header from "../../ui/Header";
@@ -12,7 +13,52 @@ import Header from "../../ui/Header";
 function User() {
   const { user, locations, mushrooms, recipes } = useLoaderData();
   const [activeTab, setActiveTab] = useState("Locations");
+  const [locationImages, setLocationImages] = useState([]);
+  const [mushroomImages, setMushroomImages] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch images for locations
+    const fetchLocationImages = async () => {
+      const images = await Promise.all(
+        locations.map(async (location) => {
+          if (location.image_url) {
+            try {
+              const url = await getImageUrl(location.image_url, "location-images");
+              return { ...location, image_url: url };
+            } catch (error) {
+              console.error(`Error fetching image for location: ${location.name}`, error);
+              return { ...location, image_url: null };
+            }
+          }
+          return location;
+        })
+      );
+      setLocationImages(images);
+    };
+
+    // Fetch images for mushrooms
+    const fetchMushroomImages = async () => {
+      const images = await Promise.all(
+        mushrooms.map(async (mushroom) => {
+          if (mushroom.image_url) {
+            try {
+              const url = await getImageUrl(mushroom.image_url, "mushrooms-images");
+              return { ...mushroom, image_url: url };
+            } catch (error) {
+              console.error(`Error fetching image for mushroom: ${mushroom.name}`, error);
+              return { ...mushroom, image_url: null };
+            }
+          }
+          return mushroom;
+        })
+      );
+      setMushroomImages(images);
+    };
+
+    fetchLocationImages();
+    fetchMushroomImages();
+  }, [locations, mushrooms]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -55,7 +101,7 @@ function User() {
           <img
             src={item.image_url}
             alt={item.name}
-            className="h-full w-full object-cover transition-transform duration-200 hover:opacity-80"
+            className="h-full w-full object-cover transition-transform duration-200 group-hover:opacity-80"
           />
           {/* Hover Box */}
           <div className="absolute bottom-0 left-0 w-full bg-white text-black text-sm font-bold flex items-center justify-center rounded-md overflow-hidden transition-all duration-100 ease-in-out h-0 group-hover:h-1/4">
@@ -64,40 +110,39 @@ function User() {
         </div>
       ));
     };
-  
+
     if (activeTab === "Recipes") {
       return renderItems(recipes, "recipes");
     }
     if (activeTab === "Mushrooms") {
-      return renderItems(mushrooms, "mushrooms");
+      return renderItems(mushroomImages, "mushrooms");
     }
     if (activeTab === "Locations") {
-      return renderItems(locations, "locations");
+      return renderItems(locationImages, "locations");
     }
   };
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scrolls to the top of the page
-  }, []); // Runs only once
-  
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-bg-primary p-5 pb-20 text-center font-sans text-white items-center">
       {/* Header Section with Title and Icons */}
-      <Header 
+      <Header
         title="Your Profile"
         backButtonFlag={false}
         RightIcon1={FiBookmark}
         onRightIcon1Click={handleBookmarkClick}
         RightIcon2={FiSettings}
-        onRightIcon2Click={handleSettingsClick}>
-      </Header>
+        onRightIcon2Click={handleSettingsClick}
+      />
 
       {/* Profile Section */}
       <div className="mt-20 flex flex-col items-center">
         <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white">
           <img
-            src={user.image_url}
+            src={user.image_url || "https://via.placeholder.com/150"} // Fallback for profile image
             alt={`${user.name}'s profile`}
             className="h-full w-full object-cover"
           />
@@ -119,7 +164,7 @@ function User() {
       {/* Tabs Section */}
       <div className="mt-5 flex justify-around border-b border-green-500 pb-2">
         <button
-          className={`p-2 text-lg ${
+          className={`p-2 text-base sm:text-lg ${
             activeTab === "Locations"
               ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
               : "text-green-300 transition-transform duration-100 hover:opacity-80"
@@ -129,7 +174,7 @@ function User() {
           Locations
         </button>
         <button
-          className={`p-2 text-lg ${
+          className={`p-2 text-base sm:text-lg ${
             activeTab === "Recipes"
               ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
               : "text-green-300 transition-transform duration-100 hover:opacity-80"
@@ -139,7 +184,7 @@ function User() {
           Recipes
         </button>
         <button
-          className={`p-2 text-lg ${
+          className={`p-2 text-base sm:text-lg ${
             activeTab === "Mushrooms"
               ? "border-b-2 border-green-500 font-bold text-red-500 transition-transform duration-100 hover:opacity-80"
               : "text-green-300 transition-transform duration-100 hover:opacity-80"
