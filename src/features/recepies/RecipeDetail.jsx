@@ -43,7 +43,7 @@ function HighlightIngredients({ ingredientDesc }) {
                     return mushroom ? (
                         <span
                             key={wordIndex}
-                            className="text-green-600 cursor-pointer"
+                            className="text-green-600 cursor-pointer font-bold"
                             onClick={() => navigateToMushroom(mushroom.id)}
                         >
                             {word}{" "}
@@ -123,8 +123,8 @@ function RecipeDetail() {
                     <span className="text-sm text-black">{recipe.rating}</span>
                 </p>
                 <p>
-                    <span className="text-sm text-gray-600">Serves: {recipe.serves}</span>
-                    <span>{recipe.serves}</span>
+                    <span className="text-sm font-semibold text-gray-600">Serves: </span>
+                    <span className="text-sm text-black">{recipe.serves}</span>
                 </p>
                 <p>
                     <span className="text-sm font-semibold text-gray-600"> Cooking Time: </span>                                           

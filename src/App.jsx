@@ -22,7 +22,9 @@ import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
 import RecipeDetail, {
   loader as recipeDetailLoader,
 } from "./features/recepies/RecipeDetail";
-import RecipeAdd from "./features/recepies/RecipeAdd";
+import RecipeAdd, {
+  action as recipeAddAction,
+} from "./features/recepies/RecipeAdd";
 import RecipeEdit, {
   loader as recipeEditLoader,
 } from "./features/recepies/RecipeEdit";
@@ -149,6 +151,7 @@ const router = createBrowserRouter([
       {
         path: "/recipes/add",
         element: <RecipeAdd />,
+        action: recipeAddAction,
       },
       {
         path: "/recipes/:id/edit",

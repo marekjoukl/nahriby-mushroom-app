@@ -81,9 +81,9 @@ function RecipeAdd() {
                         type="text" name="name" placeholder="Recipe Name" value={recipeData.name}>
                     </input>
                 </div>
-                {/* Image URL */}
+                {/* Image */}
                 <div className="space-y-1">
-                    <label className="block font-semibold">Image URL</label>
+                    <label className="block font-semibold">Uploaded Image</label>
                     <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
                         type="text" name="image_url" placeholder="Image URL" value={recipeData.image_url}>
                     </input>

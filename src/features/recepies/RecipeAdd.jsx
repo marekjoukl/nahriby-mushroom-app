@@ -1,135 +1,186 @@
 import { useId, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect, Form } from "react-router-dom";
 import { createRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
 import { FaCheckCircle } from "react-icons/fa";
 import { useUserId } from "../../contexts/UserContext";
+import toast from "react-hot-toast";
 
+// Fix tab indent
 function RecipeAdd() {
-    const navigate = useNavigate();
     const userId = useUserId();
-    const [recipeData, setRecipeData] = useState({
-       name: "",
-       image_url: "",
-       rating: 0,
-       serves: "",
-       cooking_hours: "",
-       cooking_minutes: "",
-       ingredient_desc: "",
-       method_desc: "",
-       author: userId,
-    });
-
-    const [successMessage, setSuccessMessage] = useState("");
-
-    // Handling submiting new recipe
-    const submitRecipe = async (e) => {
-        await createRecipes(recipeData);
-
-        setSuccessMessage("Recipe added successfully", useUserId);
-        setRecipeData({
-            name: "",
-            image_url: "",
-            rating: 0,
-            serves: "",
-            cooking_hours: "",
-            cooking_minutes: "",
-            ingredient_desc: "",
-            method_desc: "",
-            author: userId,
-        });
-
-        navigate("/recipes");
-        // Show message for 4 seconds
-        setTimeout(() => {
-            setSuccessMessage("")
-        }, 4000);
+    const [imageFile, setImageFile] = useState(null);
+  
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+      setImageFile(file);
     };
-
-    // Changes when typing given form inputs
-    const onChange = (e) => {
-        const { name, value } = e.target;
-        setRecipeData((prevData) => ({
-            ...prevData,
-            [name]: value,  
-        }));
-    }
-
+  
+    const removeImage = () => {
+      setImageFile(null);
+    };
+  
     return (
-        <div className="pl-8 pr-8 pt-20 pb-20">
-        <div className="bg-white shadow-md rounded-lg border border-gray-200 mt-5 pt-5 text-black flex justify-center w-full">
-            {/* Header */}    
-            <Header 
-                title="New Recipe"                
-                backButtonFlag={true}
-                RightIcon1={FaCheckCircle}
-                onRightIcon1Click={submitRecipe}
-                >
-            </Header>       
-
-            {/* Success message after adding recipe */}
-            {successMessage && (
-                <div className="fixed top-16 bg-green-500 text-white p-3 rounded text-center w-full h-16">
-                    {successMessage}
+      <>
+        <Header 
+          title="New Recipe"
+          backButtonFlag={true}
+        //   RightIcon1={FaCheckCircle}
+        />
+        <Form
+          method="POST"
+          encType="multipart/form-data"
+          className="space-y-4 mx-auto min-h-screen bg-white p-6 rounded-lg shadow-lg text-black pt-16"
+        >
+          {/* Recipe Name */}
+          <div>
+            <label className="block font-semibold">Recipe Name<span className="text-red-600"> *</span></label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Recipe Name"
+              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+              required
+            />
+          </div>
+  
+          {/* Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Upload Photo</label>
+            <div className="mt-2 flex flex-row items-center space-x-4">
+              {!imageFile && (
+                <label className="flex cursor-pointer items-center justify-center bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600">
+                  Choose File
+                  <input
+                    type="file"
+                    name="imageFile"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
+              {imageFile && (
+                <div className="flex items-center space-x-4">
+                  <span className="text-black">{imageFile.name}</span>
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="rounded-full bg-red-500 text-white p-2 hover:bg-red-600"
+                    title="Remove Photo"
+                  >
+                    ✕
+                  </button>
                 </div>
-            )}
-    
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-4 w-3/4 pb-5">
-                {/* Recipe Name  */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Recipe Name<span className="text-red-600"> *</span></label>
-                    <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                        type="text" name="name" placeholder="Recipe Name" value={recipeData.name}>
-                    </input>
-                </div>
-                {/* Image URL */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Image URL</label>
-                    <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                        type="text" name="image_url" placeholder="Image URL" value={recipeData.image_url}>
-                    </input>
-                </div>
-                {/* Serves */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Number of serves<span className="text-red-600"> *</span></label>
-                    <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                        type="number" name="serves" placeholder="Serves" value={recipeData.serves} min="1">
-                    </input>
-                </div>
-                {/* Cooking Time */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Estimated Cooking Time<span className="text-red-600"> *</span></label>
-                    <div className="flex space-x-4">
-                        <input className="w-1/2 border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                            type="number" name="cooking_hours" placeholder="Hours" value={recipeData.cooking_hours} min="0">
-                        </input>                
-                        <input className="w-1/2 border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                            type="number" name="cooking_minutes" placeholder="Minutes" value={recipeData.cooking_minutes} min="0" max="59">
-                        </input>
-                    </div>
-                </div>
-
-                {/* <input type="hidden" name="author" value={useUserId()} /> */}
-
-                {/* Ingredients */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Ingredients Description<span className="text-red-600"> *</span></label>
-                    <textarea className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500 min-h-32" onChange={onChange}
-                            name="ingredient_desc" placeholder="Describe Ingredients ..." value={recipeData.ingredient_desc}>                            
-                    </textarea>
-                </div>
-                {/* Method */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Method<span className="text-red-600"> *</span></label>
-                    <textarea className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500 min-h-32" onChange={onChange}
-                            name="method_desc" placeholder="Describe Cooking Process ..." value={recipeData.method_desc}>                            
-                    </textarea>
-                </div>                
-            </form>
-        </div>
-        </div>
-        
+              )}
+            </div>
+          </div>
+  
+          {/* Serves */}
+          <div>
+            <label className="block font-semibold">Number of serves<span className="text-red-600"> *</span></label>
+            <input
+              type="number"
+              name="serves"
+              placeholder="Serves"
+              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+              min="1"
+              required
+            />
+          </div>
+  
+          {/* Cooking Time */}
+          <div>
+            <label className="block font-semibold">Estimated Cooking Time<span className="text-red-600"> *</span></label>
+            <div className="flex space-x-4">
+              <input
+                type="number"
+                name="cooking_hours"
+                placeholder="Hours"
+                className="w-1/2 border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+                min="0"
+              />
+              <input
+                type="number"
+                name="cooking_minutes"
+                placeholder="Minutes"
+                className="w-1/2 border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+                min="0"
+                max="59"
+              />
+            </div>
+          </div>
+  
+          {/* Ingredients */}
+          <div>
+            <label className="block font-semibold">Ingredients Description<span className="text-red-600"> *</span></label>
+            <textarea
+              name="ingredient_desc"
+              placeholder="Describe Ingredients ..."
+              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
+              rows="4"
+              required
+            />
+          </div>
+  
+          {/* Method */}
+          <div>
+            <label className="block font-semibold">Method<span className="text-red-600"> *</span></label>
+            <textarea
+              name="method_desc"
+              placeholder="Describe Cooking Process ..."
+              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
+              rows="4"
+              required
+            />
+          </div>
+  
+          {/* Hidden Fields */}
+          <input type="hidden" name="author" value={userId} />
+  
+          {/* Submit Button */}
+          <div className="flex justify-center pb-20">
+            <button
+              type="submit"
+              className="rounded-full bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+            >
+              Publish Recipe
+            </button>
+          </div>
+        </Form>
+      </>
     );
-}
+  }
+  
+    export async function action({ request }) {
+        const formData = await request.formData();
+        const data = Object.fromEntries(formData); // Konvertovanie formulára na objekt
 
-export default RecipeAdd;
+        console.log("FormData entries:", Array.from(formData.entries())); // Skontrolujte obsah FormData
+        console.log("data: ", data);
+        const imageFile = formData.get("imageFile");
+
+        console.log("Image file received:", imageFile);
+
+        if (imageFile && imageFile.size > 0) {
+            console.log("Valid image file:", imageFile.name);
+        } else {
+            console.error("No valid image file found");
+        }
+
+        
+        data.imageFile = imageFile; // Pridanie súboru späť do objektu
+
+        try {
+            const newRecipe = await createRecipes(data); // Odoslanie do API
+            toast.success("Recipe created successfully!");
+
+            return redirect(`/recipes/${newRecipe[0].id}`); // Presmerovanie
+        } catch (error) {
+            console.error("Failed to create recipe:", error);
+            toast.error("Failed to create recipe. Please try again.");
+            return null;
+        }
+    }
+  
+  export default RecipeAdd;

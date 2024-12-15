@@ -100,7 +100,7 @@ function Recipes() {
                             </p>
                             <p className="text-sm text-gray-600 flex items-center font-semibold font-mono">
                                 <FaClock className="text-orange-500 mr-2"/>
-                                {recipe.cooking_hours > 0 && `${recipe.cooking_hours} hours`}
+                                {recipe.cooking_hours > 0 && `${recipe.cooking_hours} hours `}
                                 {recipe.cooking_minutes > 0 && `${recipe.cooking_minutes} minutes`}
                             </p>
                         </div>
