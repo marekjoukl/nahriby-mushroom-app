@@ -6,7 +6,7 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getMushroom, getImageUrl } from "../../api/apiMushrooms";
 import Header from "../../ui/Header";
-import { FaEdit, FaStar } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { useUserId } from "../../contexts/UserContext";
 import { useState, useEffect } from "react";
 import { searchMushroomsByName } from "../../api/apiMushrooms";
