@@ -22,6 +22,7 @@ function User() {
   const [locationImages, setLocationImages] = useState([]);
   const [mushroomImages, setMushroomImages] = useState([]);
   const [recipeImages, setRecipeImages] = useState([]);
+  const [position, setPosition] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,6 +92,27 @@ function User() {
     fetchRecipeImages();
   }, [locations, mushrooms, recipes]);
 
+  useEffect(() => {
+    // Attempt to fetch user's current position
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setPosition([latitude, longitude]);
+        },
+        (error) => {
+          console.error("Error fetching location:", error);
+          // Default position if geolocation fails
+          setPosition([49.1922443, 16.6113382]);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+      // Default position if geolocation is not available
+      setPosition([49.1922443, 16.6113382]);
+    }
+  }, []);
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -104,7 +126,12 @@ function User() {
       navigate("/mushrooms/mushroomForm");
     }
     if (activeTab === "Locations") {
-      navigate("/map/createLocation");
+      // Navigate to createLocation with lat and lng if available
+      if (position) {
+        navigate(`/map/createLocation?lat=${position[0]}&lng=${position[1]}`);
+      } else {
+        navigate("/map/createLocation");
+      }
     }
   };
 
