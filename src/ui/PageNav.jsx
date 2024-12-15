@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { NavLink } from "react-router-dom";
 import { MdMap } from "react-icons/md";
 import { IoBookOutline } from "react-icons/io5";

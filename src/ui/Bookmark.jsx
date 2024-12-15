@@ -1,3 +1,10 @@
+/**
+ * Project: ITU - Mushroom app
+ * Authors: Marek Joukl (xjoukl00)
+ *          Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";

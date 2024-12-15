@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation } from "../../api/apiMap";
 import { getImageUrl } from "../../api/apiMap"; // Import your new function
@@ -201,6 +207,7 @@ function LocationDetail() {
                   alt={`${comment.authorName}'s profile`}
                   className="mr-2 h-8 w-8 rounded-full"
                 />
+
                 <div>
                   <p className="font-semibold">{comment.authorName}</p>
                   <p className="text-sm text-gray-400">
@@ -211,6 +218,19 @@ function LocationDetail() {
                     })}
                   </p>
                 </div>
+              </div>
+              <div className="mb-2 flex items-center">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <FontAwesomeIcon
+                    key={index}
+                    icon={faStar}
+                    className={`${
+                      index < comment.stars
+                        ? "text-yellow-500"
+                        : "text-gray-500"
+                    } text-lg`}
+                  />
+                ))}
               </div>
               <p>{comment.description}</p>
             </div>

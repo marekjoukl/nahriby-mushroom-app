@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import { FiTrash2 } from "react-icons/fi";
 
 const TrashCan = ({ onClick }) => {

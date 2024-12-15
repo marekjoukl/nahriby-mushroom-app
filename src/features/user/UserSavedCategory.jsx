@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getUserSavedMushrooms, getUserSavedRecipes, getUserSavedLocations, getImageUrl } from "../../api/apiUsers";
@@ -10,18 +16,20 @@ function UserSavedCategory() {
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingDots, setLoadingDots] = useState(""); // State to manage dots animation
+  const [loadingDots, setLoadingDots] = useState(""); // Used for the "Loading..." animation
 
   useEffect(() => {
+    // Simple animation for the "Loading..." text
     const interval = setInterval(() => {
       setLoadingDots((prevDots) => (prevDots.length < 3 ? prevDots + "." : ""));
-    }, 300); // update every 300ms
+    }, 300);
     return () => clearInterval(interval);
   }, []);
 
   const fetchData = async () => {
     let fetchedItems;
 
+    // Fetch saved items based on the category
     if (category === "mushrooms") {
       const mushrooms = await getUserSavedMushrooms(userId);
       fetchedItems = await Promise.all(
@@ -55,8 +63,9 @@ function UserSavedCategory() {
         })
       );
     } else {
+      // Recipes don't need extra image fetching
       const recipes = await getUserSavedRecipes(userId);
-      fetchedItems = recipes; // Recipes don't have dynamic image fetching
+      fetchedItems = recipes;
     }
 
     setItems(fetchedItems);
@@ -65,10 +74,11 @@ function UserSavedCategory() {
 
   useEffect(() => {
     fetchData();
-    window.scrollTo(0, 0); // Scroll to the top of the page
+    window.scrollTo(0, 0); // Scroll to top when this component loads
   }, [category, userId]);
 
   const handleViewDetail = (id) => {
+    // Navigate to the detail page of the selected item based on the category
     if (category === "mushrooms") {
       navigate(`/mushrooms/mushroomDetail/${id}`);
     } else if (category === "recipes") {
@@ -79,6 +89,7 @@ function UserSavedCategory() {
   };
 
   const getToxicityLabel = (toxicity) => {
+    // Returns user-friendly toxicity label for mushrooms
     switch (toxicity) {
       case 1:
         return "Edible";
@@ -92,6 +103,7 @@ function UserSavedCategory() {
   };
 
   const getToxicityColor = (toxicity) => {
+    // Returns color class depending on mushroom toxicity level
     switch (toxicity) {
       case 1:
         return "text-green-500";
@@ -106,6 +118,7 @@ function UserSavedCategory() {
 
   const renderContent = () => {
     if (loading) {
+      // Shows a loading state with animated dots
       return <div className="text-center text-lg text-gray-300">Loading{loadingDots}</div>;
     }
 
@@ -115,6 +128,7 @@ function UserSavedCategory() {
         className="relative flex p-4 mb-4 bg-green-800 rounded-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
         onClick={() => handleViewDetail(item.id)}
       >
+        {/* Displays the item's image, which was fetched and converted to a public URL */}
         <img
           src={item.image_url}
           alt={item.name}
@@ -123,7 +137,7 @@ function UserSavedCategory() {
         <div className="ml-4">
           <h3 className="text-lg font-bold">{item.name}</h3>
 
-          {/* Additional details based on category */}
+          {/* Different categories show different details */}
           {category === "recipes" && (
             <>
               <div className="flex items-center text-xs text-gray-300 mt-1">
@@ -134,6 +148,7 @@ function UserSavedCategory() {
                 <FaUtensils className="mr-1" />
                 <span>{item.serves} servings </span>
               </div>
+              {/* Show rating as stars */}
               <div className="flex mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <FaStar
@@ -181,7 +196,7 @@ function UserSavedCategory() {
     <div className="min-h-screen bg-bg-primary p-6 text-white">
       <Header
         title={`Favourite ${category}`}
-        backButtonFlag={true}
+        backButtonFlag={true} // Let user go back to saved page
         navigateTo={`/user/${userId}/saved`}
       />
       <div className="mt-20">{renderContent()}</div>
@@ -189,6 +204,7 @@ function UserSavedCategory() {
   );
 }
 
+// Loader retrieves the category and userId from the URL params
 export async function loader({ params }) {
   const userId = params.id;
   const category = params.category;
