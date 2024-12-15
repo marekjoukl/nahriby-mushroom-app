@@ -1,6 +1,9 @@
 /**
  * Project: ITU - Mushroom app
- * Authors: Marek Joukl (xjoukl00),Aurel Strigáč (xstrig00), Igor Mikula (xmikul74), Ondrej Kožányi (xkozan01)
+ * Authors: Marek Joukl (xjoukl00),
+ *          Aurel Strigáč (xstrig00), 
+ *          Igor Mikula (xmikul74), 
+ *          Ondrej Kožányi (xkozan01)
  * Date: 15.12. 2024
  */
 
@@ -65,7 +68,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        index: true, // This makes / (root) route to the Map page
+        index: true,
         element: <Map />,
         loader: locationsLoader,
       },

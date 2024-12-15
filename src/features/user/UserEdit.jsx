@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import { useState, useEffect } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { getUser, updateUser, getImageUrl, uploadImageAndGetUrl } from "../../api/apiUsers";
@@ -25,6 +31,7 @@ function UserEdit() {
   const [showImageUrlField, setShowImageUrlField] = useState(false);
 
   useEffect(() => {
+    // Fetches a list of all countries and populates the dropdown
     async function fetchCountries() {
       try {
         const response = await fetch("https://restcountries.com/v3.1/all");
@@ -39,14 +46,17 @@ function UserEdit() {
   }, []);
 
   useEffect(() => {
+    // Makes sure the page starts at the top
     window.scrollTo(0, 0);
   }, []);
 
   const handleDeleteClick = () => {
+    // Opens the "delete user" confirmation popup
     setIsDeletePopupOpen(true);
   };
 
   const confirmDelete = async () => {
+    // Here the user should be normally deleted
     toast.error("This is your only user, dummy.");
     navigate(`/user/${user.id}`);
   };
@@ -56,10 +66,12 @@ function UserEdit() {
   };
 
   const handleCameraClick = () => {
+    // Toggle the manual "Image URL" field visibility
     setShowImageUrlField((prev) => !prev);
   };
 
   const handleInputChange = (e) => {
+    // Updates form state for inputs like name, email, etc.
     const { name, value } = e.target;
     setUserData((prev) => ({
       ...prev,
@@ -68,6 +80,7 @@ function UserEdit() {
   };
 
   const handleImageChange = async (e) => {
+    // Uploads a new profile image file to db and updates image_url
     const file = e.target.files[0];
     if (file) {
       setIsUploading(true);
@@ -111,6 +124,7 @@ function UserEdit() {
         className="mx-auto w-3/4 max-w-lg space-y-4 p-6 pb-20 text-white"
         style={{ backgroundColor: "#0B2602", borderRadius: "10px" }}
       >
+        {/* Profile picture section with camera icon overlay */}
         <div className="flex justify-center mb-4 mt-20">
           <div className="relative w-32 h-32">
             <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white">
@@ -131,6 +145,7 @@ function UserEdit() {
               style={{ width: "35px", height: "35px" }}
             >
               <FiCamera className="text-white" />
+              {/* Hidden file input that triggers image upload */}
               <input
                 type="file"
                 accept="image/*"
@@ -139,6 +154,7 @@ function UserEdit() {
               />
             </label>
             {isUploading && (
+              // Circular spinner overlay shown while image is uploading
               <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 rounded-full">
                 <div className="w-8 h-8 border-4 border-white border-t-transparent border-solid rounded-full animate-spin"></div>
               </div>
@@ -146,6 +162,7 @@ function UserEdit() {
           </div>
         </div>
 
+        {/* Hidden input ensures image_url is submitted even if user never edits it */}
         <input type="hidden" name="image_url" value={userData.image_url} />
 
         {showImageUrlField && (
@@ -163,6 +180,7 @@ function UserEdit() {
           </label>
         )}
 
+        {/* Name input field */}
         <label className="mb-2 block text-sm font-medium">
           Name
           <input
@@ -176,6 +194,7 @@ function UserEdit() {
           />
         </label>
 
+        {/* Email input field */}
         <label className="mb-2 block text-sm font-medium">
           Email
           <input
@@ -189,6 +208,7 @@ function UserEdit() {
           />
         </label>
 
+        {/* Password input field (not required if user doesn't want to change it) */}
         <label className="mb-2 block text-sm font-medium">
           Password
           <input
@@ -202,6 +222,7 @@ function UserEdit() {
           />
         </label>
 
+        {/* Date of Birth input field */}
         <label className="mb-2 block text-sm font-medium">
           Date of Birth
           <input
@@ -214,6 +235,7 @@ function UserEdit() {
           />
         </label>
 
+        {/* Country/Region selection dropdown */}
         <label className="mb-2 block text-sm font-medium">
           Country/Region
           <select
@@ -233,6 +255,7 @@ function UserEdit() {
           </select>
         </label>
 
+        {/* Submit button for saving changes */}
         <button
           type="submit"
           className="w-full rounded bg-green-500 px-4 py-2 font-semibold text-white transition-transform duration-100 hover:opacity-80"
@@ -240,6 +263,7 @@ function UserEdit() {
           Save Changes
         </button>
 
+        {/* Cancel button */}
         <button
           type="button"
           onClick={() => navigate(`/user/${user.id}`)}
@@ -250,6 +274,7 @@ function UserEdit() {
       </Form>
 
       {isDeletePopupOpen && (
+        // Confirmation popup for deleting the account
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 text-center shadow-lg w-full max-w-md mx-4">
             <p className="text-lg text-black mb-4">
@@ -274,6 +299,7 @@ function UserEdit() {
   );
 }
 
+// Loader fetches the user by ID
 export async function loader({ params }) {
   const user = await getUser(params.id);
   if (!user) {
@@ -282,10 +308,12 @@ export async function loader({ params }) {
   return { user };
 }
 
+// Action updates the user with the submitted form data
 export async function action({ request, params }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
+  // If no password is given, we don't update it
   if (!data.password) {
     delete data.password;
   }

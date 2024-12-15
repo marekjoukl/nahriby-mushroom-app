@@ -1,11 +1,18 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import supabase from "./supabase";
 
 // Function to get all users
 export async function getUsers() {
     let { data, error } = await supabase
         .from('users')
-        .select('*')
+        .select('*');
 
+    // Fetches all users from the 'users' table
     if (error) {
         console.error("Error fetching users:", error);
         throw new Error(error.message);
@@ -15,6 +22,7 @@ export async function getUsers() {
 
 // Function to get a single user by ID
 export async function getUser(userId) {
+    // Fetches a single user by 'id'
     const { data, error } = await supabase
         .from("users")
         .select("*")
@@ -28,7 +36,7 @@ export async function getUser(userId) {
     return data;
 }
 
-// Function to get all locations created by a user
+// Get all locations created by a specific user
 export async function getUserLocations(userId) {
     const { data, error } = await supabase
       .from('locations')
@@ -43,7 +51,7 @@ export async function getUserLocations(userId) {
     return data;
 }
 
-// Function to get all mushrooms created by a user
+// Get all mushrooms created by a specific user
 export async function getUserMushrooms(userId) {
     const { data, error } = await supabase
       .from('mushrooms')
@@ -58,7 +66,7 @@ export async function getUserMushrooms(userId) {
     return data;
 }
 
-// Function to get all recipes created by a user
+// Get all recipes created by a specific user
 export async function getUserRecipes(userId) {
     const { data, error } = await supabase
       .from('recipes')
@@ -73,7 +81,7 @@ export async function getUserRecipes(userId) {
     return data;
 }
 
-// Function for updating a user
+// Update a user's information
 export async function updateUser(id, data) {
     const { error } = await supabase
         .from("users")
@@ -84,8 +92,8 @@ export async function updateUser(id, data) {
         throw new Error(error.message);
     }
 }
-  
-// Function for deleting a user
+
+// Delete a user by ID
 export async function deleteUser(id) {
     const { error } = await supabase
         .from("users")
@@ -97,9 +105,10 @@ export async function deleteUser(id) {
     }
 }
 
-// Fetch saved mushrooms for a user by user ID
+// Fetch the user's saved mushrooms
 export async function getUserSavedMushrooms(userId) {
     try {
+      // First get the IDs of saved mushrooms from the 'users' table
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('saved_mushrooms')
@@ -112,10 +121,11 @@ export async function getUserSavedMushrooms(userId) {
   
       const { saved_mushrooms } = user;
   
+      // Fetch the actual mushrooms using their IDs
       const { data: mushrooms, error: mushroomError } = await supabase
         .from('mushrooms')
         .select('*')
-        .in('id', saved_mushrooms || []); // Handle empty arrays gracefully
+        .in('id', saved_mushrooms || []); // If empty, select none
   
       if (mushroomError) {
         throw new Error(`Error fetching mushrooms: ${mushroomError.message}`);
@@ -128,9 +138,10 @@ export async function getUserSavedMushrooms(userId) {
     }
 }
   
-// Fetch saved recipes for a user by user ID
+// Fetch the user's saved recipes
 export async function getUserSavedRecipes(userId) {
     try {
+      // First get the IDs of saved recipes from 'users'
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('saved_recipes')
@@ -143,6 +154,7 @@ export async function getUserSavedRecipes(userId) {
   
       const { saved_recipes } = user;
   
+      // Fetch recipes by IDs
       const { data: recipes, error: recipeError } = await supabase
         .from('recipes')
         .select('*')
@@ -159,9 +171,10 @@ export async function getUserSavedRecipes(userId) {
     }
 }
   
-// Fetch saved locations for a user by user ID
+// Fetch the user's saved locations
 export async function getUserSavedLocations(userId) {
     try {
+      // Get the saved location IDs from 'users'
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('saved_locations')
@@ -174,6 +187,7 @@ export async function getUserSavedLocations(userId) {
   
       const { saved_locations } = user;
   
+      // Fetch locations by those IDs
       const { data: locations, error: locationError } = await supabase
         .from('locations')
         .select('*')
@@ -190,10 +204,10 @@ export async function getUserSavedLocations(userId) {
     }
 }
 
-// Fetch 2 saved mushrooms, recipes, and locations for a user by user ID
+// Fetch 2 saved items from each category (mushrooms, recipes, locations) for a user
 export async function getTwoUserSavedItems(userId) {
     try {
-      // Fetch the user's saved items arrays
+      // First get the arrays of saved items from 'users'
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('saved_mushrooms, saved_recipes, saved_locations')
@@ -206,18 +220,18 @@ export async function getTwoUserSavedItems(userId) {
   
       const { saved_mushrooms, saved_recipes, saved_locations } = user;
   
-      // Fetch the mushrooms that match the user's saved mushroom IDs
+      // Fetch up to 2 saved mushrooms
       const { data: mushrooms, error: mushroomError } = await supabase
         .from('mushrooms')
         .select('*')
-        .in('id', saved_mushrooms || []) // Handle empty arrays gracefully
+        .in('id', saved_mushrooms || [])
         .limit(2);
   
       if (mushroomError) {
         throw new Error(`Error fetching mushrooms: ${mushroomError.message}`);
       }
   
-      // Fetch the recipes that match the user's saved recipe IDs
+      // Fetch up to 2 saved recipes
       const { data: recipes, error: recipeError } = await supabase
         .from('recipes')
         .select('*')
@@ -228,7 +242,7 @@ export async function getTwoUserSavedItems(userId) {
         throw new Error(`Error fetching recipes: ${recipeError.message}`);
       }
   
-      // Fetch the locations that match the user's saved location IDs
+      // Fetch up to 2 saved locations
       const { data: locations, error: locationError } = await supabase
         .from('locations')
         .select('*')
@@ -239,7 +253,6 @@ export async function getTwoUserSavedItems(userId) {
         throw new Error(`Error fetching locations: ${locationError.message}`);
       }
   
-      // Return an object with the saved items
       return { mushrooms, recipes, locations };
     } catch (error) {
       console.error('Error fetching saved items:', error);
@@ -247,6 +260,7 @@ export async function getTwoUserSavedItems(userId) {
     }
 }
 
+// Get a public URL for an image stored in a given bucket
 export async function getImageUrl(imagePath, bucketName) {
   if (!imagePath) return null;
 
@@ -259,15 +273,18 @@ export async function getImageUrl(imagePath, bucketName) {
     return null;
   }
 
+  // Returns a publicly accessible URL to the stored image
   return publicURL.publicUrl;
 }
 
+// Upload an image file to the "user-images" bucket and return its storage path
 export async function uploadImageAndGetUrl(imageFile) {
   if (!imageFile || !(imageFile instanceof File)) {
     throw new Error("Invalid image file");
   }
 
   try {
+    // Uploads the file with a unique name (timestamp + original name)
     const { data: uploadData, error } = await supabase.storage
       .from("user-images")
       .upload(`users/${Date.now()}_${imageFile.name}`, imageFile);

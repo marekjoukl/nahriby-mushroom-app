@@ -1,3 +1,12 @@
+/**
+ * Project: ITU - Mushroom app
+ * Authors: Aurel Strigac (xstrig00),
+ *          Igor Mikula (xmikul74),
+ *          Ondrej Kožányi (xkozan01),
+ *          Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import Bookmark from "./Bookmark";

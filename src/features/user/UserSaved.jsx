@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Aurel Strigac (xstrig00)
+ * Date: 15.12. 2024
+ */
+
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getTwoUserSavedItems, getImageUrl } from "../../api/apiUsers";
@@ -7,11 +13,13 @@ import Header from "../../ui/Header";
 function UserSaved() {
   const { userId, mushrooms, recipes, locations } = useLoaderData();
   const navigate = useNavigate();
+
+  // Store fetched images as separate states so we can replace paths with public URLs
   const [mushroomImages, setMushroomImages] = useState([]);
   const [locationImages, setLocationImages] = useState([]);
 
   useEffect(() => {
-  
+    // Converts mushroom image paths to public URLs
     const fetchMushroomImages = async () => {
       const images = await Promise.all(
         mushrooms.map(async (mushroom) => {
@@ -30,6 +38,7 @@ function UserSaved() {
       setMushroomImages(images);
     };
 
+    // Converts location image paths to public URLs
     const fetchLocationImages = async () => {
       const images = await Promise.all(
         locations.map(async (location) => {
@@ -53,18 +62,20 @@ function UserSaved() {
   }, [mushrooms, locations]);
 
   const handleViewAllClick = (category) => {
+    // Navigates to the full list of items for the chosen category
     navigate(`/user/${userId}/saved/${category}`);
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to the top of the page
+    // Ensures page is scrolled to the top when loaded
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="min-h-screen w-full bg-bg-primary p-5 pb-20 text-center font-sans text-white items-center">
       <Header
         title="Favourites"
-        backButtonFlag={true}
+        backButtonFlag={true} // Allows going back to user's profile
         navigateTo={`/user/${userId}`}
       />
 
@@ -83,11 +94,13 @@ function UserSaved() {
                 alt={location.name}
                 className="h-full w-full object-cover transition-transform duration-200 group-hover:opacity-80"
               />
+              {/* Hover overlay showing location name */}
               <div className="absolute bottom-0 left-0 w-full bg-white text-black text-sm font-bold flex items-center justify-center rounded-md overflow-hidden transition-all duration-100 ease-in-out h-0 group-hover:h-1/4">
                 {location.name}
               </div>
             </div>
           ))}
+          {/* "View All" card takes you to the full list of saved locations */}
           <div
             className="group flex h-32 w-24 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer items-center justify-center rounded-md border-2 border-white transition-transform duration-100"
             onClick={() => handleViewAllClick("locations")}
@@ -117,11 +130,13 @@ function UserSaved() {
                 alt={recipe.name}
                 className="h-full w-full object-cover transition-transform duration-200 group-hover:opacity-80"
               />
+              {/* Hover overlay showing recipe name */}
               <div className="absolute bottom-0 left-0 w-full bg-white text-black text-sm font-bold flex items-center justify-center rounded-md overflow-hidden transition-all duration-100 ease-in-out h-0 group-hover:h-1/4">
                 {recipe.name}
               </div>
             </div>
           ))}
+          {/* "View All" card for recipes */}
           <div
             className="group flex h-32 w-24 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer items-center justify-center rounded-md border-2 border-white transition-transform duration-100"
             onClick={() => handleViewAllClick("recipes")}
@@ -136,7 +151,7 @@ function UserSaved() {
         </div>
       </div>
 
-      {/* Mushrooms Section */}
+      {/* Mushrooms Section (called "Atlas") */}
       <div className="mt-8">
         <h2 className="text-lg mb-2 font-semibold border-b border-gray-300 pb-3">Atlas</h2>
         <div className="flex justify-center items-center pb-5 gap-4">
@@ -151,11 +166,13 @@ function UserSaved() {
                 alt={mushroom.name}
                 className="h-full w-full object-cover transition-transform duration-200 group-hover:opacity-80"
               />
+              {/* Hover overlay showing mushroom name */}
               <div className="absolute bottom-0 left-0 w-full bg-white text-black text-sm font-bold flex items-center justify-center rounded-md overflow-hidden transition-all duration-100 ease-in-out h-0 group-hover:h-1/4">
                 {mushroom.name}
               </div>
             </div>
           ))}
+          {/* "View All" card for mushrooms */}
           <div
             className="group flex h-32 w-24 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer items-center justify-center rounded-md border-2 border-white transition-transform duration-100"
             onClick={() => handleViewAllClick("mushrooms")}
@@ -173,6 +190,7 @@ function UserSaved() {
   );
 }
 
+// Loader fetches a small subset of saved items for each category
 export async function loader({ params }) {
   const userId = params.id;
 
