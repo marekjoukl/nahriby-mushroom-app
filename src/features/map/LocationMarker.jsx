@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useEffect, useState } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { getUser } from "../../api/apiUsers";

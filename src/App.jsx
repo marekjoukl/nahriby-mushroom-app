@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Authors: Marek Joukl (xjoukl00),Aurel Strigáč (xstrig00), Igor Mikula (xmikul74), Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Error from "./ui/Error";
 import Map, { loader as locationsLoader } from "./features/map/Map";

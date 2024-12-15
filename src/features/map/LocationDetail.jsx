@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getLocation } from "../../api/apiMap";
 import { getImageUrl } from "../../api/apiMap"; // Import your new function

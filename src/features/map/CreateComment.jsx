@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useState } from "react";
 import { Form, redirect, useLocation } from "react-router-dom";
 import { useUserId } from "../../contexts/UserContext"; // Assuming this hook returns the current user ID

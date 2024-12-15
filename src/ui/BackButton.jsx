@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useNavigate } from "react-router-dom";
 
 function BackButton({ iconType, navigateTo }) {
