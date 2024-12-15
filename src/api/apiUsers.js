@@ -261,3 +261,24 @@ export async function getImageUrl(imagePath, bucketName) {
 
   return publicURL.publicUrl;
 }
+
+export async function uploadImageAndGetUrl(imageFile) {
+  if (!imageFile || !(imageFile instanceof File)) {
+    throw new Error("Invalid image file");
+  }
+
+  try {
+    const { data: uploadData, error } = await supabase.storage
+      .from("user-images")
+      .upload(`users/${Date.now()}_${imageFile.name}`, imageFile);
+
+    if (error) {
+      throw new Error("Failed to upload image");
+    }
+
+    return uploadData.path;
+  } catch (error) {
+    console.error("Error uploading image:", error.message);
+    throw error;
+  }
+}
