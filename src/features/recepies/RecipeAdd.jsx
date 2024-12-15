@@ -51,7 +51,7 @@ function RecipeAdd() {
 
             {/* Image Upload */}
             <div className="flex flex-col">
-                <label className="block text-sm font-medium text-white">
+                <label className="block text-sm font-medium text-black">
                     Upload Photo
                 </label>
                 <div className="mt-2 flex flex-row items-center space-x-4">
