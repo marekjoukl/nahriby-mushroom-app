@@ -2,6 +2,11 @@ File Structure and Authors
 
 Project Name: ITU - Mushroom app
 
+Setup:
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npm run dev`
+
 Root Directory
 	•	index.css
 	    •	Description: Styles for map.
@@ -20,7 +25,10 @@ src Directory
 	    •	Author: Marek Joukl (xjoukl00)
 	•	apiMushrooms.js
 	    •	Description: Fetches and manages mushroom data.
-	    •	Author: [Insert Author Name]
+	    •	Author: Ondrej Kozanyi (xkozan01)
+	•	apiSimilarMushrooms.js
+	    •   Description: Handles API calls related to mushroom similarity groups - creating, removing, modifying.
+	    •   Author: Ondrej Kozanyi (xkozan01)
 
 2. contexts/
 	•	UserContext.js
@@ -34,16 +42,9 @@ src Directory
         •	Author: Marek Joukl (xjoukl00)
 
 	•	mushrooms/
-        •	Description: 
-        •	Author: 
+        •	Description: Contains all functions manipulating atlas and mushroom entries.
+        •	Author: Ondrej Kozanyi (xkozan01)
 
-    •	mushrooms/
-        •	Description: 
-        •	Author: 
-
-    •	mushrooms/
-        •	Description: 
-        •	Author: 
 4. ui/
     •	Purpose: Reusable UI components and styles.
     •	Author: Everyone (described in each file header)

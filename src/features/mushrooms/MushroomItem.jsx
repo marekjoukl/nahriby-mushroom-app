@@ -54,7 +54,7 @@ function MushroomItem({ mushroom }) {
     return (
         <div 
             onClick={handleClick}
-            className="border border-green-700 p-4 m-4 rounded-lg bg-green-50 flex flex-row items-start bg-[#86EFAC] max-w-lg"
+            className="border border-green-700 p-4 m-4 rounded-lg bg-green-50 flex flex-row items-start bg-[#86EFAC] max-w-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
         >
             <img 
                 src={imageUrl}
