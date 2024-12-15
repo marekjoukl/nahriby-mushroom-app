@@ -1,23 +1,26 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
 import { useState, useEffect } from "react";
-// import { addOrUpdateSimilarMushrooms } from "../api/apiSimilarMushrooms";
 
 function SimilarMushroomsPopup({ onClose, onSearch, searchResults, onAddSimilar }) {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(""); // State to store the search term
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (searchTerm) {
-                onSearch(searchTerm);
+                onSearch(searchTerm); // Trigger search when searchTerm changes
             }
         }, 300);
 
-        return () => clearTimeout(delayDebounceFn);
+        return () => clearTimeout(delayDebounceFn); // Cleanup the timeout
     }, [searchTerm, onSearch]);
 
     const handleAddSimilar = async (mushroomId) => {
-        // await addOrUpdateSimilarMushrooms(currentMushroomId, mushroomId);
-        onAddSimilar(mushroomId);
-        onClose();
+        onAddSimilar(mushroomId); // Add similar mushroom
+        onClose(); // Close the popup
     };
 
     return (
@@ -27,7 +30,7 @@ function SimilarMushroomsPopup({ onClose, onSearch, searchResults, onAddSimilar 
                     onClick={onClose}
                     className="absolute top-2 right-2 text-red-600 hover:text-red-800 text-4xl"
                 >
-                    &times;
+                    &times; {/* Close button */}
                 </button>
                 <h2 className="text-2xl mb-4 text-gray-800">Search for Similar Mushrooms</h2>
                 <input
@@ -45,7 +48,7 @@ function SimilarMushroomsPopup({ onClose, onSearch, searchResults, onAddSimilar 
                                 className="p-2 border-b border-gray-300 text-gray-800 last:border-none cursor-pointer"
                                 onClick={() => handleAddSimilar(mushroom.id)}
                             >
-                                {mushroom.name}
+                                {mushroom.name} {/* Display search results */}
                             </div>
                         ))
                     ) : (

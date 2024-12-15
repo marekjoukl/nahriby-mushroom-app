@@ -1,3 +1,8 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getMushroom, getImageUrl } from "../../api/apiMushrooms";
 import Header from "../../ui/Header";
@@ -18,6 +23,7 @@ function MushroomDetail() {
     const [similarMushroomImages, setSimilarMushroomImages] = useState({});
     const [imageUrl, setImageUrl] = useState(null);
 
+    // Fetch similar mushrooms and their images
     const fetchSimilarMushrooms = async () => {
         const similarMushroomIds = await getSimilarMushroomsByMushroomId(mushroom.id);
         const similarMushroomsData = await Promise.all(similarMushroomIds.map(id => getMushroom(id)));
@@ -33,6 +39,7 @@ function MushroomDetail() {
         setSimilarMushroomImages(imageUrls);
     };
 
+    // Fetch image URL for the mushroom
     useEffect(() => {
         async function fetchImageUrl() {
           try {
@@ -48,19 +55,23 @@ function MushroomDetail() {
         fetchImageUrl();
     }, [mushroom.image_url]);
 
+    // Fetch similar mushrooms when mushroom ID changes
     useEffect(() => {
         fetchSimilarMushrooms();
     }, [mushroom.id]);
 
+    // Navigate to edit mushroom form
     const handleEdit = () => {
         navigate(`/mushrooms/mushroomForm/${mushroom.id}`);
     };
 
+    // Handle search for similar mushrooms
     const handleAddSimilarMushroom = async (searchTerm) => {
         const results = await searchMushroomsByName(searchTerm);
         setSearchResults(results);
     };
 
+    // Add mushroom to similarity group
     const handleAddSimilar = async (mushroomId) => {
         if (mushroomId == mushroom.id) {
            toast.error("Mushroom cannot be similar to itself!");
@@ -76,12 +87,14 @@ function MushroomDetail() {
         }
     };
 
+    // Remove mushroom from similarity groups
     const handleRemoveFromSimilarityGroups = async () => {
         await removeMushroomFromSimilarityGroups(mushroom.id);
         toast.success("Mushroom removed from similarity group!");
         setSimilarMushrooms([]);
     };
 
+    // Get toxicity label based on toxicity level
     const getToxicityLabel = (toxicity) => {
         switch (toxicity) {
             case 1:
@@ -95,6 +108,7 @@ function MushroomDetail() {
         }
     };
 
+    // Get toxicity color based on toxicity level
     const getToxicityColor = (toxicity) => {
         switch (toxicity) {
             case 1:
@@ -108,6 +122,7 @@ function MushroomDetail() {
         }
     };
 
+    // Close the similar mushrooms popup
     const handleClosePopup = () => {
         setIsPopupOpen(false);
         setSearchResults([]);
@@ -186,6 +201,7 @@ function MushroomDetail() {
     );
 }
 
+// Loader function to fetch mushroom data by ID
 export async function loader({ params }) {
     const mushroom = await getMushroom(params.id);
     if (!mushroom) {
