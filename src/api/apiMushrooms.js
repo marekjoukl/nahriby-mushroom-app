@@ -145,3 +145,21 @@ export async function searchMushroomsByName(name) {
     }
     return data;
 }
+
+// Function to get mushrooms by toxicity level
+export async function getMushroomsByToxicity(toxicity) {
+    let query = supabase.from("mushrooms").select("*");
+
+    if (toxicity && toxicity !== "ALL") {
+        const toxicityLevel = toxicity === "EDIBLE" ? 1 : toxicity === "WARNING" ? 2 : 3;
+        query = query.eq("toxicity", toxicityLevel);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.error("Error fetching mushrooms by toxicity:", error);
+        throw new Error(error.message);
+    }
+    return data;
+}

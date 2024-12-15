@@ -28,18 +28,56 @@ export async function addOrUpdateSimilarMushrooms(mushroomId1, mushroomId2) {
 
     for (let record of similarMushrooms) {
         if (record.mushroom_ids.includes(mushroomId1) || record.mushroom_ids.includes(mushroomId2)) {
-            const mushroomIdsSet = new Set(record.mushroom_ids);
-            mushroomIdsSet.add(mushroomId1);
-            mushroomIdsSet.add(mushroomId2);
-            await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
-            updated = true;
-            break;
+            if (record.mushroom_ids.includes(mushroomId1)) {
+                for (let record2 of similarMushrooms) {
+                    if (record2.mushroom_ids.includes(mushroomId2)) {
+                        if (record.id === record2.id) {
+                            return { alreadyInGroup: true };
+                        }
+                        const mushroomIdsSet = new Set(record.mushroom_ids.concat(record2.mushroom_ids));
+                        console.log("Mushroom IDs 1:", record.mushroom_ids);
+                        console.log("Mushroom IDs 2:", record2.mushroom_ids);
+                        console.log("Mushroom IDs set:", mushroomIdsSet);
+                        await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
+                        await deleteSimilarMushrooms(record2.id);
+                        updated = true;
+                        break;
+                    }
+                }
+            }
+            if (record.mushroom_ids.includes(mushroomId2) && !updated) {
+                for (let record2 of similarMushrooms) {
+                    if (record2.mushroom_ids.includes(mushroomId1)) {
+                        if (record.id === record2.id) {
+                            return { alreadyInGroup: true };
+                        }
+                        const mushroomIdsSet = new Set(record.mushroom_ids.concat(record2.mushroom_ids));
+                        console.log("Mushroom IDs 2:", record.mushroom_ids);
+                        console.log("Mushroom IDs 1:", record2.mushroom_ids);
+                        console.log("Mushroom IDs set:", mushroomIdsSet);
+                        await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
+                        await deleteSimilarMushrooms(record2.id);
+                        updated = true;
+                        break;
+                    }
+                }
+            }
+            if (!updated) {
+                const mushroomIdsSet = new Set(record.mushroom_ids);
+                mushroomIdsSet.add(mushroomId1);
+                mushroomIdsSet.add(mushroomId2);
+                await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
+                updated = true;
+                break;
+            }
         }
     }
 
     if (!updated) {
         await createSimilarMushrooms([mushroomId1, mushroomId2]);
     }
+
+    return { alreadyInGroup: false };
 }
 
 // Function to get similar mushrooms by mushroom ID

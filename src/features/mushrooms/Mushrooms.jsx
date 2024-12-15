@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getMushrooms, searchMushroomsByName } from "../../api/apiMushrooms";
+import { getMushrooms, searchMushroomsByName, getMushroomsByToxicity } from "../../api/apiMushrooms";
 import MushroomItem from "./MushroomItem";
 import Header from "../../ui/Header";
 import { FaPlus, FaSearch } from "react-icons/fa";
@@ -11,6 +11,7 @@ function Mushrooms() {
     const [mushrooms, setMushrooms] = useState(initialMushrooms);
     const [searchTerm, setSearchTerm] = useState("");
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [category, setCategory] = useState("ALL");
 
     const handleAddMushroom = () => {
         navigate("/mushrooms/mushroomForm");
@@ -29,11 +30,34 @@ function Mushrooms() {
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm, initialMushrooms]);
 
+    useEffect(() => {
+        const fetchMushrooms = async () => {
+            const results = await getMushroomsByToxicity(category === "ALL" ? null : category);
+            setMushrooms(results);
+        };
+
+        fetchMushrooms();
+    }, [category]);
+
     const toggleSearch = () => {
         setIsSearchVisible(!isSearchVisible);
         if (!isSearchVisible) {
             setSearchTerm("");
+            setCategory("ALL");
             setMushrooms(initialMushrooms);
+        }
+    };
+
+    const getCategoryName = (category) => {
+        switch (category) {
+            case "TOXIC":
+                return "Toxic";
+            case "WARNING":
+                return "Warning";
+            case "EDIBLE":
+                return "Edible";
+            default:
+                return "All";
         }
     };
 
@@ -64,13 +88,26 @@ function Mushrooms() {
                     </button>
                 </div>
             )}
+            {!isSearchVisible && (
+                <div className="container mx-auto mt-4 flex justify-center space-x-4">
+                    {["ALL", "TOXIC", "WARNING", "EDIBLE"].map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setCategory(cat)}
+                            className={`px-4 py-2 rounded ${category === cat ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            )}
             <div className="container mx-auto flex flex-col items-center mt-4">
                 {mushrooms.length > 0 ? (
                     mushrooms.map((mushroom) => (
                         <MushroomItem key={mushroom.id} mushroom={mushroom} />
                     ))
                 ) : (
-                    <p className="text-white">No mushrooms found</p>
+                    <p className="text-white">There are no mushrooms available with toxicity level: {getCategoryName(category)}</p>
                 )}
             </div>
         </div>

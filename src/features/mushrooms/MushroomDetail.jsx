@@ -15,12 +15,22 @@ function MushroomDetail() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [similarMushrooms, setSimilarMushrooms] = useState([]);
+    const [similarMushroomImages, setSimilarMushroomImages] = useState({});
     const [imageUrl, setImageUrl] = useState(null);
 
     const fetchSimilarMushrooms = async () => {
         const similarMushroomIds = await getSimilarMushroomsByMushroomId(mushroom.id);
         const similarMushroomsData = await Promise.all(similarMushroomIds.map(id => getMushroom(id)));
         setSimilarMushrooms(similarMushroomsData);
+
+        const imageUrls = {};
+        for (const similarMushroom of similarMushroomsData) {
+            if (similarMushroom.image_url) {
+                const url = await getImageUrl(similarMushroom.image_url);
+                imageUrls[similarMushroom.id] = url;
+            }
+        }
+        setSimilarMushroomImages(imageUrls);
     };
 
     useEffect(() => {
@@ -52,9 +62,18 @@ function MushroomDetail() {
     };
 
     const handleAddSimilar = async (mushroomId) => {
-        await addOrUpdateSimilarMushrooms(mushroom.id, mushroomId);
-        toast.success("Mushroom added to similarity group!");
-        fetchSimilarMushrooms();
+        if (mushroomId == mushroom.id) {
+           toast.error("Mushroom cannot be similar to itself!");
+           setIsPopupOpen(false);
+           return;
+        }
+        const { alreadyInGroup } = await addOrUpdateSimilarMushrooms(mushroom.id, mushroomId);
+        if (alreadyInGroup) {
+            toast.error("These mushrooms are already in the same similarity group!");
+        } else {
+            toast.success("Mushroom added to similarity group!");
+            fetchSimilarMushrooms();
+        }
     };
 
     const handleRemoveFromSimilarityGroups = async () => {
@@ -116,21 +135,19 @@ function MushroomDetail() {
                 <p className={`text-lg text-left mt-4 ${getToxicityColor(mushroom.toxicity)}`}>
                     <strong>Toxicity:</strong> {getToxicityLabel(mushroom.toxicity)}
                 </p>
-                {similarMushrooms.length === 0 && (
-                    <button
-                        onClick={() => setIsPopupOpen(true)}
-                        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-                    >
-                        Add to Similar Mushrooms
-                    </button>
-                )}
+                <button
+                    onClick={() => setIsPopupOpen(true)}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+                >
+                    Add to Similar Mushrooms
+                </button>
                 {isPopupOpen && (
                     <SimilarMushroomsPopup
                         onClose={handleClosePopup}
                         onSearch={handleAddSimilarMushroom}
                         searchResults={searchResults}
-                        // currentMushroomId={mushroom.id}
                         onAddSimilar={handleAddSimilar}
+                        currentMushroomId={mushroom.id}
                     />
                 )}
                 <div className="mt-10">
@@ -149,7 +166,7 @@ function MushroomDetail() {
                         {similarMushrooms.map((similarMushroom) => (
                             <div key={similarMushroom.id} className="bg-gray-800 p-4 rounded-lg flex items-center">
                                 <img
-                                    src={similarMushroom.image_url}
+                                    src={similarMushroomImages[similarMushroom.id]}
                                     alt={similarMushroom.name}
                                     className="w-24 h-24 object-cover rounded-lg mr-4"
                                 />
