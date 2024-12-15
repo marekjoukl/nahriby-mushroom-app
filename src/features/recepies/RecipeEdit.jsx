@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Header from "../../ui/Header";
 import { FaCheckCircle, FaTrash } from "react-icons/fa";
-import { updateRecipe, deleteRecipe, getRecipe } from "../../api/apiRecipes";
+import { updateRecipe, deleteRecipe, getRecipe, uploadImageAndGetUrl } from "../../api/apiRecipes";
 import { useUserId } from "../../contexts/UserContext";
+import toast from "react-hot-toast";
 
 function RecipeAdd() {
     const navigate = useNavigate();
@@ -20,17 +21,45 @@ function RecipeAdd() {
        method_desc: recipe.method_desc || "",
     });
 
-    const [successMessage, setSuccessMessage] = useState("");
+    const [imageFile, setImageFile] = useState(null); 
+    // const [successMessage, setSuccessMessage] = useState("");
+
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setImageFile(file);
+    };
+    
+    const removeImage = () => {
+        setImageFile(null);
+        setRecipeData((prev) => ({ ...prev, image_url: "" }));
+    };
 
     // Handling submiting new recipe
     const submitRecipe = async (e) => {
-        console.log("Updating recipe with data:", recipeData); // Debug
-        await updateRecipe(recipe.id, recipeData);
+        e.preventDefault();
 
-        navigate(-1);
-        setSuccessMessage("Recipe edited successfully");
-        // Show message for 4 seconds
-        setTimeout(() => setSuccessMessage(""), 4000);
+        let imageUrl = recipeData.image_url;
+
+        try {
+            // Ak je nahratá nová fotka, nahraj ju a získaj URL
+            if (imageFile) {
+                imageUrl = await uploadImageAndGetUrl(imageFile);
+            }
+
+            const updatedData = {
+                ...recipeData,
+                image_url: imageUrl,
+            };
+
+            await updateRecipe(recipe.id, updatedData);
+
+            toast.success("Recipe updated successfully");
+            navigate(-1);
+        } catch (error) {
+            console.error("Error updating recipe:", error);
+            toast.error("Failed to update recipe.");
+        }
     };
 
     // Changes when typing given form inputs
@@ -47,9 +76,7 @@ function RecipeAdd() {
         await deleteRecipe(recipe.id);
 
         navigate("/recipes");
-        setSuccessMessage("Recipe deleted successfully");
-        // Show message for 4 seconds
-        setTimeout(() => setSuccessMessage(""), 4000);
+        toast.success("Recipe deleted successfully");
     }
 
     return (
@@ -66,12 +93,12 @@ function RecipeAdd() {
                 >
             </Header>       
 
-            {/* Success message after adding recipe */}
+            {/* Success message after adding recipe
             {successMessage && (
                 <div className="fixed top-16 bg-green-500 text-white p-3 rounded text-center w-full h-16">
                     {successMessage}
                 </div>
-            )}
+            )} */}
     
             <form onSubmit={(e) => e.preventDefault()} className="space-y-4 w-3/4 pb-5">
                 {/* Recipe Name  */}
@@ -81,13 +108,42 @@ function RecipeAdd() {
                         type="text" name="name" placeholder="Recipe Name" value={recipeData.name}>
                     </input>
                 </div>
-                {/* Image */}
-                <div className="space-y-1">
-                    <label className="block font-semibold">Uploaded Image</label>
-                    <input className="w-full border-2 border-green-900 rounded p-2 focus:outline-none focus:ring focus:ring-green-500" onChange={onChange}
-                        type="text" name="image_url" placeholder="Image URL" value={recipeData.image_url}>
-                    </input>
+                {/* Image Upload */}
+                <div>
+                    <label className="block font-semibold">Upload Image</label>
+                    <div className="flex items-center space-x-4">
+                        {!imageFile && (
+                            <label className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                Choose File
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleImageChange} 
+                                    className="hidden"
+                                />
+                            </label>
+                        )}
+                        {imageFile && (
+                            <div className="flex items-center space-x-4">
+                                <span>{imageFile.name}</span>
+                                <button 
+                                    type="button" 
+                                    onClick={removeImage} 
+                                    className="bg-red-500 text-white rounded-full px-2 hover:bg-red-600">
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+                        {recipeData.image_url && !imageFile && (
+                            <img 
+                                src={recipeData.image_url} 
+                                alt="Current" 
+                                className="h-16 rounded" 
+                            />
+                        )}
+                    </div>
                 </div>
+
                 {/* Serves */}
                 <div className="space-y-1">
                     <label className="block font-semibold">Number of serves<span className="text-red-600"> *</span></label>

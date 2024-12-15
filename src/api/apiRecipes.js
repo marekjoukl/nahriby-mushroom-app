@@ -1,11 +1,31 @@
 import supabase from "./supabase";
 
 export async function getRecipes() {
+    // Old version
     const { data, error } = await supabase.from("recipes").select("*");
     if (error) {
         console.error("error", error);
         throw new Error(error.message);
     }
+    return data;
+}
+
+export async function filterRecipes(searchQuery) {
+    if (!searchQuery) {
+        throw new Error("Search query is empty");
+    }
+
+    // Filtering recipes based on their name
+    const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .ilike("name", `%${searchQuery}%`);
+
+    if (error) {
+        console.error("Error filtering recipes:", error);
+        throw new Error(error.message);
+    }
+
     return data;
 }
 
@@ -113,4 +133,20 @@ export async function uploadImageAndGetUrl(imageFile) {
       console.error("Error uploading image:", error.message);
       throw error;
     }
+  }
+
+
+  export async function getImageUrl(imagePath) {
+    if (!imagePath) return null;
+  
+    const { data: publicURL, error } = supabase.storage
+      .from("recipe-images")
+      .getPublicUrl(imagePath);
+  
+    if (error) {
+      console.error("Error fetching image URL:", error.message);
+      return null;
+    }
+  
+    return publicURL.publicUrl;
   }

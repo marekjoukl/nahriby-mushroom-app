@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getRecipe, updateRecipeRating } from "../../api/apiRecipes";
+import { getRecipe, updateRecipeRating, getImageUrl } from "../../api/apiRecipes";
 import { useEffect, useState } from "react";
 import { FaStar, FaHeart, FaEdit } from "react-icons/fa";
 import Header from "../../ui/Header";
@@ -70,11 +70,32 @@ function RecipeDetail() {
 
     const [rating, setRating] = useState(recipe.rating || 0);
     const [hover, setHover] = useState(null);   // Showing when hovering stars
-  
+    const [imageUrl, setImageUrl] = useState(null); // State pre verejnú URL obrázka
+    const [isLoadingImage, setIsLoadingImage] = useState(true); // Stav načítania obrázka
+
+    useEffect(() => {
+        async function fetchImageUrl() {
+            if (recipe.image_url) {
+                try {
+                    const url = await getImageUrl(recipe.image_url); // Funkcia pre získanie URL z back-endu
+                    setImageUrl(url);
+                } catch (error) {
+                    console.error("Error fetching image URL:", error);
+                } finally {
+                    setIsLoadingImage(false);
+                }
+            } else {
+                setIsLoadingImage(false);
+            }
+        }
+
+        fetchImageUrl();
+    }, [recipe.image_url]);
+
     const changeRating = async (newRating) => {
         setRating(newRating);
-        await updateRecipeRating(recipe.id, newRating); // New API
-    }
+        await updateRecipeRating(recipe.id, newRating);
+    };
 
     const handleEditClick = () => {
         navigate(`/recipes/${recipe.id}/edit`);
@@ -117,7 +138,17 @@ function RecipeDetail() {
                     </div>
                 </div>
 
-                <img src={recipe.image_url || "https://via.placeholder.com/150"} alt={recipe.name} className="w-full h-64 object-cover rounded mb-4"/>
+                {/* <img src={recipe.image_url || "https://via.placeholder.com/150"} alt={recipe.name} className="w-full h-64 object-cover rounded mb-4"/> */}
+                {isLoadingImage ? (
+                    <p>Loading image...</p>
+                ) : (
+                    <img 
+                        src={imageUrl || "https://via.placeholder.com/150"} 
+                        alt={recipe.name} 
+                        className="w-full h-64 object-cover rounded mb-4"
+                    />
+                )}
+
                 <p>
                     <span className="text-sm font-semibold text-gray-600">Rating: </span>
                     <span className="text-sm text-black">{recipe.rating}</span>
@@ -128,7 +159,10 @@ function RecipeDetail() {
                 </p>
                 <p>
                     <span className="text-sm font-semibold text-gray-600"> Cooking Time: </span>                                           
-                    <span className="text-sm text-black">{recipe.cooking_hours} hours {recipe.cooking_minutes} minutes</span>
+                    <span className="text-sm text-black">
+                    {recipe.cooking_hours > 0 && `${recipe.cooking_hours} ${recipe.cooking_hours === 1 ? "hour" : "hours"} `}
+                    {recipe.cooking_minutes > 0 && `${recipe.cooking_minutes} ${recipe.cooking_minutes === 1 ? "minute" : "minutes"}`}
+                </span>
                 </p>
                 <div className="mt-4">
                     <h3 className="font-semibold text-gray-800">Ingredients:</h3>

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom"
 import { FaPlus, FaSearch, FaStar, FaUtensils, FaClock } from "react-icons/fa";
-import { getRecipes } from "../../api/apiRecipes";
+import { getRecipes, getImageUrl, filterRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
 
 // background-color: #1a2a1d; /* Dark green background */
@@ -13,6 +13,35 @@ function Recipes() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredRecipes, setFilteredRecipes] = useState(recipes);
     const [showSearchBar, setShowSearchBar] = useState(false);
+    const [imageUrls, setImageUrls] = useState({}); // Uchová URL obrázkov pre recepty
+
+    // Fetch image URLs for all recipes
+    useEffect(() => {
+        async function fetchInitialRecipes() {
+            try {
+                const data = await getRecipes();
+                setFilteredRecipes(data);
+                await fetchImageUrls(data);
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
+            }
+        }
+        fetchInitialRecipes();
+    }, []);
+
+    const fetchImageUrls = async (recipes) => {
+        const urls = {};
+        for (const recipe of recipes) {
+            if (recipe.image_url) {
+                try {
+                    urls[recipe.id] = await getImageUrl(recipe.image_url);
+                } catch (error) {
+                    urls[recipe.id] = null; // Handle error
+                }
+            }
+        }
+        setImageUrls(urls);
+    };
 
     const handleRecipeClick = (id) => {
         navigate(`/recipes/${id}`);
@@ -30,12 +59,16 @@ function Recipes() {
     }
 
     // Filtering recipes based on their name
-    const handleSearch = () => {
-        const filtered = recipes.filter(
-            recipe => recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredRecipes(filtered);
+    const handleSearch = async () => {
+        try {
+            const filteredRecipes = await filterRecipes(searchQuery);
+            setFilteredRecipes(filteredRecipes);
+            await fetchImageUrls(filteredRecipes);
+        } catch (error) {
+            console.error("Error filtering recipes:", error);
+        }
     };
+    
 
     // Changing characters in search input
     const searchChange = (e) => {
@@ -75,11 +108,11 @@ function Recipes() {
 
                         {/* Image - higher half */}
                         <div className="h-40 bg-gray-100">
-                        <img
-                            src={recipe.image_url || "https://via.placeholder.com/150"}
-                            alt={recipe.name}
-                            className="h-full w-full object-cover"
-                        />
+                            <img
+                                src={imageUrls[recipe.id] || "https://via.placeholder.com/150"}
+                                alt={recipe.name}
+                                className="h-full w-full object-cover"
+                            />
                         </div>
                         
                         {/* General recipe info */}
@@ -96,12 +129,12 @@ function Recipes() {
                             </div>
 
                             <p className="text-sm text-gray-600 flex items-center font-semibold font-mono">
-                                <FaUtensils className="text-orange-500 mr-2"/> {recipe.serves}
+                                <FaUtensils className="text-orange-500 mr-2"/> {recipe.serves} Serves
                             </p>
                             <p className="text-sm text-gray-600 flex items-center font-semibold font-mono">
-                                <FaClock className="text-orange-500 mr-2"/>
-                                {recipe.cooking_hours > 0 && `${recipe.cooking_hours} hours `}
-                                {recipe.cooking_minutes > 0 && `${recipe.cooking_minutes} minutes`}
+                            <FaClock className="text-orange-500 mr-2"/>
+                            {recipe.cooking_hours > 0 && `${recipe.cooking_hours} ${recipe.cooking_hours === 1 ? 'hour' : 'hours'} `}
+                            {recipe.cooking_minutes > 0 && `${recipe.cooking_minutes} ${recipe.cooking_minutes === 1 ? 'minute' : 'minutes'}`}
                             </p>
                         </div>
                     </div>

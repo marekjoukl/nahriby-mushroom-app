@@ -10,148 +10,151 @@ import toast from "react-hot-toast";
 function RecipeAdd() {
     const userId = useUserId();
     const [imageFile, setImageFile] = useState(null);
-  
+
     const handleImageChange = (e) => {
-      const file = e.target.files[0];
-      setImageFile(file);
+        const file = e.target.files[0];
+        setImageFile(file);
     };
-  
+
     const removeImage = () => {
       setImageFile(null);
     };
-  
+
     return (
       <>
         <Header 
-          title="New Recipe"
-          backButtonFlag={true}
+            title="New Recipe"
+            backButtonFlag={true}
         //   RightIcon1={FaCheckCircle}
         />
         <Form
-          method="POST"
-          encType="multipart/form-data"
-          className="space-y-4 mx-auto min-h-screen bg-white p-6 rounded-lg shadow-lg text-black pt-16"
+            method="POST"
+            encType="multipart/form-data"
+            className="space-y-4 mx-auto min-h-screen bg-white p-6 rounded-lg shadow-lg text-black pt-16"
         >
-          {/* Recipe Name */}
-          <div>
+            {/* Recipe Name */}
+            <div>
             <label className="block font-semibold">Recipe Name<span className="text-red-600"> *</span></label>
             <input
-              type="text"
-              name="name"
-              placeholder="Recipe Name"
-              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
-              required
+                type="text"
+                name="name"
+                placeholder="Recipe Name"
+                className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+                required
             />
-          </div>
-  
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Upload Photo</label>
-            <div className="mt-2 flex flex-row items-center space-x-4">
-              {!imageFile && (
-                <label className="flex cursor-pointer items-center justify-center bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600">
-                  Choose File
-                  <input
-                    type="file"
-                    name="imageFile"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
+            </div>
+
+            {/* Image Upload */}
+            <div className="flex flex-col">
+                <label className="block text-sm font-medium text-white">
+                    Upload Photo
                 </label>
-              )}
-              {imageFile && (
-                <div className="flex items-center space-x-4">
-                  <span className="text-black">{imageFile.name}</span>
-                  <button
+                <div className="mt-2 flex flex-row items-center space-x-4">
+                <label
+                    className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${
+                    imageFile ? "hidden" : ""
+                    }`}>
+                    Choose File
+                    <input
+                        type="file"
+                        name="imageFile"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                    />
+                </label>
+                <div
+                    className={`flex items-center space-x-4 ${imageFile ? "" : "hidden"}`}
+                >
+                    <span className="text-sm text-gray-300">{imageFile?.name}</span>
+                    <button
                     type="button"
                     onClick={removeImage}
-                    className="rounded-full bg-red-500 text-white p-2 hover:bg-red-600"
+                    className="rounded-full bg-red-500 p-2 text-xs font-bold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
                     title="Remove Photo"
-                  >
+                    >
                     ✕
-                  </button>
+                    </button>
                 </div>
-              )}
             </div>
-          </div>
-  
-          {/* Serves */}
-          <div>
+        </div>
+
+            {/* Serves */}
+            <div>
             <label className="block font-semibold">Number of serves<span className="text-red-600"> *</span></label>
             <input
-              type="number"
-              name="serves"
-              placeholder="Serves"
-              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
-              min="1"
-              required
+                type="number"
+                name="serves"
+                placeholder="Serves"
+                className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
+                min="1"
+                required
             />
-          </div>
-  
-          {/* Cooking Time */}
-          <div>
+            </div>
+
+            {/* Cooking Time */}
+            <div>
             <label className="block font-semibold">Estimated Cooking Time<span className="text-red-600"> *</span></label>
             <div className="flex space-x-4">
-              <input
+                <input
                 type="number"
                 name="cooking_hours"
                 placeholder="Hours"
                 className="w-1/2 border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
                 min="0"
-              />
-              <input
+                />
+                <input
                 type="number"
                 name="cooking_minutes"
                 placeholder="Minutes"
                 className="w-1/2 border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500"
                 min="0"
                 max="59"
-              />
+                />
             </div>
-          </div>
-  
-          {/* Ingredients */}
-          <div>
+            </div>
+
+            {/* Ingredients */}
+            <div>
             <label className="block font-semibold">Ingredients Description<span className="text-red-600"> *</span></label>
             <textarea
-              name="ingredient_desc"
-              placeholder="Describe Ingredients ..."
-              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
-              rows="4"
-              required
+                name="ingredient_desc"
+                placeholder="Describe Ingredients ..."
+                className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
+                rows="4"
+                required
             />
-          </div>
-  
-          {/* Method */}
-          <div>
+            </div>
+
+            {/* Method */}
+            <div>
             <label className="block font-semibold">Method<span className="text-red-600"> *</span></label>
             <textarea
-              name="method_desc"
-              placeholder="Describe Cooking Process ..."
-              className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
-              rows="4"
-              required
+                name="method_desc"
+                placeholder="Describe Cooking Process ..."
+                className="w-full border-2 border-green-900 rounded p-2 focus:ring focus:ring-green-500 min-h-32"
+                rows="4"
+                required
             />
-          </div>
-  
-          {/* Hidden Fields */}
-          <input type="hidden" name="author" value={userId} />
-  
-          {/* Submit Button */}
-          <div className="flex justify-center pb-20">
+            </div>
+
+            {/* Hidden Fields */}
+            <input type="hidden" name="author" value={userId} />
+
+            {/* Submit Button */}
+            <div className="flex justify-center pb-20">
             <button
-              type="submit"
-              className="rounded-full bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                type="submit"
+                className="rounded-full bg-green-500 px-4 py-2 text-white hover:bg-green-600"
             >
-              Publish Recipe
+                Publish Recipe
             </button>
-          </div>
+            </div>
         </Form>
-      </>
+        </>
     );
   }
-  
+
     export async function action({ request }) {
         const formData = await request.formData();
         const data = Object.fromEntries(formData); // Konvertovanie formulára na objekt
@@ -182,5 +185,5 @@ function RecipeAdd() {
             return null;
         }
     }
-  
+
   export default RecipeAdd;
