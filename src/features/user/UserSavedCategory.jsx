@@ -63,9 +63,21 @@ function UserSavedCategory() {
         })
       );
     } else {
-      // Recipes don't need extra image fetching
       const recipes = await getUserSavedRecipes(userId);
-      fetchedItems = recipes;
+      fetchedItems = await Promise.all(
+        recipes.map(async (recipe) => {
+          if (recipe.image_url) {
+            try {
+              const imageUrl = await getImageUrl(recipe.image_url, "recipe-images");
+              return { ...recipe, image_url: imageUrl };
+            } catch (error) {
+              console.error(`Error fetching image for recipe: ${recipe.name}`, error);
+              return { ...recipe, image_url: null };
+            }
+          }
+          return recipe;
+        })
+      );
     }
 
     setItems(fetchedItems);
