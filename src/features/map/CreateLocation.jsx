@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 import { useEffect, useState } from "react";
 import { Form, redirect, useSearchParams } from "react-router-dom";
 import Select from "react-select"; // Import react-select
