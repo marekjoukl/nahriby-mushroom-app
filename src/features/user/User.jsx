@@ -21,10 +21,11 @@ function User() {
   const [activeTab, setActiveTab] = useState("Locations");
   const [locationImages, setLocationImages] = useState([]);
   const [mushroomImages, setMushroomImages] = useState([]);
+  const [recipeImages, setRecipeImages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Replace stored image paths with actual public URLs
+    // Replace stored image paths with actual public URLs for locations
     const fetchLocationImages = async () => {
       const images = await Promise.all(
         locations.map(async (location) => {
@@ -45,6 +46,7 @@ function User() {
       setLocationImages(images);
     };
 
+    // Replace stored image paths with actual public URLs for mushrooms
     const fetchMushroomImages = async () => {
       const images = await Promise.all(
         mushrooms.map(async (mushroom) => {
@@ -64,9 +66,30 @@ function User() {
       setMushroomImages(images);
     };
 
+    // Replace stored image paths with actual public URLs for recipes
+    const fetchRecipeImages = async () => {
+      const images = await Promise.all(
+        recipes.map(async (recipe) => {
+
+          if (recipe.image_url) {
+            try {
+              const url = await getImageUrl(recipe.image_url, "recipe-images");
+              return { ...recipe, image_url: url };
+            } catch (error) {
+              console.error(`Error fetching image for recipe: ${recipe.name}`, error);
+              return { ...recipe, image_url: null };
+            }
+          }
+          return recipe;
+        })
+      );
+      setRecipeImages(images);
+    };
+
     fetchLocationImages();
     fetchMushroomImages();
-  }, [locations, mushrooms]);
+    fetchRecipeImages();
+  }, [locations, mushrooms, recipes]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -125,7 +148,7 @@ function User() {
 
     // Render content based on which tab is active
     if (activeTab === "Recipes") {
-      return renderItems(recipes, "recipes");
+      return renderItems(recipeImages, "recipes");
     }
     if (activeTab === "Mushrooms") {
       return renderItems(mushroomImages, "mushrooms");

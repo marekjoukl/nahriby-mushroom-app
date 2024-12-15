@@ -17,6 +17,7 @@ function UserSaved() {
   // Store fetched images as separate states so we can replace paths with public URLs
   const [mushroomImages, setMushroomImages] = useState([]);
   const [locationImages, setLocationImages] = useState([]);
+  const [recipeImages, setRecipeImages] = useState([]);
 
   useEffect(() => {
     // Converts mushroom image paths to public URLs
@@ -57,9 +58,29 @@ function UserSaved() {
       setLocationImages(images);
     };
 
+    // Converts recipe image paths to public URLs
+    const fetchRecipeImages = async () => {
+      const images = await Promise.all(
+        recipes.map(async (recipe) => {
+          if (recipe.image_url) {
+            try {
+              const url = await getImageUrl(recipe.image_url, "recipe-images");
+              return { ...recipe, image_url: url };
+            } catch (error) {
+              console.error(`Error fetching image for recipe: ${recipe.name}`, error);
+              return { ...recipe, image_url: null };
+            }
+          }
+          return recipe;
+        })
+      );
+      setRecipeImages(images);
+    };
+
     fetchMushroomImages();
     fetchLocationImages();
-  }, [mushrooms, locations]);
+    fetchRecipeImages();
+  }, [mushrooms, locations, recipes]);
 
   const handleViewAllClick = (category) => {
     // Navigates to the full list of items for the chosen category
@@ -119,7 +140,7 @@ function UserSaved() {
       <div className="mt-8">
         <h2 className="text-lg mb-2 font-semibold border-b border-gray-300 pb-3">Recipes</h2>
         <div className="flex justify-center items-center pb-5 gap-4">
-          {recipes.map((recipe) => (
+          {recipeImages.map((recipe) => (
             <div
               key={recipe.id}
               className="relative flex-shrink-0 h-32 w-24 sm:h-36 sm:w-28 md:h-60 md:w-52 cursor-pointer overflow-hidden rounded-md border-2 border-white group"
