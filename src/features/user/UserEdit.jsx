@@ -11,6 +11,7 @@ function UserEdit() {
   const navigate = useNavigate();
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [countries, setCountries] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [userData, setUserData] = useState({
     name: user.name || "",
@@ -18,7 +19,7 @@ function UserEdit() {
     password: "",
     birth_date: user.birth_date || "",
     country: user.country || "",
-    image_url: user.image_url || "", // This should be the public URL if available
+    image_url: user.image_url || "",
   });
 
   const [showImageUrlField, setShowImageUrlField] = useState(false);
@@ -66,14 +67,12 @@ function UserEdit() {
     }));
   };
 
-  // Function to handle image file selection and upload
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      setIsUploading(true);
       try {
-        // Upload the image to storage, get the path
         const imagePath = await uploadImageAndGetUrl(file);
-        // Get the public URL from the path
         const publicUrl = await getImageUrl(imagePath, "user-images");
 
         if (publicUrl) {
@@ -88,6 +87,8 @@ function UserEdit() {
       } catch (error) {
         toast.error(`Failed to upload image: ${error.message}`);
         console.error(error);
+      } finally {
+        setIsUploading(false);
       }
     }
   };
@@ -130,7 +131,6 @@ function UserEdit() {
               style={{ width: "35px", height: "35px" }}
             >
               <FiCamera className="text-white" />
-              {/* Hidden file input for image upload */}
               <input
                 type="file"
                 accept="image/*"
@@ -138,10 +138,14 @@ function UserEdit() {
                 onChange={handleImageChange}
               />
             </label>
+            {isUploading && (
+              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                <div className="w-8 h-8 border-4 border-white border-t-transparent border-solid rounded-full animate-spin"></div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Hidden input to ensure image_url is always submitted */}
         <input type="hidden" name="image_url" value={userData.image_url} />
 
         {showImageUrlField && (
@@ -205,7 +209,7 @@ function UserEdit() {
             name="birth_date"
             value={userData.birth_date}
             onChange={handleInputChange}
-            className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
+            className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200 text-white" 
             autoComplete="bday"
           />
         </label>
@@ -216,7 +220,7 @@ function UserEdit() {
             name="country"
             value={userData.country}
             onChange={handleInputChange}
-            className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200"
+            className="w-full rounded border border-green-500 p-2 bg-transparent focus:ring focus:ring-green-200 text-white"
           >
             <option value="" disabled>
               Select a country
