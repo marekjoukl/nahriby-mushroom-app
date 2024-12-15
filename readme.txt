@@ -2,6 +2,11 @@ File Structure and Authors
 
 Project Name: ITU - Mushroom app
 
+Setup:
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npm run dev`
+
 Root Directory
 	•	index.css
 	    •	Description: Styles for map.
