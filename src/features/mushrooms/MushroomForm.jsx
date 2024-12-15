@@ -20,6 +20,7 @@ function MushroomForm() {
         short_description: mushroom.short_description,
         long_description: mushroom.long_description,
         toxicity: mushroom.toxicity || 1,
+        author: useUserId()
     });
     const [imageFile, setImageFile] = useState(null); // State to store the selected image file
 
@@ -54,41 +55,11 @@ function MushroomForm() {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        let imageUrl = mushroom.image_url;
-
-        try {
-            if (imageFile) {
-                console.log("Image file selected:", imageFile); // Debugging information
-                imageUrl = await uploadImageAndGetUrl(imageFile); // Upload image and get URL
-            }
-
-            const updatedData = {
-                ...mushroomData,
-                image_url: imageUrl,
-            };
-
-            if (mushroom.id) {
-                await updateMushroom(mushroom.id, updatedData); // Update mushroom
-                toast.success("Mushroom updated successfully!");
-            } else {
-                await createMushroom(updatedData); // Create new mushroom
-                toast.success("Mushroom created successfully!");
-            }
-
-            navigate("/mushrooms"); // Navigate to mushrooms list
-        } catch (error) {
-            console.error("Error in handleSubmit:", error); // Debugging information
-            toast.error("Failed to upload image. Please try again.");
-        }
-    };
-
     return (
         <Form
             method="POST"
+            encType="multipart/form-data"
             className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg pb-20"
-            onSubmit={handleSubmit}
         >
             <BackButton iconType="arrow" navigateTo={-1} />
             <h2 className="text-center text-xl font-semibold text-gray-900">
@@ -114,20 +85,18 @@ function MushroomForm() {
                     Upload Photo
                 </label>
                 <div className="mt-2 flex flex-row items-center space-x-4">
-                    {!mushroomData.image_url && (
-                        <label
-                            className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${imageFile ? "hidden" : ""}`}
-                        >
-                            Choose File
-                            <input
-                                type="file"
-                                name="imageFile"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="hidden"
-                            />
-                        </label>
-                    )}
+                    <label
+                        className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${imageFile ? "hidden" : ""}`}
+                    >
+                        Choose File
+                        <input
+                            type="file"
+                            name="imageFile"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                        />
+                    </label>
                     {mushroomData.image_url && (
                     <>
                         <p className="text-black">
