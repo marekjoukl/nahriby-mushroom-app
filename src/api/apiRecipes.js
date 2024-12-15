@@ -7,7 +7,6 @@
 import supabase from "./supabase";
 
 export async function getRecipes() {
-    // Old version
     const { data, error } = await supabase.from("recipes").select("*");
     if (error) {
         console.error("error", error);
@@ -52,7 +51,6 @@ export async function createRecipes(data) {
     imagePath = uploadData.path;
     }
 
-    // Create a payload excluding the `imageFile` field
     const { imageFile: _, ...payload } = data; // Remove imageFile from payload
 
     // Add the image path to the payload

@@ -18,13 +18,14 @@ function Recipes() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredRecipes, setFilteredRecipes] = useState(recipes);
     const [showSearchBar, setShowSearchBar] = useState(false);
-    const [imageUrls, setImageUrls] = useState({}); // Uchová URL obrázkov pre recepty
+    const [imageUrls, setImageUrls] = useState({}); 
 
     // Fetch image URLs for all recipes
     useEffect(() => {
         async function fetchInitialRecipes() {
             try {
                 const data = await getRecipes();
+                // Update recipes and load imges
                 setFilteredRecipes(data);
                 await fetchImageUrls(data);
             } catch (error) {
@@ -34,6 +35,7 @@ function Recipes() {
         fetchInitialRecipes();
     }, []);
 
+    // Loading URLs of images for recipes
     const fetchImageUrls = async (recipes) => {
         const urls = {};
         for (const recipe of recipes) {
@@ -41,17 +43,19 @@ function Recipes() {
                 try {
                     urls[recipe.id] = await getImageUrl(recipe.image_url);
                 } catch (error) {
-                    urls[recipe.id] = null; // Handle error
+                    urls[recipe.id] = null; // URL will be null, if error
                 }
             }
         }
         setImageUrls(urls);
     };
 
+    // GOTO Detail
     const handleRecipeClick = (id) => {
         navigate(`/recipes/${id}`);
     };
 
+    // GOTO Add Recipe
     const handleAddRecipeClick = () => {
         navigate("/recipes/add");
     };
@@ -149,6 +153,7 @@ function Recipes() {
         </div>   
     );
 }
+
 
 export async function loader() {
   const recipes = await getRecipes();  

@@ -9,7 +9,6 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import Header from "../../ui/Header";
 import { FaCheckCircle, FaTrash } from "react-icons/fa";
 import { updateRecipe, deleteRecipe, getRecipe, uploadImageAndGetUrl } from "../../api/apiRecipes";
-import { useUserId } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
 
 function RecipeAdd() {
@@ -28,8 +27,6 @@ function RecipeAdd() {
     });
 
     const [imageFile, setImageFile] = useState(null); 
-    // const [successMessage, setSuccessMessage] = useState("");
-
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -48,7 +45,7 @@ function RecipeAdd() {
         let imageUrl = recipeData.image_url;
 
         try {
-            // Ak je nahratá nová fotka, nahraj ju a získaj URL
+            // Adding new photo, if old one already exists
             if (imageFile) {
                 imageUrl = await uploadImageAndGetUrl(imageFile);
             }
@@ -98,13 +95,6 @@ function RecipeAdd() {
                 onRightIcon2Click={handleDelete}
                 >
             </Header>       
-
-            {/* Success message after adding recipe
-            {successMessage && (
-                <div className="fixed top-16 bg-green-500 text-white p-3 rounded text-center w-full h-16">
-                    {successMessage}
-                </div>
-            )} */}
     
             <form onSubmit={(e) => e.preventDefault()} className="space-y-4 w-3/4 pb-5">
                 {/* Recipe Name  */}
@@ -140,13 +130,6 @@ function RecipeAdd() {
                                 </button>
                             </div>
                         )}
-                        {/* {recipeData.image_url && !imageFile && (
-                            <img 
-                                src={recipeData.image_url} 
-                                alt="Current" 
-                                className="h-16 rounded" 
-                            />
-                        )} */}
                     </div>
                 </div>
 

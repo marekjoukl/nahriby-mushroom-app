@@ -54,6 +54,10 @@ src Directory
         •	Description: Contains all functions manipulating atlas and mushroom entries.
         •	Author: Ondrej Kozanyi (xkozan01)
 
+	•	recepies/
+        •	Description: Contains all functions manipulating recipes.
+        •	Author: Aurel Strigac (xstrig00)		
+
 	•	user/
         •	Description: Contains all functions manipulating users and their favourite posts.
         •	Author: Aurel Strigac (xstrig00)

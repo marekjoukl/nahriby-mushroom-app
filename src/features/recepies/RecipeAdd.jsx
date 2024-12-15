@@ -4,15 +4,14 @@
  * Date: 15.12. 2024
  */
 
-import { useId, useState } from "react";
-import { useNavigate, redirect, Form } from "react-router-dom";
+import { useState } from "react";
+import { redirect, Form } from "react-router-dom";
 import { createRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
-import { FaCheckCircle } from "react-icons/fa";
 import { useUserId } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
 
-// Fix tab indent
+
 function RecipeAdd() {
     const userId = useUserId();
     const [imageFile, setImageFile] = useState(null);
@@ -161,11 +160,12 @@ function RecipeAdd() {
     );
 }
 
+// Handling form
 export async function action({ request }) {
     const formData = await request.formData();
-    const data = Object.fromEntries(formData); // Konvertovanie formulára na objekt
+    const data = Object.fromEntries(formData); 
 
-    console.log("FormData entries:", Array.from(formData.entries())); // Skontrolujte obsah FormData
+    console.log("FormData entries:", Array.from(formData.entries())); 
     console.log("data: ", data);
     const imageFile = formData.get("imageFile");
 
@@ -177,14 +177,15 @@ export async function action({ request }) {
         console.error("No valid image file found");
     }
 
-    
-    data.imageFile = imageFile; // Pridanie súboru späť do objektu
+    // Add file to object
+    data.imageFile = imageFile; 
 
     try {
-        const newRecipe = await createRecipes(data); // Odoslanie do API
+        // Let API handle
+        const newRecipe = await createRecipes(data); 
         toast.success("Recipe created successfully!");
 
-        return redirect(`/recipes/${newRecipe[0].id}`); // Presmerovanie
+        return redirect(`/recipes/${newRecipe[0].id}`); 
     } catch (error) {
         console.error("Failed to create recipe:", error);
         toast.error("Failed to create recipe. Please try again.");

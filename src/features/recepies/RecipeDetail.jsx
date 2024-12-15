@@ -5,9 +5,9 @@
  */
 
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getRecipe, updateRecipeRating, getImageUrl, addRecipeRating } from "../../api/apiRecipes"; // UpdateRecipeRating - nepotrebne?
+import { getRecipe, getImageUrl, addRecipeRating } from "../../api/apiRecipes"; 
 import { useEffect, useState } from "react";
-import { FaStar, FaHeart, FaEdit } from "react-icons/fa";
+import { FaStar, FaEdit } from "react-icons/fa";
 import Header from "../../ui/Header";
 import { useUserId } from "../../contexts/UserContext";
 import { getMushrooms } from "../../api/apiMushrooms";
@@ -77,14 +77,14 @@ function RecipeDetail() {
 
     const [rating, setRating] = useState(recipe.rating || 0);
     const [hover, setHover] = useState(null);   // Showing when hovering stars
-    const [imageUrl, setImageUrl] = useState(null); // State pre verejnú URL obrázka
-    const [isLoadingImage, setIsLoadingImage] = useState(true); // Stav načítania obrázka
+    const [imageUrl, setImageUrl] = useState(null); // public URL state
+    const [isLoadingImage, setIsLoadingImage] = useState(true); // image loading state
 
     useEffect(() => {
         async function fetchImageUrl() {
             if (recipe.image_url) {
                 try {
-                    const url = await getImageUrl(recipe.image_url); // Funkcia pre získanie URL z back-endu
+                    const url = await getImageUrl(recipe.image_url);
                     setImageUrl(url);
                 } catch (error) {
                     console.error("Error fetching image URL:", error);
@@ -130,9 +130,6 @@ function RecipeDetail() {
                 >
             </Header>            
 
-            {/* Docasne - zahladenie prekryvania hlavickov pomocou top marginu */}
-            {/* <div className="mt-16"></div> */}
-
             <div className="bg-white shadow-md rounded-lg p-6 border border-zinc-900 ml-8 mr-8 mt-16">
                 <h1 className="text-2xl font-bold mb-4 text-black">{recipe.name}</h1>
 
@@ -153,7 +150,6 @@ function RecipeDetail() {
                     </div>
                 </div>
 
-                {/* <img src={recipe.image_url || "https://via.placeholder.com/150"} alt={recipe.name} className="w-full h-64 object-cover rounded mb-4"/> */}
                 {isLoadingImage ? (
                     <p>Loading image...</p>
                 ) : (
