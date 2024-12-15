@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Igor Mikula (xmikul74)
+ * Date: 15.12. 2024
+ */
+
 import { useId, useState } from "react";
 import { useNavigate, redirect, Form } from "react-router-dom";
 import { createRecipes } from "../../api/apiRecipes";
@@ -153,37 +159,37 @@ function RecipeAdd() {
         </Form>
         </>
     );
-  }
+}
 
-    export async function action({ request }) {
-        const formData = await request.formData();
-        const data = Object.fromEntries(formData); // Konvertovanie formulára na objekt
+export async function action({ request }) {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData); // Konvertovanie formulára na objekt
 
-        console.log("FormData entries:", Array.from(formData.entries())); // Skontrolujte obsah FormData
-        console.log("data: ", data);
-        const imageFile = formData.get("imageFile");
+    console.log("FormData entries:", Array.from(formData.entries())); // Skontrolujte obsah FormData
+    console.log("data: ", data);
+    const imageFile = formData.get("imageFile");
 
-        console.log("Image file received:", imageFile);
+    console.log("Image file received:", imageFile);
 
-        if (imageFile && imageFile.size > 0) {
-            console.log("Valid image file:", imageFile.name);
-        } else {
-            console.error("No valid image file found");
-        }
-
-        
-        data.imageFile = imageFile; // Pridanie súboru späť do objektu
-
-        try {
-            const newRecipe = await createRecipes(data); // Odoslanie do API
-            toast.success("Recipe created successfully!");
-
-            return redirect(`/recipes/${newRecipe[0].id}`); // Presmerovanie
-        } catch (error) {
-            console.error("Failed to create recipe:", error);
-            toast.error("Failed to create recipe. Please try again.");
-            return null;
-        }
+    if (imageFile && imageFile.size > 0) {
+        console.log("Valid image file:", imageFile.name);
+    } else {
+        console.error("No valid image file found");
     }
 
-  export default RecipeAdd;
+    
+    data.imageFile = imageFile; // Pridanie súboru späť do objektu
+
+    try {
+        const newRecipe = await createRecipes(data); // Odoslanie do API
+        toast.success("Recipe created successfully!");
+
+        return redirect(`/recipes/${newRecipe[0].id}`); // Presmerovanie
+    } catch (error) {
+        console.error("Failed to create recipe:", error);
+        toast.error("Failed to create recipe. Please try again.");
+        return null;
+    }
+}
+
+export default RecipeAdd;

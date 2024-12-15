@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Igor Mikula (xmikul74)
+ * Date: 15.12. 2024
+ */
+
 import supabase from "./supabase";
 
 export async function getRecipes() {
@@ -150,3 +156,43 @@ export async function uploadImageAndGetUrl(imageFile) {
   
     return publicURL.publicUrl;
   }
+
+// Returning rating thats average of every users rating
+export async function addRecipeRating(recipeId, userId, rating) {
+    // Add new rating to the table
+    const { error } = await supabase
+        .from("recipe_ratings")
+        .upsert({ recipe_id: recipeId, user_id: userId, rating }, { onConflict: ["recipe_id", "user_id"] });
+
+    if (error) {
+        console.error("Error adding rating:", error.message);
+        throw new Error(error.message);
+    }
+
+    // Calculate average
+    const { data, error: avgError } = await supabase
+        .from("recipe_ratings")
+        .select("rating")
+        .eq("recipe_id", recipeId);
+
+    if (avgError) {
+        console.error("Error fetching ratings for averaging:", avgError.message);
+        throw new Error(avgError.message);
+    }
+
+    const averageRating =
+        data.reduce((sum, entry) => sum + entry.rating, 0) / data.length;
+
+    // Actualize value in database
+    const { error: updateError } = await supabase
+        .from("recipes")
+        .update({ rating: averageRating })
+        .eq("id", recipeId);
+
+    if (updateError) {
+        console.error("Error updating average rating:", updateError.message);
+        throw new Error(updateError.message);
+    }
+
+    return averageRating;
+}

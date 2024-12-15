@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Igor Mikula (xmikul74)
+ * Date: 15.12. 2024
+ */
+
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Header from "../../ui/Header";
@@ -88,7 +94,7 @@ function RecipeAdd() {
                 backButtonFlag={true}
                 RightIcon1={FaCheckCircle}
                 onRightIcon1Click={submitRecipe}
-                RightIcon2={FaTrash}
+                RightIcon2={FaTrash}                
                 onRightIcon2Click={handleDelete}
                 >
             </Header>       
@@ -134,13 +140,13 @@ function RecipeAdd() {
                                 </button>
                             </div>
                         )}
-                        {recipeData.image_url && !imageFile && (
+                        {/* {recipeData.image_url && !imageFile && (
                             <img 
                                 src={recipeData.image_url} 
                                 alt="Current" 
                                 className="h-16 rounded" 
                             />
-                        )}
+                        )} */}
                     </div>
                 </div>
 

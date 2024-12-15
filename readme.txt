@@ -29,6 +29,9 @@ src Directory
 	•	apiSimilarMushrooms.js
 	    •   Description: Handles API calls related to mushroom similarity groups - creating, removing, modifying.
 	    •   Author: Ondrej Kozanyi (xkozan01)
+	•	apiRecipes.js
+	    •   Description: Handles API calls related to recipes.
+	    •   Author: Igor Mikula (xmikul74)
 
 2. contexts/
 	•	UserContext.js

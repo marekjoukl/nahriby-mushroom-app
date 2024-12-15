@@ -1,10 +1,15 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Igor Mikula (xmikul74)
+ * Date: 15.12. 2024
+ */
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom"
 import { FaPlus, FaSearch, FaStar, FaUtensils, FaClock } from "react-icons/fa";
 import { getRecipes, getImageUrl, filterRecipes } from "../../api/apiRecipes";
 import Header from "../../ui/Header";
 
-// background-color: #1a2a1d; /* Dark green background */
 
 function Recipes() {
     const { recipes } = useLoaderData();

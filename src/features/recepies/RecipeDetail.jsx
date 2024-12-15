@@ -1,10 +1,17 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Igor Mikula (xmikul74)
+ * Date: 15.12. 2024
+ */
+
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getRecipe, updateRecipeRating, getImageUrl } from "../../api/apiRecipes";
+import { getRecipe, updateRecipeRating, getImageUrl, addRecipeRating } from "../../api/apiRecipes"; // UpdateRecipeRating - nepotrebne?
 import { useEffect, useState } from "react";
 import { FaStar, FaHeart, FaEdit } from "react-icons/fa";
 import Header from "../../ui/Header";
 import { useUserId } from "../../contexts/UserContext";
 import { getMushrooms } from "../../api/apiMushrooms";
+import toast from "react-hot-toast";
 
 function HighlightIngredients({ ingredientDesc }) {
     const [mushrooms, setMushrooms] = useState([]);
@@ -93,8 +100,14 @@ function RecipeDetail() {
     }, [recipe.image_url]);
 
     const changeRating = async (newRating) => {
-        setRating(newRating);
-        await updateRecipeRating(recipe.id, newRating);
+        try {
+            const updatedRating = await addRecipeRating(recipe.id, userId, newRating);
+            toast.success("Thank you for rating this recipe");
+            // Setting new avg rating
+            setRating(updatedRating); 
+        } catch (error) {
+            console.error("Error updating rating:", error.message);
+        }
     };
 
     const handleEditClick = () => {
@@ -128,12 +141,14 @@ function RecipeDetail() {
                     <span className="text-green-700 font-light">Rate this recipe:</span>
                     <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
-                            <FaStar key={star} size={16}
-                                    className={`cursor-pointer ${(hover || rating) >= star ? "text-yellow-400" : "text-gray-300"}`}
-                                    onClick={() => changeRating(star)}
-                                    onMouseEnter={() => setHover(star)}
-                                    onMouseLeave={() => setHover(null)}
-                            ></FaStar>
+                            <FaStar
+                            key={star}
+                            size={16}
+                            className={`cursor-pointer ${rating >= star ? "text-yellow-400" : "text-gray-300"}`}
+                            onClick={() => changeRating(star)}
+                            onMouseEnter={() => setHover(star)}
+                            onMouseLeave={() => setHover(null)}
+                        />
                         ))}
                     </div>
                 </div>
@@ -149,10 +164,6 @@ function RecipeDetail() {
                     />
                 )}
 
-                <p>
-                    <span className="text-sm font-semibold text-gray-600">Rating: </span>
-                    <span className="text-sm text-black">{recipe.rating}</span>
-                </p>
                 <p>
                     <span className="text-sm font-semibold text-gray-600">Serves: </span>
                     <span className="text-sm text-black">{recipe.serves}</span>

@@ -31,9 +31,11 @@ import Recipes, { loader as recipesLoader } from "./features/recepies/Recipes";
 import RecipeDetail, {
   loader as recipeDetailLoader,
 } from "./features/recepies/RecipeDetail";
-import RecipeAdd, {
+
+import RecipeAdd , {
   action as recipeAddAction,
 } from "./features/recepies/RecipeAdd";
+
 import RecipeEdit, {
   loader as recipeEditLoader,
 } from "./features/recepies/RecipeEdit";
