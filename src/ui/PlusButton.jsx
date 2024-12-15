@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Marek Joukl (xjoukl00)
+ * Date: 15.12. 2024
+ */
+
 function CircleButton({ onClick }) {
   return (
     <button
