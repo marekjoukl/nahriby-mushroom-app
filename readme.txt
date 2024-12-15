@@ -56,7 +56,7 @@ src Directory
 
 	•	recepies/
         •	Description: Contains all functions manipulating recipes.
-        •	Author: Aurel Strigac (xstrig00)		
+        •	Author: Igor Mikula (xmikul74)
 
 	•	user/
         •	Description: Contains all functions manipulating users and their favourite posts.
