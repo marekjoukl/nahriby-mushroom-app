@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
+
 import supabase from "./supabase";
 
 // Function to get all similar mushrooms records
@@ -35,9 +41,6 @@ export async function addOrUpdateSimilarMushrooms(mushroomId1, mushroomId2) {
                             return { alreadyInGroup: true };
                         }
                         const mushroomIdsSet = new Set(record.mushroom_ids.concat(record2.mushroom_ids));
-                        console.log("Mushroom IDs 1:", record.mushroom_ids);
-                        console.log("Mushroom IDs 2:", record2.mushroom_ids);
-                        console.log("Mushroom IDs set:", mushroomIdsSet);
                         await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
                         await deleteSimilarMushrooms(record2.id);
                         updated = true;
@@ -52,9 +55,6 @@ export async function addOrUpdateSimilarMushrooms(mushroomId1, mushroomId2) {
                             return { alreadyInGroup: true };
                         }
                         const mushroomIdsSet = new Set(record.mushroom_ids.concat(record2.mushroom_ids));
-                        console.log("Mushroom IDs 2:", record.mushroom_ids);
-                        console.log("Mushroom IDs 1:", record2.mushroom_ids);
-                        console.log("Mushroom IDs set:", mushroomIdsSet);
                         await updateSimilarMushrooms(record.id, Array.from(mushroomIdsSet));
                         await deleteSimilarMushrooms(record2.id);
                         updated = true;

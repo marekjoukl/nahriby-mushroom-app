@@ -1,4 +1,9 @@
-import { useLoaderData, useNavigate } from "react-router-dom";
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
+import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../api/apiMushrooms"; // Import your new function
 import { useEffect, useState } from "react";
 
@@ -6,6 +11,7 @@ function MushroomItem({ mushroom }) {
     const navigate = useNavigate();
     const [imageUrl, setImageUrl] = useState(null);
 
+    // Fetch image URL for the mushroom
     useEffect(() => {
         async function fetchImageUrl() {
           try {
@@ -21,10 +27,12 @@ function MushroomItem({ mushroom }) {
         fetchImageUrl();
     }, [mushroom.image_url]);
 
+    // Navigate to mushroom detail page
     const handleClick = () => {
         navigate(`/mushrooms/mushroomDetail/${mushroom.id}`);
     };
 
+    // Get toxicity label based on toxicity level
     const getToxicityLabel = (toxicity) => {
         switch (toxicity) {
             case 1:
@@ -38,6 +46,7 @@ function MushroomItem({ mushroom }) {
         }
     };
 
+    // Get toxicity color based on toxicity level
     const getToxicityColor = (toxicity) => {
         switch (toxicity) {
             case 1:

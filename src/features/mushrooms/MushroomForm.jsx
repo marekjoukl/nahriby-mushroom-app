@@ -1,3 +1,8 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
 import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { createMushroom, getMushroom, updateMushroom, deleteMushroom, uploadImageAndGetUrl } from "../../api/apiMushrooms";
@@ -16,7 +21,7 @@ function MushroomForm() {
         long_description: mushroom.long_description,
         toxicity: mushroom.toxicity || 1,
     });
-    const [imageFile, setImageFile] = useState(null);
+    const [imageFile, setImageFile] = useState(null); // State to store the selected image file
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,14 +32,14 @@ function MushroomForm() {
     };
 
     const handleDelete = async () => {
-        await deleteMushroom(mushroom.id);
+        await deleteMushroom(mushroom.id); // Delete mushroom
         toast.success("Mushroom deleted successfully!");
-        navigate("/mushrooms");
+        navigate("/mushrooms"); // Navigate to mushrooms list
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImageFile(file);
+        setImageFile(file); // Set the selected image file
         setMushroomData((prev) => ({
             ...prev,
             image_url: file.name,
@@ -42,7 +47,7 @@ function MushroomForm() {
     };
 
     const removeImage = () => {
-        setImageFile(null);
+        setImageFile(null); // Remove the selected image file
         setMushroomData((prev) => ({
             ...prev,
             image_url: "",
@@ -56,7 +61,7 @@ function MushroomForm() {
         try {
             if (imageFile) {
                 console.log("Image file selected:", imageFile); // Debugging information
-                imageUrl = await uploadImageAndGetUrl(imageFile);
+                imageUrl = await uploadImageAndGetUrl(imageFile); // Upload image and get URL
             }
 
             const updatedData = {
@@ -65,14 +70,14 @@ function MushroomForm() {
             };
 
             if (mushroom.id) {
-                await updateMushroom(mushroom.id, updatedData);
+                await updateMushroom(mushroom.id, updatedData); // Update mushroom
                 toast.success("Mushroom updated successfully!");
             } else {
-                await createMushroom(updatedData);
+                await createMushroom(updatedData); // Create new mushroom
                 toast.success("Mushroom created successfully!");
             }
 
-            navigate("/mushrooms");
+            navigate("/mushrooms"); // Navigate to mushrooms list
         } catch (error) {
             console.error("Error in handleSubmit:", error); // Debugging information
             toast.error("Failed to upload image. Please try again.");

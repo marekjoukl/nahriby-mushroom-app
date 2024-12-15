@@ -1,3 +1,9 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
+
 import supabase from "./supabase";
 
 // Function to get all mushrooms
@@ -15,21 +21,20 @@ export async function getMushrooms() {
 
 // Function to create a new mushroom entry
 export async function createMushroom(data) {
-
     // Handle image upload
     let imagePath = "";
     const imageFile = data.imageFile; // Extract imageFile from the input
 
     if (imageFile && imageFile instanceof File) {
-      const { data: uploadData, error } = await supabase.storage
-        .from("mushrooms-images")
-        .upload(`mushrooms/${Date.now()}_${imageFile.name}`, imageFile);
+        const { data: uploadData, error } = await supabase.storage
+            .from("mushrooms-images")
+            .upload(`mushrooms/${Date.now()}_${imageFile.name}`, imageFile);
 
-      if (error) {
-        throw new Error("Failed to upload image");
-      }
+        if (error) {
+            throw new Error("Failed to upload image");
+        }
 
-      imagePath = uploadData.path;
+        imagePath = uploadData.path;
     }
 
     // Create a payload excluding the `imageFile` field
@@ -50,21 +55,23 @@ export async function createMushroom(data) {
     return insertedData;
 }
 
+// Function to get the public URL of an image
 export async function getImageUrl(imagePath) {
     if (!imagePath) return null;
-  
+
     const { data: publicURL, error } = supabase.storage
-      .from("mushrooms-images")
-      .getPublicUrl(imagePath);
-  
+        .from("mushrooms-images")
+        .getPublicUrl(imagePath);
+
     if (error) {
-      console.error("Error fetching image URL:", error.message);
-      return null;
+        console.error("Error fetching image URL:", error.message);
+        return null;
     }
-  
+
     return publicURL.publicUrl;
 }
 
+// Function to upload an image and get its URL
 export async function uploadImageAndGetUrl(imageFile) {
     if (!imageFile || !(imageFile instanceof File)) {
         throw new Error("Invalid image file");

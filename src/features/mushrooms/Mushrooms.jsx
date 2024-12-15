@@ -1,3 +1,8 @@
+/**
+ * Project: ITU - Mushroom app
+ * Author: Ondrej Kožányi (xkozan01)
+ * Date: 15.12. 2024
+ */
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getMushrooms, searchMushroomsByName, getMushroomsByToxicity } from "../../api/apiMushrooms";
 import MushroomItem from "./MushroomItem";
@@ -6,6 +11,7 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
 function Mushrooms() {
+    // Load initial mushrooms data
     const { mushrooms: initialMushrooms } = useLoaderData() || { mushrooms: [] };
     const navigate = useNavigate();
     const [mushrooms, setMushrooms] = useState(initialMushrooms);
@@ -13,10 +19,12 @@ function Mushrooms() {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [category, setCategory] = useState("ALL");
 
+    // Navigate to add mushroom form
     const handleAddMushroom = () => {
         navigate("/mushrooms/mushroomForm");
     };
 
+    // Handle search term changes with debounce
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
             if (searchTerm) {
@@ -30,6 +38,7 @@ function Mushrooms() {
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm, initialMushrooms]);
 
+    // Fetch mushrooms based on selected category
     useEffect(() => {
         const fetchMushrooms = async () => {
             const results = await getMushroomsByToxicity(category === "ALL" ? null : category);
@@ -39,6 +48,7 @@ function Mushrooms() {
         fetchMushrooms();
     }, [category]);
 
+    // Toggle search visibility and reset filters
     const toggleSearch = () => {
         setIsSearchVisible(!isSearchVisible);
         if (!isSearchVisible) {
@@ -48,6 +58,7 @@ function Mushrooms() {
         }
     };
 
+    // Get category name for display
     const getCategoryName = (category) => {
         switch (category) {
             case "TOXIC":
@@ -114,6 +125,7 @@ function Mushrooms() {
     );
 }
 
+// Loader function to fetch initial mushrooms data
 export async function loader() {
     const mushrooms = await getMushrooms();
     return { mushrooms };
