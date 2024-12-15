@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Form, useLoaderData, useNavigate } from "react-router-dom";
+import Select from "react-select"; // Import react-select
 import {
   updateLocation,
   deleteLocation,
   getLocation,
   uploadImageAndGetUrl,
 } from "../../api/apiMap";
+import { getMushrooms } from "../../api/apiMushrooms";
 import Header from "../../ui/Header";
 import toast from "react-hot-toast";
 
@@ -21,11 +23,26 @@ function EditLocation() {
     image_url: location.image_url || "",
     description: location.description || "",
     author: location.author || 42,
+    mushrooms: location.mushrooms || [],
     imageFile: null, // New file input
   });
 
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mushrooms, setMushrooms] = useState([]);
+
+  useEffect(() => {
+    async function fetchMushrooms() {
+      const data = await getMushrooms();
+      setMushrooms(
+        data.map((mushroom) => ({
+          value: mushroom.id,
+          label: mushroom.name,
+        })),
+      );
+    }
+    fetchMushrooms();
+  }, []);
 
   const handleStarsClick = (rating) => {
     setLocationData((prev) => ({
@@ -73,6 +90,13 @@ function EditLocation() {
       ...prev,
       imageFile: null,
       image_url: "", // Clear existing image URL
+    }));
+  };
+
+  const handleMushroomSelection = (selectedOptions) => {
+    setLocationData((prev) => ({
+      ...prev,
+      mushrooms: selectedOptions.map((option) => option.value),
     }));
   };
 
@@ -203,12 +227,28 @@ function EditLocation() {
                   onClick={removeImage}
                   className="rounded-full bg-red-500 p-2 text-xs font-bold text-white hover:bg-red-600"
                   title="Remove Photo"
+                  hidden={!locationData.image_url}
                 >
                   ✕
                 </button>
               </>
             )}
           </div>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-white">
+            Select Mushrooms
+          </label>
+          <Select
+            isMulti
+            options={mushrooms}
+            value={mushrooms.filter((mushroom) =>
+              locationData.mushrooms.includes(mushroom.value),
+            )}
+            onChange={handleMushroomSelection}
+            className="text-black"
+          />
         </div>
 
         <div className="flex justify-between">
@@ -227,7 +267,7 @@ function EditLocation() {
             className="rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
             disabled={isLoading} // Disable button when loading
           >
-            Delete Location
+            Delete
           </button>
         </div>
       </Form>

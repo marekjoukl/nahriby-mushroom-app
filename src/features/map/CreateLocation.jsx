@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, redirect, useSearchParams } from "react-router-dom";
+import Select from "react-select"; // Import react-select
 import { createLocation } from "../../api/apiMap";
 import { getMushrooms } from "../../api/apiMushrooms";
 import { useUserId } from "../../contexts/UserContext";
@@ -22,16 +23,21 @@ function CreateLocation() {
   useEffect(() => {
     async function fetchMushrooms() {
       const data = await getMushrooms();
-      setMushrooms(data);
+      setMushrooms(
+        data.map((mushroom) => ({
+          value: mushroom.id,
+          label: mushroom.name,
+        })),
+      );
     }
     fetchMushrooms();
   }, []);
 
   const handleStarsClick = (rating) => {
-    setLocationData({
-      ...locationData,
+    setLocationData((prev) => ({
+      ...prev,
       stars: rating,
-    });
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -41,6 +47,13 @@ function CreateLocation() {
 
   const removeImage = () => {
     setImageFile(null);
+  };
+
+  const handleMushroomSelection = (selectedOptions) => {
+    setLocationData((prev) => ({
+      ...prev,
+      mushrooms: selectedOptions.map((option) => option.value),
+    }));
   };
 
   const renderStars = () => {
@@ -60,15 +73,6 @@ function CreateLocation() {
     ));
   };
 
-  const toggleMushroomSelection = (mushroomId) => {
-    setLocationData((prevData) => ({
-      ...prevData,
-      mushrooms: prevData.mushrooms.includes(mushroomId)
-        ? prevData.mushrooms.filter((id) => id !== mushroomId)
-        : [...prevData.mushrooms, mushroomId],
-    }));
-  };
-
   return (
     <>
       <Header title="Create new location" />
@@ -83,6 +87,9 @@ function CreateLocation() {
         </div>
 
         <div>
+          <label className="block p-1 text-sm font-medium text-white">
+            Name
+          </label>
           <input
             type="text"
             name="name"
@@ -107,6 +114,9 @@ function CreateLocation() {
         <input type="hidden" name="lng" value={locationData.lng} />
 
         <div>
+          <label className="block p-1 text-sm font-medium text-white">
+            Description
+          </label>
           <textarea
             name="description"
             className="w-full rounded-xl border border-gray-300 p-4 text-black focus:ring focus:ring-green-200"
@@ -152,29 +162,15 @@ function CreateLocation() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            Mushrooms in this location:
+          <label className="mb-2 block text-sm font-medium text-white">
+            Select Mushrooms
           </label>
-          <div className="flex flex-wrap gap-2">
-            {mushrooms.length > 0 ? (
-              mushrooms.map((mushroom) => (
-                <button
-                  key={mushroom.id}
-                  type="button"
-                  onClick={() => toggleMushroomSelection(mushroom.id)}
-                  className={`rounded-full border px-4 py-2 ${
-                    locationData.mushrooms.includes(mushroom.id)
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-200 text-gray-700"
-                  }`}
-                >
-                  {mushroom.name}
-                </button>
-              ))
-            ) : (
-              <p>Loading mushrooms...</p>
-            )}
-          </div>
+          <Select
+            isMulti
+            options={mushrooms}
+            onChange={handleMushroomSelection}
+            className="text-black"
+          />
         </div>
 
         <input
@@ -202,8 +198,10 @@ export async function action({ request }) {
 
   // Convert form data into a plain object
   const data = Object.fromEntries(formData);
-  data.mushrooms = JSON.parse(data.mushrooms); // Convert mushrooms string back to an array
-  data.imageFile = formData.get("imageFile"); // Get the uploaded image file
+  data.mushrooms = JSON.parse(data.mushrooms);
+
+  const imageFile = formData.get("imageFile"); // Get the uploaded image file
+  data.imageFile = imageFile && imageFile.size > 0 ? imageFile : null;
 
   try {
     const newLocation = await createLocation(data);
