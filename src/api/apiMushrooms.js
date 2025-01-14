@@ -78,7 +78,6 @@ export async function uploadImageAndGetUrl(imageFile) {
     }
 
     try {
-        console.log("Uploading image:", imageFile.name); // Debugging information
         const { data: uploadData, error } = await supabase.storage
             .from("mushrooms-images")
             .upload(`mushrooms/${Date.now()}_${imageFile.name}`, imageFile);
@@ -88,7 +87,6 @@ export async function uploadImageAndGetUrl(imageFile) {
             throw new Error("Failed to upload image");
         }
 
-        console.log("Upload successful:", uploadData); // Debugging information
         return uploadData.path;
     } catch (error) {
         console.error("Error uploading image:", error.message);
@@ -113,9 +111,16 @@ export async function getMushroom(id) {
 
 // Function to update a mushroom by ID
 export async function updateMushroom(id, data) {
+    let imageUrl = await uploadImageAndGetUrl(data.imageFile);
+
+    const { imageFile: _, ...payload } = data; // Remove imageFile from payload
+
+    // Add the image path to the payload
+    payload.image_url = imageUrl;
+
     const { error, data: updatedData } = await supabase
         .from("mushrooms")
-        .update(data)
+        .update(payload)
         .eq("id", id)
         .select();
 
