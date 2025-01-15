@@ -64,15 +64,16 @@ function MushroomItem({ mushroom }) {
         <div 
             onClick={handleClick}
             className="border border-green-700 p-4 m-4 rounded-lg bg-green-50 flex flex-row items-start bg-[#86EFAC] max-w-lg cursor-pointer transition-transform duration-100 hover:opacity-90"
+            style={{ width: '380px' }}
         >
             <img 
                 src={imageUrl}
                 alt={mushroom.name} 
                 className="w-24 h-24 object-cover rounded-lg mr-4" 
             />
-            <div className="flex-grow text-left">
-                <h3 className="text-xl font-semibold mb-1 text-green-900">{mushroom.name}</h3>
-                <p className="text-base mb-1 text-green-800">{mushroom.short_description}</p>
+            <div className="flex-grow text-left overflow-hidden">
+                <h3 className="text-xl font-semibold mb-1 text-green-900 truncate">{mushroom.name}</h3>
+                <p className="text-base mb-1 text-green-800 break-words">{mushroom.short_description}</p>
                 <p className={`text-sm ${getToxicityColor(mushroom.toxicity)}`}><strong>Toxicity:</strong> {getToxicityLabel(mushroom.toxicity)}</p>
             </div>
         </div>

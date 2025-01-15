@@ -112,12 +112,13 @@ export async function getMushroom(id) {
 // Function to update a mushroom by ID
 export async function updateMushroom(id, data) {
     let imageUrl = await uploadImageAndGetUrl(data.imageFile);
+    const { imageFile: _, ...payload } = data;
 
-    const { imageFile: _, ...payload } = data; // Remove imageFile from payload
-
-    // Add the image path to the payload
-    payload.image_url = imageUrl;
-
+    if (data.imageFile.name !== "") {
+        // Add the image path to the payload
+        payload.image_url = imageUrl;
+    }
+    
     const { error, data: updatedData } = await supabase
         .from("mushrooms")
         .update(payload)

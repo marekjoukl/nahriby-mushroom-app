@@ -5,8 +5,7 @@
  */
 import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { createMushroom, getMushroom, updateMushroom, deleteMushroom, uploadImageAndGetUrl } from "../../api/apiMushrooms";
-import BackButton from "../../ui/BackButton";
+import { createMushroom, getMushroom, updateMushroom, deleteMushroom } from "../../api/apiMushrooms";
 import { useUserId } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
 
@@ -55,13 +54,23 @@ function MushroomForm() {
         }));
     };
 
+    const handleBackClick = (e) => {
+        e.preventDefault();
+        navigate(-1);
+    };
+
     return (
         <Form
             method="POST"
             encType="multipart/form-data"
             className="mx-auto max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg pb-20"
         >
-            <BackButton iconType="arrow" navigateTo={-1} />
+            <button
+                onClick={handleBackClick}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
+                <span>&#8592;</span>
+            </button>
             <h2 className="text-center text-xl font-semibold text-gray-900">
                 {mushroom.id ? "Edit Mushroom" : "Add a New Mushroom"}
             </h2>
@@ -86,7 +95,7 @@ function MushroomForm() {
                 </label>
                 <div className="mt-2 flex flex-row items-center space-x-4">
                     <label
-                        className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${imageFile ? "hidden" : ""}`}
+                        className={`flex cursor-pointer items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ${(imageFile || (mushroomData.image_url != ""))  ? "hidden" : ""}`}
                     >
                         Choose File
                         <input
@@ -198,6 +207,7 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
+
     if (params.id) {
         await updateMushroom(params.id, data);
         toast.success("Mushroom updated successfully!");
